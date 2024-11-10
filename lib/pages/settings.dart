@@ -63,7 +63,7 @@ class _SettingsList {
           onTap: (BuildContext context) {
             DropDownState(DropDown(
               bottomSheetTitle: Text(
-                '选择语言',
+                AppLocalizations.of(context)!.settings_select_language,
                 style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontWeight: FontWeight.bold,

@@ -9,6 +9,7 @@ class OptionGridView extends StatelessWidget {
   final double crossAxisSpacing;
   final EdgeInsetsGeometry? padding;
   final IndexedWidgetBuilder itemBuilder;
+  final ScrollPhysics? physics;
 
   OptionGridView({
     super.key,
@@ -18,6 +19,7 @@ class OptionGridView extends StatelessWidget {
     this.crossAxisSpacing = 0.0,
     this.padding = const EdgeInsets.all(0),
     required this.itemBuilder,
+    this.physics,
   })  : assert(itemCount >= 0),
         assert(rowCount > 0),
         columnCount = (itemCount / rowCount).ceil(),
@@ -29,7 +31,7 @@ class OptionGridView extends StatelessWidget {
     return ListView.separated(
       itemCount: columnCount,
       padding: padding,
-      physics: const NeverScrollableScrollPhysics(),
+      physics: physics ?? const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       controller: ScrollController(keepScrollOffset: false),
       separatorBuilder: (context, index) => SizedBox(height: mainAxisSpacing),

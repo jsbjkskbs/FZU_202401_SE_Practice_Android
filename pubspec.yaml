@@ -59,6 +59,7 @@ dependencies:
   flutter_launcher_icons: ^0.14.1
   grouped_list: ^6.0.0
   drop_down_list: ^0.0.8
+  easy_refresh: ^3.4.0
 
 dev_dependencies:
   flutter_test:

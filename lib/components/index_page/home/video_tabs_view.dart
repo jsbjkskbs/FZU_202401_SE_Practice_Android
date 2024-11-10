@@ -1,5 +1,5 @@
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:fulifuli_app/components/index_page/home/video_card.dart';
 import 'package:fulifuli_app/global.dart';
 
@@ -28,7 +28,10 @@ class VideoTabsView extends StatefulWidget {
 class _VideoTabsViewState extends State<VideoTabsView> {
   double _lastMoveY = 0;
   late List<Video> videoList = [];
-  final EasyRefreshController _easyRefreshController = EasyRefreshController();
+  final EasyRefreshController _easyRefreshController = EasyRefreshController(
+    controlFinishLoad: true,
+    controlFinishRefresh: true,
+  );
 
   @override
   void initState() {
@@ -67,63 +70,76 @@ class _VideoTabsViewState extends State<VideoTabsView> {
         }
         _lastMoveY = position;
       },
-      child: EasyRefresh(
-        header: MaterialHeader(
-          valueColor: AlwaysStoppedAnimation(Theme.of(context).primaryColor),
-          backgroundColor: Theme.of(context).cardColor,
-          completeDuration: const Duration(milliseconds: 500),
-        ),
-        footer: MaterialFooter(
-          valueColor: AlwaysStoppedAnimation(Theme.of(context).primaryColor),
-          backgroundColor: Theme.of(context).cardColor,
-          completeDuration: const Duration(milliseconds: 500),
-        ),
-        controller: _easyRefreshController,
-        enableControlFinishRefresh: true,
-        enableControlFinishLoad: true,
-        onRefresh: () async {
-          await Future<void>.delayed(const Duration(milliseconds: 500));
-          if (!mounted) {
-            return;
-          }
-          videoList.add(
-            Video(
-              id: '1',
-              userId: 'user1',
-              title: 'Video 21',
-              description: 'Description 1',
-              category: 'Category 1',
-              labels: ['label1', 'label2'],
-              coverUrl: 'http://example.com/cover1.jpg',
-              videoUrl: 'http://example.com/video1.mp4',
-              viewCount: 100,
-              likeCount: 10,
-              commentCount: 5,
-              createdAt: 1633036800,
-              updatedAt: 1633123200,
-              deletedAt: 0,
-              status: 'active',
+      child: EasyRefresh.builder(
+          header: MaterialHeader(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            valueColor:
+                AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+          ),
+          footer: BezierFooter(
+            foregroundColor: Theme.of(context).scaffoldBackgroundColor,
+            backgroundColor: Theme.of(context).primaryColor,
+            spinWidget: SizedBox(
+              width: 25,
+              height: 25,
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                    Theme.of(context).scaffoldBackgroundColor),
+                strokeWidth: 4,
+              ),
             ),
-          );
-          _easyRefreshController.finishRefresh();
-          setState(() {});
-        },
-        onLoad: () async {
-          await Future<void>.delayed(const Duration(milliseconds: 4000));
-          debugPrint('onLoad');
-          if (!mounted) {
-            return;
-          }
-          _easyRefreshController.finishLoad(noMore: false);
-        },
-        child: OptionGridView(
-          itemCount: videoList.length,
-          rowCount: 2,
-          itemBuilder: (context, index) {
-            return VideoCard(video: videoList[index]);
+            springRebound: true,
+          ),
+          controller: _easyRefreshController,
+          onRefresh: () async {
+            await Future<void>.delayed(const Duration(milliseconds: 500));
+            if (!mounted) {
+              return;
+            }
+            videoList.add(
+              Video(
+                id: '1',
+                userId: 'user1',
+                title: 'Video 21',
+                description: 'Description 1',
+                category: 'Category 1',
+                labels: ['label1', 'label2'],
+                coverUrl: 'http://example.com/cover1.jpg',
+                videoUrl: 'http://example.com/video1.mp4',
+                viewCount: 100,
+                likeCount: 10,
+                commentCount: 5,
+                createdAt: 1633036800,
+                updatedAt: 1633123200,
+                deletedAt: 0,
+                status: 'active',
+              ),
+            );
+            debugPrint('onRefresh');
+            _easyRefreshController.finishRefresh();
+            _easyRefreshController.resetHeader();
+            setState(() {});
           },
-        ),
-      ),
+          onLoad: () async {
+            await Future<void>.delayed(const Duration(milliseconds: 4000));
+            debugPrint('onLoad');
+            if (!mounted) {
+              return IndicatorResult.noMore;
+            }
+            _easyRefreshController.finishLoad();
+            _easyRefreshController.resetFooter();
+            return IndicatorResult.noMore;
+          },
+          childBuilder: (BuildContext context, ScrollPhysics physics) {
+            return OptionGridView(
+              physics: physics,
+              itemCount: videoList.length,
+              rowCount: 2,
+              itemBuilder: (context, index) {
+                return VideoCard(video: videoList[index]);
+              },
+            );
+          }),
     );
   }
 }
