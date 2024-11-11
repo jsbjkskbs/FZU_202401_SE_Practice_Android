@@ -36,6 +36,8 @@ class _LoginScreenState extends State<LoginScreen> {
       _needMFA = true;
     });
     await Future.delayed(loginTime);
+    Global.self = _user;
+    Global.self.id = "1";
     return null;
   }
 

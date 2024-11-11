@@ -5,7 +5,7 @@ import 'package:fulifuli_app/utils/reverse_color.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:toastification/toastification.dart';
 
-import '../../../utils/image_shader_mask.dart';
+import '../utils/image_shader_mask.dart';
 
 class VideoCard extends StatefulWidget {
   final Video video;

@@ -13,6 +13,7 @@ import 'package:fulifuli_app/pages/loading.dart';
 import 'package:fulifuli_app/pages/login.dart';
 import 'package:fulifuli_app/pages/mfa_verification.dart';
 import 'package:fulifuli_app/pages/settings.dart';
+import 'package:fulifuli_app/pages/space.dart';
 import 'package:fulifuli_app/test.dart';
 
 Future<void> main() async {
@@ -122,6 +123,7 @@ class MyAppState extends State<MyApp> {
                 IndexPage.routeName: (context) => const IndexPage(),
                 MFAVerification.routeName: (context) => const MFAVerification(),
                 SettingsPage.routeName: (context) => const SettingsPage(),
+                SpacePage.routeName: (context) => const SpacePage(),
               },
             ));
   }

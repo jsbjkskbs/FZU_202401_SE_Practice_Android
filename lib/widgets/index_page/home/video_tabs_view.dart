@@ -1,10 +1,10 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:fulifuli_app/global.dart';
-import 'package:fulifuli_app/widgets/index_page/home/video_card.dart';
 
 import '../../../model/video.dart';
 import '../../../utils/option_grid_view.dart';
+import '../../video_card.dart';
 
 class VideoTabsView extends StatefulWidget {
   const VideoTabsView(

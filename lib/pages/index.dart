@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/pages/tabs/activity.dart';
 import 'package:fulifuli_app/pages/tabs/favorite.dart';
 import 'package:fulifuli_app/pages/tabs/home.dart';
 import 'package:fulifuli_app/pages/tabs/mine.dart';
 import 'package:fulifuli_app/pages/tabs/submit.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class IndexPage extends StatefulWidget {
   const IndexPage({super.key});
@@ -49,8 +49,8 @@ class _IndexPageState extends State<IndexPage> {
             label: AppLocalizations.of(context)!.index_tabs_submit,
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.favorite),
-            label: AppLocalizations.of(context)!.index_tabs_favorite,
+            icon: const Icon(Icons.perm_contact_cal),
+            label: AppLocalizations.of(context)!.index_tabs_friend,
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.person),

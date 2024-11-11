@@ -8,7 +8,14 @@ class Global {
   static String languageCode = "zh";
 
   static User self = User();
+
+  static bool isLogin() {
+    return self.id.isNotEmpty;
+  }
+
   static List<List<Video>> cachedVideoList = [];
+  static Map<String, List<Video>> cachedSpaceVideoList = {};
+  static Map<String, List<String>> cachedSpaceDynamicList = {};
 }
 
 class Storage {

@@ -2,10 +2,11 @@
   "index_tabs_home": "Home",
   "index_tabs_dynamic": "Dynamic",
   "index_tabs_submit": "Submit",
-  "index_tabs_favorite": "Favorite",
+  "index_tabs_friend": "Friend",
   "index_tabs_mine": "Mine",
   "home_top_bar_search": "Search",
   "home_theme_switch_toast": "Theme switch successful",
+  "home_login_hint": "Please login first",
   "home_tabs_recommend": "Recommend",
   "home_tabs_game": "Game",
   "home_tabs_knowledge": "Knowledge",
@@ -102,5 +103,12 @@
   "mfa_validation_error": "Invalid MFA verification code",
   "mfa_verifying": "Verifying...",
   "loading_hint": "Click the countdown to skip~",
-  "loading_skip": "Skip"
+  "loading_skip": "Skip",
+  "space_video": "Video",
+  "space_dynamic": "Dynamic",
+  "space_follower": "Follower",
+  "space_following": "Subscribe",
+  "space_like": "Like",
+  "space_nothing_hint": "Nothing here~",
+  "space_nothing_hint_bottom": "Really nothing here~"
 }

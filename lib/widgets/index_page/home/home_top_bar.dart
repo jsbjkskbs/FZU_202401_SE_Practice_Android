@@ -1,10 +1,10 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeTopBar extends StatefulWidget {
   const HomeTopBar({super.key});
@@ -43,9 +43,19 @@ class _HomeTopBarState extends State<HomeTopBar> {
                       ),
                     ],
                   ),
-                  child: const TDAvatar(
+                  child: TDAvatar(
                     size: TDAvatarSize.small,
                     defaultUrl: "assets/images/default_avatar.gif",
+                    onTap: () {
+                      if (Global.isLogin()) {
+                        Navigator.of(context).pushNamed('/space',
+                            arguments: {'user_id': "用户ID七个字"});
+                      } else {
+                        ToastificationUtils.showSimpleToastification(context,
+                            AppLocalizations.of(context)!.home_login_hint);
+                        Navigator.of(context).pushNamed('/login');
+                      }
+                    },
                   ),
                 ),
                 const SizedBox(width: 16),
