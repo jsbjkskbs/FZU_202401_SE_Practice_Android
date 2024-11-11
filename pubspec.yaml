@@ -60,6 +60,7 @@ dependencies:
   grouped_list: ^6.0.0
   drop_down_list: ^0.0.8
   easy_refresh: ^3.4.0
+  linked_scroll_controller: ^0.2.0
 
 dev_dependencies:
   flutter_test:

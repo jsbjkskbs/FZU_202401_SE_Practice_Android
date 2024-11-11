@@ -1,13 +1,13 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/model/user.dart';
 import 'package:fulifuli_app/pages/index.dart';
 import 'package:pinput/pinput.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../components/mfa_page/themes.dart';
+import '../widgets/mfa_page/themes.dart';
 
 class MFAVerification extends StatefulWidget {
   const MFAVerification({super.key});

@@ -10,6 +10,7 @@ class OptionGridView extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final IndexedWidgetBuilder itemBuilder;
   final ScrollPhysics? physics;
+  final ScrollController? controller;
 
   OptionGridView({
     super.key,
@@ -20,6 +21,7 @@ class OptionGridView extends StatelessWidget {
     this.padding = const EdgeInsets.all(0),
     required this.itemBuilder,
     this.physics,
+    this.controller,
   })  : assert(itemCount >= 0),
         assert(rowCount > 0),
         columnCount = (itemCount / rowCount).ceil(),
@@ -33,7 +35,7 @@ class OptionGridView extends StatelessWidget {
       padding: padding,
       physics: physics ?? const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      controller: ScrollController(keepScrollOffset: false),
+      controller: controller ?? ScrollController(keepScrollOffset: false),
       separatorBuilder: (context, index) => SizedBox(height: mainAxisSpacing),
       itemBuilder: (context, index) => buildRow(context, index),
     );

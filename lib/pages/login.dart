@@ -3,11 +3,11 @@ import 'dart:math';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_login/flutter_login.dart';
-import 'package:fulifuli_app/components/index_page/login/recover_password.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/model/user.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fulifuli_app/widgets/index_page/login/recover_password.dart';
 
 import 'index.dart';
 import 'mfa_verification.dart';

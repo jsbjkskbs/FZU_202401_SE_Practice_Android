@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fulifuli_app/components/index_page/home/video_tabs_view.dart';
 import 'package:fulifuli_app/global.dart';
+import 'package:fulifuli_app/widgets/index_page/home/video_tabs_view.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 class VideoTabsContainer extends StatefulWidget {
@@ -54,6 +54,12 @@ class _VideoTabsContainerState extends State<VideoTabsContainer>
     _getTabs();
     _initTabController();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override

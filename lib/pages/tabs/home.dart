@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fulifuli_app/components/index_page/home/home_content.dart';
+import 'package:fulifuli_app/widgets/index_page/home/home_content.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
