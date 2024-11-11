@@ -1,9 +1,9 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'index.dart';
 
@@ -67,6 +67,27 @@ class _LoadingPageState extends State<LoadingPage> {
             height: MediaQuery.of(context).size.height / 3,
             width: MediaQuery.of(context).size.height / 3,
           ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                  right: MediaQuery.of(context).size.width / 20,
+                  bottom: MediaQuery.of(context).size.height / 24),
+              child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pushReplacementNamed(IndexPage.routeName);
+                  },
+                  child: Text(AppLocalizations.of(context)!.loading_skip,
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width / 20,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).indicatorColor,
+                          fontFamily: "Ponari"))),
+            ),
+          ],
         ),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           AnimatedTextKit(

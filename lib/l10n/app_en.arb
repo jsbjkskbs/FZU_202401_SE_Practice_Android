@@ -101,5 +101,6 @@
   "mfa_hint": "Please enter your MFA verification code",
   "mfa_validation_error": "Invalid MFA verification code",
   "mfa_verifying": "Verifying...",
-  "loading_hint": "Click the countdown to skip~"
+  "loading_hint": "Click the countdown to skip~",
+  "loading_skip": "Skip"
 }

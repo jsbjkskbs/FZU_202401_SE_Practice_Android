@@ -51,10 +51,10 @@ class _VideoTabsViewState extends State<VideoTabsView> {
   @override
   Widget build(BuildContext context) {
     return EasyRefresh.builder(
-        header: MaterialHeader(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          valueColor:
-              AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+        header: BezierCircleHeader(
+          backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Theme.of(context).scaffoldBackgroundColor,
+          springRebound: true,
         ),
         footer: BezierFooter(
           foregroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -96,6 +96,7 @@ class _VideoTabsViewState extends State<VideoTabsView> {
             ),
           );
           debugPrint('onRefresh');
+          await Future<void>.delayed(const Duration(milliseconds: 1000));
           _easyRefreshController.finishRefresh();
           _easyRefreshController.resetHeader();
           setState(() {});
@@ -120,7 +121,6 @@ class _VideoTabsViewState extends State<VideoTabsView> {
               return VideoCard(video: videoList[index]);
             },
           );
-        } //),
-        );
+        });
   }
 }

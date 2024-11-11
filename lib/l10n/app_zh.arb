@@ -101,5 +101,6 @@
   "mfa_hint": "请输入您的MFA验证码",
   "mfa_validation_error": "MFA验证码错误",
   "mfa_verifying": "验证中...",
-  "loading_hint": "点击倒计时可以跳过捏~"
+  "loading_hint": "点击倒计时可以跳过捏~",
+  "loading_skip": "跳过"
 }

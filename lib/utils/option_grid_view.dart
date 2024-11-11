@@ -30,15 +30,18 @@ class OptionGridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      itemCount: columnCount,
-      padding: padding,
-      physics: physics ?? const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      controller: controller ?? ScrollController(keepScrollOffset: false),
-      separatorBuilder: (context, index) => SizedBox(height: mainAxisSpacing),
-      itemBuilder: (context, index) => buildRow(context, index),
-    );
+    return SizedBox(
+        height: double.infinity,
+        child: ListView.separated(
+          itemCount: columnCount,
+          padding: padding,
+          physics: physics ?? const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          controller: controller ?? ScrollController(keepScrollOffset: false),
+          separatorBuilder: (context, index) =>
+              SizedBox(height: mainAxisSpacing),
+          itemBuilder: (context, index) => buildRow(context, index),
+        ));
   }
 
   Widget buildRow(BuildContext context, int index) {
