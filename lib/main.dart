@@ -12,6 +12,7 @@ import 'package:fulifuli_app/pages/index.dart';
 import 'package:fulifuli_app/pages/loading.dart';
 import 'package:fulifuli_app/pages/login.dart';
 import 'package:fulifuli_app/pages/mfa_verification.dart';
+import 'package:fulifuli_app/pages/search.dart';
 import 'package:fulifuli_app/pages/settings.dart';
 import 'package:fulifuli_app/pages/space.dart';
 import 'package:fulifuli_app/test.dart';
@@ -111,8 +112,8 @@ class MyAppState extends State<MyApp> {
               theme: theme.copyWith(
                   pageTransitionsTheme: const PageTransitionsTheme(
                       builders: <TargetPlatform, PageTransitionsBuilder>{
-                    TargetPlatform.iOS: ZoomPageTransitionsBuilder(),
-                    TargetPlatform.android: ZoomPageTransitionsBuilder(),
+                    TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+                    TargetPlatform.android: CupertinoPageTransitionsBuilder(),
                   })),
               darkTheme: darkTheme,
               // initialRoute: IndexPage.routeName,
@@ -124,6 +125,7 @@ class MyAppState extends State<MyApp> {
                 MFAVerification.routeName: (context) => const MFAVerification(),
                 SettingsPage.routeName: (context) => const SettingsPage(),
                 SpacePage.routeName: (context) => const SpacePage(),
+                SearchPage.routeName: (context) => const SearchPage(),
               },
             ));
   }

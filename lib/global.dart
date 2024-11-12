@@ -14,8 +14,10 @@ class Global {
   }
 
   static List<List<Video>> cachedVideoList = [];
-  static Map<String, List<Video>> cachedSpaceVideoList = {};
-  static Map<String, List<String>> cachedSpaceDynamicList = {};
+  static Map<String, List<Video>> cachedMapVideoList = {};
+  static Map<String, List<String>> cachedMapDynamicList = {};
+  static Map<String, List<String>> cachedMapUserList = {};
+  static List<Video> cachedSearchVideoList = [];
 }
 
 class Storage {

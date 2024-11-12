@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tdesign_flutter/tdesign_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 import '../../../global.dart';
 
@@ -27,7 +27,8 @@ class _ProfileViewState extends State<ProfileView> {
         ),
         onPressed: () {
           if (Global.self.isValidUser()) {
-            Navigator.of(context).pushNamed("/my");
+            Navigator.of(context)
+                .pushNamed("/space", arguments: {"user_id": Global.self.id});
           } else {
             Navigator.of(context).pushNamed("/login");
           }

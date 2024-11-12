@@ -19,7 +19,7 @@ class SpaceVideoTabsView extends StatefulWidget {
     required this.uniqueKey,
   });
 
-  final ScrollController controller;
+  final ScrollController? controller;
   final int currentIndex;
   final Function onUpdate;
   final int assignedIndex;
@@ -38,38 +38,40 @@ class _SpaceVideoTabsViewState extends State<SpaceVideoTabsView> {
   @override
   void initState() {
     super.initState();
-    if (!Global.cachedSpaceVideoList.containsKey(widget.uniqueKey)) {
-      Global.cachedSpaceVideoList
+    bool isCached = Global.cachedMapVideoList.containsKey(widget.uniqueKey);
+    if (!isCached) {
+      Global.cachedMapVideoList
           .addEntries([MapEntry(widget.uniqueKey, videoList)]);
+      debugPrint('Added new video list with key: ${widget.uniqueKey}');
     }
-    videoList = Global.cachedSpaceVideoList[widget.uniqueKey]!;
+    videoList = Global.cachedMapVideoList[widget.uniqueKey]!;
 
+    if (isCached) {
+      return;
+    }
     var widgetsBinding = WidgetsBinding.instance;
     widgetsBinding.addPostFrameCallback((_) {
-      if (videoList.isEmpty && widget.currentIndex == widget.assignedIndex) {
-        switch (Random().nextInt(3)) {
-          case 0:
-            videoList.add(Video(
-              id: '1',
-              userId: 'user1',
-              title: 'Video 1',
-              description: 'Description 1',
-              category: 'Category 1',
-              labels: ['label1', 'label2'],
-              coverUrl: 'http://example.com/cover1.jpg',
-              videoUrl: 'http://example.com/video1.mp4',
-              viewCount: 100,
-              likeCount: 10,
-              commentCount: 5,
-              createdAt: 1633036800,
-              updatedAt: 1633123200,
-              deletedAt: 0,
-              status: 'active',
-            ));
-            break;
-        }
-        setState(() {});
+      if (widget.currentIndex == widget.assignedIndex) {
+        debugPrint('Adding new video item');
+        videoList.add(Video(
+          id: '1',
+          userId: 'user1',
+          title: 'Video 1',
+          description: 'Description 1',
+          category: 'Category 1',
+          labels: ['label1', 'label2'],
+          coverUrl: 'http://example.com/cover1.jpg',
+          videoUrl: 'http://example.com/video1.mp4',
+          viewCount: 100,
+          likeCount: 10,
+          commentCount: 5,
+          createdAt: 1633036800,
+          updatedAt: 1633123200,
+          deletedAt: 0,
+          status: 'active',
+        ));
       }
+      setState(() {});
     });
   }
 

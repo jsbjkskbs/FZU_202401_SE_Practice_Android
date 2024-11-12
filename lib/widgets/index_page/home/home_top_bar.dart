@@ -68,6 +68,15 @@ class _HomeTopBarState extends State<HomeTopBar> {
                     ),
                     shadowColor: WidgetStatePropertyAll(
                         Theme.of(context).shadowColor.withOpacity(0.4)),
+                    backgroundColor: WidgetStatePropertyAll(
+                        Theme.of(context).scaffoldBackgroundColor),
+                    side: WidgetStateProperty.all(BorderSide(
+                        width: 1.5,
+                        color: Theme.of(context).textTheme.labelLarge!.color!)),
+                    onTap: () {
+                      Navigator.of(context).pushNamed('/search');
+                    },
+                    keyboardType: TextInputType.none,
                   ),
                 ),
                 const SizedBox(width: 16),

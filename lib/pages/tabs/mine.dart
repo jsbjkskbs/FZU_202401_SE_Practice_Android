@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../widgets/index_page/my/func_zone.dart';
-import '../../widgets/index_page/my/profile.dart';
-import '../../widgets/index_page/my/user_info.dart';
+import '../../widgets/index_page/mine/func_zone.dart';
+import '../../widgets/index_page/mine/profile.dart';
+import '../../widgets/index_page/mine/user_info.dart';
 
 class MinePage extends StatelessWidget {
   const MinePage({super.key});

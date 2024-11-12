@@ -120,7 +120,8 @@ class _SettingsList {
                           ),
                           const SizedBox(height: 32),
                           Text(
-                            '什么也没有哦~',
+                            AppLocalizations.of(context)!
+                                .settings_about_us_noting,
                             style: TextStyle(
                               color: Theme.of(context).primaryColor,
                               fontSize: MediaQuery.of(context).size.width / 20,

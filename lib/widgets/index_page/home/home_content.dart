@@ -36,11 +36,11 @@ class _HomeContentState extends State<HomeContent> {
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(controller: _tabBarScrollController, slivers: [
-      const SliverAppBar(
+      SliverAppBar(
         toolbarHeight: 48,
-        backgroundColor: Colors.transparent,
         floating: false,
-        flexibleSpace: HomeTopBar(),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        flexibleSpace: const HomeTopBar(),
       ),
       SliverFillRemaining(
         child: VideoTabsContainer(

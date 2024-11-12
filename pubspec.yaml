@@ -62,6 +62,8 @@ dependencies:
   easy_refresh: ^3.4.0
   linked_scroll_controller: ^0.2.0
   visibility_detector: ^0.4.0+2
+  flutter_svg: ^2.0.14
+  vector_graphics: ^1.1.14
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +75,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^4.0.0
+  vector_graphics_compiler: ^1.1.14
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -91,6 +94,7 @@ flutter:
     - assets/images/
     - assets/images/logo/
     - assets/images/cute/
+    - assets/icons/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

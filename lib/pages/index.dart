@@ -19,6 +19,7 @@ class IndexPage extends StatefulWidget {
 
 class _IndexPageState extends State<IndexPage> {
   int _currentIndex = 0;
+  late Color _backgroundColor;
   final List<Widget> _pages = const [
     HomePage(),
     ActivityPage(),
@@ -27,11 +28,23 @@ class _IndexPageState extends State<IndexPage> {
     MinePage(),
   ];
 
+  void _setBackgroundColor() {
+    setState(() {
+      if (_currentIndex == 0) {
+        _backgroundColor = Theme.of(context).dialogBackgroundColor;
+      } else {
+        _backgroundColor = Theme.of(context).scaffoldBackgroundColor;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    _setBackgroundColor();
     return SafeArea(
         child: Scaffold(
       body: _pages[_currentIndex],
+      backgroundColor: _backgroundColor,
       bottomNavigationBar: BottomNavigationBar(
         unselectedItemColor: Theme.of(context).unselectedWidgetColor,
         selectedItemColor: Theme.of(context).indicatorColor,
@@ -49,8 +62,8 @@ class _IndexPageState extends State<IndexPage> {
             label: AppLocalizations.of(context)!.index_tabs_submit,
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.perm_contact_cal),
-            label: AppLocalizations.of(context)!.index_tabs_friend,
+            icon: const Icon(Icons.message_outlined),
+            label: AppLocalizations.of(context)!.index_tabs_message,
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.person),
@@ -63,6 +76,7 @@ class _IndexPageState extends State<IndexPage> {
             setState(() {
               _currentIndex = index;
             });
+            _setBackgroundColor();
           }
         },
       ),

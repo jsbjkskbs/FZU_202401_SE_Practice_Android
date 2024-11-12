@@ -2,7 +2,7 @@
   "index_tabs_home": "Home",
   "index_tabs_dynamic": "Dynamic",
   "index_tabs_submit": "Submit",
-  "index_tabs_friend": "Friend",
+  "index_tabs_message": "Message",
   "index_tabs_mine": "Mine",
   "home_top_bar_search": "Search",
   "home_theme_switch_toast": "Theme switch successful",
@@ -110,5 +110,14 @@
   "space_following": "Subscribe",
   "space_like": "Like",
   "space_nothing_hint": "Nothing here~",
-  "space_nothing_hint_bottom": "Really nothing here~"
+  "space_nothing_hint_bottom": "Really nothing here~",
+  "search_input_box_no_text_hint": "Please enter a search term",
+  "search_video": "Video",
+  "search_user": "User",
+  "search_follow": "Follow",
+  "search_nothing_hint_bottom": "Try another keyword~",
+  "search_nothing_hint_bottom_user": "No related users found",
+  "search_nothing_hint_bottom_video": "No related videos found",
+  "search_followed": "Followed",
+  "search_follower": " Followers"
 }

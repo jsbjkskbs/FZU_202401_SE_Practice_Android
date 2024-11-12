@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/widgets/index_page/home/video_tabs_view.dart';
+import 'package:fulifuli_app/widgets/search_page/search_page_user_tabs_view.dart';
+import 'package:fulifuli_app/widgets/search_page/search_page_video_tabs_view.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
-class VideoTabsContainer extends StatefulWidget {
-  const VideoTabsContainer(
-      {super.key, required this.controller, required this.tabs});
+class SearchPageTabsContainer extends StatefulWidget {
+  const SearchPageTabsContainer({super.key, required this.tabs});
 
-  final ScrollController controller;
   final List<String> tabs;
 
   @override
   State<StatefulWidget> createState() {
-    return _VideoTabsContainerState();
+    return _SearchPageTabsContainerState();
   }
 }
 
-class _VideoTabsContainerState extends State<VideoTabsContainer>
+class _SearchPageTabsContainerState extends State<SearchPageTabsContainer>
     with TickerProviderStateMixin {
   late TabController _tabController;
   int _currentIndex = 0;
@@ -32,12 +32,6 @@ class _VideoTabsContainerState extends State<VideoTabsContainer>
         )
     ];
     return tabs;
-  }
-
-  void _initTabView() {
-    for (var i = 0; i < tabs.length; i++) {
-      Global.cachedVideoList.add([]);
-    }
   }
 
   void _initTabController() {
@@ -58,13 +52,14 @@ class _VideoTabsContainerState extends State<VideoTabsContainer>
 
   @override
   void dispose() {
-    _tabController.dispose();
     super.dispose();
+    _tabController.dispose();
+    Global.cachedMapUserList.remove(SearchPageUserTabsView.uniqueKey);
+    Global.cachedMapVideoList.remove(SearchPageVideoTabsView.uniqueKey);
   }
 
   @override
   Widget build(BuildContext context) {
-    _initTabView();
     return Column(
       children: [
         TDTabBar(
@@ -74,7 +69,6 @@ class _VideoTabsContainerState extends State<VideoTabsContainer>
           showIndicator: true,
           labelColor: Theme.of(context).primaryColor,
           unselectedLabelColor: Theme.of(context).unselectedWidgetColor,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           indicatorColor: Theme.of(context).primaryColor,
           isScrollable: true,
           labelPadding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -83,16 +77,17 @@ class _VideoTabsContainerState extends State<VideoTabsContainer>
           child: TabBarView(
             controller: _tabController,
             children: [
-              for (var i = 0; i < tabs.length; i++)
-                VideoTabsView(
-                  controller: widget.controller,
-                  currentIndex: _currentIndex,
-                  onUpdate: () {},
-                  assignedIndex: i,
-                )
+              SearchPageVideoTabsView(
+                currentIndex: _currentIndex,
+                assignedIndex: 0,
+              ),
+              SearchPageUserTabsView(
+                currentIndex: _currentIndex,
+                assignedIndex: 1,
+              ),
             ],
           ),
-        ),
+        )
       ],
     );
   }

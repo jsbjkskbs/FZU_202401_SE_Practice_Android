@@ -1,9 +1,7 @@
 class NumberConverter {
   static String convertNumber(int number) {
-    if (number < 1000) {
+    if (number < 10000) {
       return number.toString();
-    } else if (number < 10000) {
-      return '${(number / 1000).toStringAsFixed(1)}千';
     } else if (number < 100000) {
       return '${(number / 10000).toStringAsFixed(1)}万';
     } else if (number < 1000000) {

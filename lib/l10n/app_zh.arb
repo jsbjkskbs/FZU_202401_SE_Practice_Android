@@ -2,7 +2,7 @@
   "index_tabs_home": "首页",
   "index_tabs_dynamic": "动态",
   "index_tabs_submit": "投稿",
-  "index_tabs_friend": "朋友",
+  "index_tabs_message": "消息",
   "index_tabs_mine": "我的",
   "home_top_bar_search": "搜索",
   "home_theme_switch_toast": "主题切换成功",
@@ -110,5 +110,14 @@
   "space_following": "关注",
   "space_like": "获赞",
   "space_nothing_hint": "这里空空如也~",
-  "space_nothing_hint_bottom": "真的什么都没有哦~"
+  "space_nothing_hint_bottom": "真的什么都没有哦~",
+  "search_input_box_no_text_hint": "请输入搜索内容",
+  "search_video": "视频",
+  "search_user": "用户",
+  "search_follow": "关注",
+  "search_nothing_hint_bottom": "换个关键词试试吧~",
+  "search_nothing_hint_bottom_user": "没有找到相关用户",
+  "search_nothing_hint_bottom_video": "没有找到相关视频",
+  "search_followed": "已关注",
+  "search_follower": "粉丝"
 }

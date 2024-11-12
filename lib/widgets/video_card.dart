@@ -65,9 +65,8 @@ class _VideoCardState extends State<VideoCard> {
           child: FractionallySizedBox(
             widthFactor: 1,
             child: Card(
-              shadowColor: Theme.of(context).indicatorColor,
               color: Theme.of(context).cardColor,
-              elevation: 6,
+              elevation: 2,
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(8)),
               ),

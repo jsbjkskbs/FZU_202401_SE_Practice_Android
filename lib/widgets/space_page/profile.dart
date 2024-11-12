@@ -22,10 +22,10 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     _labelStyle = TextStyle(
       color: Theme.of(context).primaryColor,
-      fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+      fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
     );
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
             padding: EdgeInsets.all(MediaQuery.of(context).size.width / 16),
@@ -50,59 +50,53 @@ class _ProfileState extends State<Profile> {
                   type: TDImageType.circle,
                 ))),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
+            const SizedBox(),
             SizedBox(
-                width: MediaQuery.of(context).size.width / 5,
+                width: MediaQuery.of(context).size.width / 4,
                 child: Column(
                   children: [
-                    Text("0", style: _labelStyle),
+                    Text("0",
+                        style: _labelStyle.copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontSize: Theme.of(context)
+                                .textTheme
+                                .bodyLarge!
+                                .fontSize)),
                     Text(
                       AppLocalizations.of(context)!.space_follower,
                       style: _labelStyle,
                     ),
                   ],
                 )),
-            Container(
-              height: 32,
-              decoration: BoxDecoration(
-                border: Border(
-                  left: BorderSide(
-                    color: Theme.of(context).dividerColor,
-                    width: 1,
-                  ),
-                ),
-              ),
-            ),
             SizedBox(
-                width: MediaQuery.of(context).size.width / 5,
+                width: MediaQuery.of(context).size.width / 4,
                 child: Column(
                   children: [
-                    Text("0", style: _labelStyle),
+                    Text("0",
+                        style: _labelStyle.copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontSize: Theme.of(context)
+                                .textTheme
+                                .bodyLarge!
+                                .fontSize)),
                     Text(
                       AppLocalizations.of(context)!.space_following,
                       style: _labelStyle,
                     ),
                   ],
                 )),
-            Container(
-              height: 32,
-              decoration: BoxDecoration(
-                border: Border(
-                  left: BorderSide(
-                    color: Theme.of(context).dividerColor,
-                    width: 1,
-                  ),
-                ),
-              ),
-            ),
             SizedBox(
-                width: MediaQuery.of(context).size.width / 5,
+                width: MediaQuery.of(context).size.width / 4,
                 child: Column(
                   children: [
                     Text(
                       NumberConverter.convertNumber(0),
-                      style: _labelStyle,
+                      style: _labelStyle.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize:
+                              Theme.of(context).textTheme.bodyLarge!.fontSize),
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
@@ -110,9 +104,30 @@ class _ProfileState extends State<Profile> {
                       style: _labelStyle,
                     ),
                   ],
-                ))
+                )),
+            const SizedBox(),
           ],
-        )
+        ),
+        const SizedBox(height: 16.0),
+        TextButton(
+          onPressed: () {},
+          style: ButtonStyle(
+            overlayColor: WidgetStateProperty.all(
+                Theme.of(context).scaffoldBackgroundColor.withOpacity(0.5)),
+            backgroundColor:
+                WidgetStateProperty.all(Theme.of(context).primaryColor),
+            shape: WidgetStateProperty.all(RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0))),
+          ),
+          child: Text(
+            "Edit Profile",
+            style: TextStyle(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                fontWeight: FontWeight.bold),
+          ),
+        ),
+        const SizedBox(height: 16.0),
       ],
     );
   }

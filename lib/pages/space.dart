@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
-import 'package:fulifuli_app/widgets/space_page/profile.dart';
 import 'package:fulifuli_app/widgets/space_page/space_tabs_container.dart';
+
+import '../widgets/space_page/profile.dart';
 
 class SpacePage extends StatefulWidget {
   const SpacePage({super.key});
@@ -26,8 +27,8 @@ class _SpacePageState extends State<SpacePage> {
   @override
   void dispose() {
     super.dispose();
-    Global.cachedSpaceVideoList.remove(userId);
-    Global.cachedSpaceDynamicList.remove(userId);
+    Global.cachedMapVideoList.remove(userId);
+    Global.cachedMapDynamicList.remove(userId);
   }
 
   @override
@@ -51,14 +52,13 @@ class _SpacePageState extends State<SpacePage> {
               child: Profile(),
             ),
             SliverFillRemaining(
-              child: SpaceTabsContainer(
-                uniqueKey: userId,
-                tabs: [
-                  AppLocalizations.of(context)!.space_video,
-                  AppLocalizations.of(context)!.space_dynamic,
-                ],
-              ),
-            ),
+                child: SpaceTabsContainer(
+              uniqueKey: userId,
+              tabs: [
+                AppLocalizations.of(context)!.space_video,
+                AppLocalizations.of(context)!.space_dynamic,
+              ],
+            )),
           ],
         ));
   }

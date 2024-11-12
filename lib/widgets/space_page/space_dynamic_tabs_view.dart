@@ -18,7 +18,7 @@ class SpaceDynamicTabsView extends StatefulWidget {
     required this.uniqueKey,
   });
 
-  final ScrollController controller;
+  final ScrollController? controller;
   final int currentIndex;
   final Function onUpdate;
   final int assignedIndex;
@@ -37,15 +37,22 @@ class _SpaceDynamicTabsViewState extends State<SpaceDynamicTabsView> {
   @override
   void initState() {
     super.initState();
-    if (!Global.cachedSpaceDynamicList.containsKey(widget.uniqueKey)) {
-      Global.cachedSpaceDynamicList
+    bool isCached = Global.cachedMapDynamicList.containsKey(widget.uniqueKey);
+    if (!isCached) {
+      Global.cachedMapDynamicList
           .addEntries([MapEntry(widget.uniqueKey, dynamicList)]);
+      debugPrint('Added new dynamic list with key: ${widget.uniqueKey}');
     }
-    dynamicList = Global.cachedSpaceDynamicList[widget.uniqueKey]!;
+    dynamicList = Global.cachedMapDynamicList[widget.uniqueKey]!;
+
+    if (isCached) {
+      return;
+    }
 
     var widgetsBinding = WidgetsBinding.instance;
     widgetsBinding.addPostFrameCallback((_) {
       if (dynamicList.isEmpty && widget.currentIndex == widget.assignedIndex) {
+        debugPrint('Adding new dynamic item');
         switch (Random().nextInt(3)) {
           case 0:
             dynamicList.add('Dynamic 1');
@@ -59,14 +66,11 @@ class _SpaceDynamicTabsViewState extends State<SpaceDynamicTabsView> {
   @override
   void didUpdateWidget(covariant SpaceDynamicTabsView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (dynamicList.isEmpty && widget.currentIndex == widget.assignedIndex) {
-      switch (Random().nextInt(3)) {
-        case 0:
-          dynamicList.add('Dynamic 1');
-          break;
-      }
-      setState(() {});
+    if (widget.currentIndex == widget.assignedIndex) {
+      debugPrint('Adding new dynamic item');
+      dynamicList.add('Dynamic 1');
     }
+    setState(() {});
   }
 
   @override
