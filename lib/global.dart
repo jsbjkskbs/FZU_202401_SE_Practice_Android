@@ -1,11 +1,35 @@
+import 'dart:convert';
+
+import 'package:flex_color_scheme/flex_color_scheme.dart';
+import 'package:flutter/foundation.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'model/user.dart';
 import 'model/video.dart';
 
+part 'global.g.dart';
+
+@JsonSerializable()
+class AppPersistentData {
+  int themeMode;
+  String themeSelection;
+  String languageCode;
+
+  AppPersistentData(
+      {required this.themeMode,
+      required this.languageCode,
+      required this.themeSelection});
+
+  factory AppPersistentData.fromJson(Map<String, dynamic> json) =>
+      _$AppPersistentDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AppPersistentDataToJson(this);
+}
+
 class Global {
-  static int themeMode = 0;
-  static String languageCode = "zh";
+  static AppPersistentData appPersistentData = AppPersistentData(
+      themeMode: 0, languageCode: "zh", themeSelection: FlexScheme.sakura.name);
 
   static User self = User();
 
@@ -21,20 +45,25 @@ class Global {
 }
 
 class Storage {
-  static storeThemeMode(int mode) {
-    storeKeyInt("themeMode", mode);
+  static storePersistentData(AppPersistentData data) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString("appPersistentData", jsonEncode(data));
+    debugPrint("Storage.storePersistentData: ${data.toJson()}");
   }
 
-  static storeLanguageCode(String code) {
-    storeKeyString("languageCode", code);
-  }
-
-  static Future<int?> getThemeMode() {
-    return getKeyInt("themeMode");
-  }
-
-  static Future<String?> getLanguageCode() {
-    return getKeyString("languageCode");
+  static Future<AppPersistentData> getPersistentData() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? data = prefs.getString("appPersistentData");
+    if (data != null) {
+      debugPrint("Storage.getPersistentData: $data");
+      return AppPersistentData.fromJson(jsonDecode(data));
+    } else {
+      debugPrint("Storage.getPersistentData: default");
+      return AppPersistentData(
+          themeMode: 0,
+          languageCode: "zh",
+          themeSelection: FlexScheme.sakura.name);
+    }
   }
 
   static storeKeyString(String key, String value) async {

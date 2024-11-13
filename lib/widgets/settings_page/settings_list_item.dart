@@ -4,8 +4,10 @@ import 'package:fulifuli_app/model/settings.dart';
 class SettingsListItem extends StatelessWidget {
   SettingsListItem(SettingsItem item, {super.key})
       : label = item.label,
-        onTap = item.onTap;
+        onTap = item.onTap,
+        icon = item.icon;
 
+  final Icon? icon;
   final String label;
   final Function? onTap;
 
@@ -32,11 +34,21 @@ class SettingsListItem extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text(label,
-                    style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.width / 24,
-                      color: Theme.of(context).primaryColor,
-                    )),
+                IntrinsicWidth(
+                  child: Row(
+                    children: [
+                      if (icon != null) icon!,
+                      if (icon != null) const SizedBox(width: 8),
+                      Text(
+                        label,
+                        style: TextStyle(
+                          fontSize:
+                              Theme.of(context).textTheme.bodyMedium!.fontSize,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 Icon(
                   Icons.arrow_forward_ios,
                   color: Theme.of(context).primaryColor,

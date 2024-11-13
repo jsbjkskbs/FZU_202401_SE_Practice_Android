@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fulifuli_app/model/video.dart';
 import 'package:fulifuli_app/utils/number_converter.dart';
+import 'package:fulifuli_app/widgets/icons/def.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
-import 'package:vector_graphics/vector_graphics.dart';
 
 class SearchPageVideoItem extends StatelessWidget {
   const SearchPageVideoItem(
@@ -74,17 +73,13 @@ class SearchPageVideoItem extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                SvgPicture(
-                                  const AssetBytesLoader(
-                                      'assets/icons/author_logo.svg.vec'),
-                                  height: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall!
-                                      .fontSize,
-                                  colorFilter: ColorFilter.mode(
-                                      Theme.of(context).hintColor,
-                                      BlendMode.srcIn),
-                                ),
+                                Icon(DisplayIcons.up_er,
+                                    size: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall!
+                                            .fontSize! *
+                                        1.6,
+                                    color: Theme.of(context).hintColor),
                                 const SizedBox(
                                   width: 4,
                                 ),
@@ -111,17 +106,13 @@ class SearchPageVideoItem extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                SvgPicture(
-                                  const AssetBytesLoader(
-                                      'assets/icons/video_player.svg.vec'),
-                                  height: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall!
-                                      .fontSize,
-                                  colorFilter: ColorFilter.mode(
-                                      Theme.of(context).hintColor,
-                                      BlendMode.srcIn),
-                                ),
+                                Icon(DisplayIcons.video_player,
+                                    size: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall!
+                                            .fontSize! *
+                                        1.6,
+                                    color: Theme.of(context).hintColor),
                                 const SizedBox(
                                   width: 4,
                                 ),

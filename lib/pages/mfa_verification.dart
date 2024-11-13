@@ -41,7 +41,7 @@ class _MFAVerificationState extends State<MFAVerification> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Global.themeMode == 0
+        backgroundColor: Global.appPersistentData.themeMode == 0
             ? Theme.of(context).primaryColor
             : Theme.of(context).primaryColor,
         body: Center(

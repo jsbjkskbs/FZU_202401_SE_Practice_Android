@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_popup/flutter_popup.dart';
 import 'package:fulifuli_app/model/video.dart';
-import 'package:fulifuli_app/utils/reverse_color.dart';
-import 'package:hugeicons/hugeicons.dart';
-import 'package:toastification/toastification.dart';
+import 'package:fulifuli_app/utils/toastification.dart';
+import 'package:fulifuli_app/widgets/icons/def.dart';
 
 import '../utils/image_shader_mask.dart';
 
@@ -27,37 +27,52 @@ class _VideoCardState extends State<VideoCard> {
         backgroundColor: Theme.of(context).cardColor,
         showArrow: false,
         isLongPress: true,
+        contentPadding: const EdgeInsets.all(0),
         content: SizedBox(
             height: 100,
             child: Column(
               children: [
                 TextButton(
                     style: ButtonStyle(
+                      alignment: Alignment.centerLeft,
                       shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(0))),
-                      minimumSize: WidgetStateProperty.all(const Size(100, 50)),
+                      minimumSize: WidgetStateProperty.all(const Size(140, 50)),
                     ),
                     onPressed: () {},
-                    child: const Text('举报')),
+                    child: IntrinsicWidth(
+                        child: Row(
+                      children: [
+                        const Icon(DisplayIcons.report),
+                        const SizedBox(width: 4),
+                        Text(AppLocalizations.of(context)!.video_card_report),
+                      ],
+                    ))),
                 TextButton(
                     style: ButtonStyle(
+                      alignment: Alignment.centerLeft,
                       shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(0))),
-                      minimumSize: WidgetStateProperty.all(const Size(100, 50)),
+                      minimumSize: WidgetStateProperty.all(const Size(140, 50)),
                     ),
                     onPressed: () {
                       Navigator.of(context).pop();
-                      toastification.show(
-                        context: context,
-                        autoCloseDuration: const Duration(milliseconds: 1500),
-                        style: ToastificationStyle.simple,
-                        title: const Text('将减少此类内容推荐'),
-                        alignment: Alignment.center,
-                      );
+                      ToastificationUtils.showSimpleToastification(
+                          context,
+                          AppLocalizations.of(context)!
+                              .video_card_uninterested_success);
                     },
-                    child: const Text('不感兴趣')),
+                    child: IntrinsicWidth(
+                        child: Row(
+                      children: [
+                        const Icon(DisplayIcons.not_interest),
+                        const SizedBox(width: 4),
+                        Text(AppLocalizations.of(context)!
+                            .video_card_uninterested),
+                      ],
+                    ))),
               ],
             )),
         child: Padding(
@@ -85,18 +100,27 @@ class _VideoCardState extends State<VideoCard> {
                         child: Row(
                           children: [
                             const SizedBox(width: 4),
-                            HugeIcon(
-                              icon: HugeIcons.strokeRoundedYoutube,
-                              color: ColorUtils.reversColor(
-                                  Theme.of(context).cardColor),
-                              size: 20,
+                            Icon(
+                              DisplayIcons.video_player,
+                              size: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .fontSize,
+                              color:
+                                  Theme.of(context).textTheme.bodyMedium!.color,
                             ),
                             const SizedBox(width: 2),
                             Text(
                               video.viewCount.toString(),
                               style: TextStyle(
-                                color: ColorUtils.reversColor(
-                                    Theme.of(context).cardColor),
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
+                                fontSize: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .fontSize,
                               ),
                             ),
                           ],
@@ -106,17 +130,23 @@ class _VideoCardState extends State<VideoCard> {
                   ),
                   const SizedBox(height: 6),
                   FractionallySizedBox(
-                    widthFactor: 0.9,
-                    child: Text(
-                      video.title,
-                      style: TextStyle(
-                        color: Theme.of(context).textTheme.headlineLarge?.color,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ),
+                      widthFactor: 0.9,
+                      child: SizedBox(
+                        height:
+                            Theme.of(context).textTheme.bodyLarge!.fontSize! *
+                                2.7,
+                        child: Text(
+                          video.title,
+                          style: TextStyle(
+                            color: Theme.of(context).textTheme.bodyLarge!.color,
+                            fontSize:
+                                Theme.of(context).textTheme.bodyLarge!.fontSize,
+                            fontWeight: FontWeight.bold,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          maxLines: 2,
+                        ),
+                      )),
                   const SizedBox(
                     height: 6,
                   ),
@@ -125,18 +155,30 @@ class _VideoCardState extends State<VideoCard> {
                       child: Row(
                         children: [
                           const SizedBox(width: 4),
-                          HugeIcon(
-                            icon: HugeIcons.strokeRoundedUserSquare,
+                          Icon(
+                            DisplayIcons.up_er,
+                            size: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .fontSize! *
+                                1.6,
                             color: Theme.of(context).hintColor,
-                            size: 16,
                           ),
                           const SizedBox(width: 4),
-                          Text("作者名字七个字: ${video.userId}",
-                              style: TextStyle(
-                                color: Theme.of(context).hintColor,
-                                fontSize: 12,
-                                overflow: TextOverflow.ellipsis,
-                              )),
+                          ConstrainedBox(
+                              constraints: BoxConstraints(
+                                  maxWidth:
+                                      MediaQuery.of(context).size.width / 3),
+                              child:
+                                  Text("作者名字七个字: ${video.userId}12313131321231",
+                                      style: TextStyle(
+                                        color: Theme.of(context).hintColor,
+                                        fontSize: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall!
+                                            .fontSize,
+                                        overflow: TextOverflow.ellipsis,
+                                      )))
                         ],
                       )),
                   const SizedBox(height: 12),

@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/model/locale.dart';
+import 'package:fulifuli_app/model/scheme.dart';
 import 'package:fulifuli_app/pages/index.dart';
 import 'package:fulifuli_app/pages/loading.dart';
 import 'package:fulifuli_app/pages/login.dart';
@@ -16,6 +17,7 @@ import 'package:fulifuli_app/pages/search.dart';
 import 'package:fulifuli_app/pages/settings.dart';
 import 'package:fulifuli_app/pages/space.dart';
 import 'package:fulifuli_app/test.dart';
+import 'package:fulifuli_app/utils/scheme_reflect.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,8 +25,7 @@ Future<void> main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  Global.themeMode = await Storage.getThemeMode() ?? 0;
-  Global.languageCode = await Storage.getLanguageCode() ?? "zh";
+  Global.appPersistentData = await Storage.getPersistentData();
   _fetchVideoList();
   runApp(const MyApp());
 }
@@ -44,7 +45,9 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
-  static AppLocale appLocale = AppLocale(Locale(Global.languageCode), (_) {});
+  static AppLocale appLocale =
+      AppLocale(Locale(Global.appPersistentData.languageCode), (_) {});
+  static AppScheme appScheme = AppScheme();
 
   @override
   void initState() {
@@ -52,8 +55,8 @@ class MyAppState extends State<MyApp> {
     appLocale.changeLocale = (Locale locale) {
       setState(() {
         appLocale.locale = locale;
-        Global.languageCode = locale.languageCode;
-        Storage.storeLanguageCode(Global.languageCode);
+        Global.appPersistentData.languageCode = locale.languageCode;
+        Storage.storePersistentData(Global.appPersistentData);
       });
     };
   }
@@ -61,11 +64,12 @@ class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return AdaptiveTheme(
-        initial: Global.themeMode == 0
+        initial: Global.appPersistentData.themeMode == 0
             ? AdaptiveThemeMode.light
             : AdaptiveThemeMode.dark,
         light: FlexThemeData.light(
-          scheme: FlexScheme.sakura,
+          scheme: SchemeReflect.getFlexScheme(
+              Global.appPersistentData.themeSelection),
           subThemesData: const FlexSubThemesData(
             interactionEffects: true,
             tintedDisabledControls: true,
@@ -81,7 +85,8 @@ class MyAppState extends State<MyApp> {
               const CupertinoThemeData(applyThemeToAll: true),
         ),
         dark: FlexThemeData.dark(
-          scheme: FlexScheme.sakura,
+          scheme: SchemeReflect.getFlexScheme(
+              Global.appPersistentData.themeSelection),
           subThemesData: const FlexSubThemesData(
             interactionEffects: true,
             tintedDisabledControls: true,

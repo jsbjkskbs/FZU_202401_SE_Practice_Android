@@ -1,10 +1,13 @@
 import 'package:drop_down_list/drop_down_list.dart';
 import 'package:drop_down_list/model/selected_list_item.dart';
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/main.dart';
 import 'package:fulifuli_app/model/settings.dart';
+import 'package:fulifuli_app/utils/scheme_reflect.dart';
+import 'package:fulifuli_app/widgets/icons/def.dart';
 import 'package:fulifuli_app/widgets/settings_page/settings_list_item.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
@@ -56,9 +59,59 @@ class _SettingsList {
   static List<SettingsItem> getItems(BuildContext context) {
     return <SettingsItem>[
       SettingsItem(
+        icon: const Icon(DisplayIcons.palette),
+        label: AppLocalizations.of(context)!.settings_change_theme,
+        kind: 'additional',
+        labelIndex: 0,
+        kindIndex: 0,
+        onTap: (BuildContext context) {
+          DropDownState(DropDown(
+            bottomSheetTitle: Text(
+              AppLocalizations.of(context)!.settings_select_theme,
+              style: TextStyle(
+                color: Theme.of(context).primaryColor,
+                fontWeight: FontWeight.bold,
+                fontSize: MediaQuery.of(context).size.width / 20,
+              ),
+            ),
+            data: [
+              SelectedListItem(
+                name: AppLocalizations.of(context)!.flex_scheme_default,
+                isSelected: Global.appPersistentData.themeSelection ==
+                    FlexScheme.sakura.name,
+                value: FlexScheme.sakura.name,
+              ),
+              for (var value in FlexScheme.values)
+                if (value.name != 'custom') ...[
+                  SelectedListItem(
+                      name: SchemeReflect.getFlexSchemeLocalizedName(
+                          value.name, context),
+                      isSelected:
+                          Global.appPersistentData.themeSelection == value.name,
+                      value: value.name),
+                ]
+            ],
+            onSelected: (items) {
+              var val = items.first.value ??
+                  SchemeReflect.getFlexScheme(FlexScheme.sakura.name,
+                          defaultScheme: FlexScheme.sakura)
+                      .name;
+              Global.appPersistentData.themeSelection = val;
+              Storage.storePersistentData(Global.appPersistentData);
+              MyAppState.appScheme.setSchemeWithContext(
+                  SchemeReflect.getFlexScheme(val,
+                      defaultScheme: FlexScheme.sakura),
+                  context);
+            },
+            searchHintText: AppLocalizations.of(context)!.home_top_bar_search,
+          )).showModal(context);
+        },
+      ),
+      SettingsItem(
+          icon: const Icon(DisplayIcons.language_change),
           label: AppLocalizations.of(context)!.settings_change_language,
           kind: 'additional',
-          labelIndex: 0,
+          labelIndex: 1,
           kindIndex: 0,
           onTap: (BuildContext context) {
             DropDownState(DropDown(
@@ -73,11 +126,11 @@ class _SettingsList {
               data: [
                 SelectedListItem(
                     name: '简体中文',
-                    isSelected: Global.languageCode == 'zh',
+                    isSelected: Global.appPersistentData.languageCode == 'zh',
                     value: 'zh'),
                 SelectedListItem(
                     name: 'English',
-                    isSelected: Global.languageCode == 'en',
+                    isSelected: Global.appPersistentData.languageCode == 'en',
                     value: 'en'),
               ],
               onSelected: (items) {
@@ -89,13 +142,14 @@ class _SettingsList {
             )).showModal(context);
           }),
       SettingsItem(
+          icon: const Icon(DisplayIcons.about),
           label: AppLocalizations.of(context)!.settings_about_us,
           kind: 'additional',
-          labelIndex: 1,
+          labelIndex: 2,
           kindIndex: 0,
           onTap: (BuildContext context) {
             Navigator.of(context).push(TDSlidePopupRoute(
-                modalBarrierColor: Global.themeMode == 0
+                modalBarrierColor: Global.appPersistentData.themeMode == 0
                     ? Colors.black.withOpacity(0.5)
                     : Colors.white.withOpacity(0.3),
                 slideTransitionFrom: SlideTransitionFrom.bottom,

@@ -35,12 +35,12 @@ class _SearchPageUserItemState extends State<SearchPageUserItem> {
     var iconColor = isFollowed
         ? Theme.of(context).hintColor
         : Theme.of(context).scaffoldBackgroundColor;
-    var iconSize = Theme.of(context).textTheme.bodyMedium!.fontSize;
+    var iconSize = Theme.of(context).textTheme.bodySmall!.fontSize;
     var textStyle = TextStyle(
         color: isFollowed
             ? Theme.of(context).hintColor
             : Theme.of(context).scaffoldBackgroundColor,
-        fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize);
+        fontSize: Theme.of(context).textTheme.bodySmall!.fontSize);
     return Padding(
         padding: const EdgeInsets.only(right: 16),
         child: ElevatedButton(
@@ -60,7 +60,7 @@ class _SearchPageUserItemState extends State<SearchPageUserItem> {
                   width: 2,
                 ),
                 SizedBox(
-                  width: Theme.of(context).textTheme.bodyMedium!.fontSize! * 5,
+                  width: Theme.of(context).textTheme.bodySmall!.fontSize! * 4.2,
                   child: Text(
                     text,
                     style: textStyle,
@@ -119,7 +119,7 @@ class _SearchPageUserItemState extends State<SearchPageUserItem> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            '${NumberConverter.convertNumber(17381931737)}${AppLocalizations.of(context)!.search_follower}',
+                            '${NumberConverter.convertNumber(173881931737)}${AppLocalizations.of(context)!.search_follower}',
                             style: TextStyle(
                               color: Theme.of(context).hintColor,
                               fontSize: Theme.of(context)

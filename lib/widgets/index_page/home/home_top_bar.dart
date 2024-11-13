@@ -83,11 +83,11 @@ class _HomeTopBarState extends State<HomeTopBar> {
                 SizedBox(
                   width: 80,
                   child: AnimatedToggleSwitch<int>.rolling(
-                    current: Global.themeMode,
+                    current: Global.appPersistentData.themeMode,
                     values: const [0, 1],
                     onChanged: (index) => setState(() {
-                      Global.themeMode = index;
-                      switch (Global.themeMode) {
+                      Global.appPersistentData.themeMode = index;
+                      switch (Global.appPersistentData.themeMode) {
                         case 0:
                           AdaptiveTheme.of(context).setLight();
                           break;
@@ -95,7 +95,7 @@ class _HomeTopBarState extends State<HomeTopBar> {
                           AdaptiveTheme.of(context).setDark();
                           break;
                       }
-                      Storage.storeThemeMode(Global.themeMode);
+                      Storage.storePersistentData(Global.appPersistentData);
                       ToastificationUtils.showSimpleToastification(
                           context,
                           AppLocalizations.of(context)!

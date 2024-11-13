@@ -5,6 +5,7 @@ import 'package:fulifuli_app/pages/tabs/favorite.dart';
 import 'package:fulifuli_app/pages/tabs/home.dart';
 import 'package:fulifuli_app/pages/tabs/mine.dart';
 import 'package:fulifuli_app/pages/tabs/submit.dart';
+import 'package:fulifuli_app/widgets/icons/def.dart';
 
 class IndexPage extends StatefulWidget {
   const IndexPage({super.key});
@@ -50,23 +51,24 @@ class _IndexPageState extends State<IndexPage> {
         selectedItemColor: Theme.of(context).indicatorColor,
         items: [
           BottomNavigationBarItem(
-            icon: const Icon(Icons.home),
+            icon: const Icon(DisplayIcons.home),
             label: AppLocalizations.of(context)!.index_tabs_home,
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.dynamic_feed),
+            icon: const Icon(DisplayIcons.dynamic),
             label: AppLocalizations.of(context)!.index_tabs_dynamic,
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.add_circle),
+            icon: const Icon(DisplayIcons.submit),
             label: AppLocalizations.of(context)!.index_tabs_submit,
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.message_outlined),
+            icon: const Icon(DisplayIcons.friend),
             label: AppLocalizations.of(context)!.index_tabs_message,
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.person),
+            icon: const Icon(DisplayIcons.mine),
+            activeIcon: const Icon(DisplayIcons.mine_active),
             label: AppLocalizations.of(context)!.index_tabs_mine,
           ),
         ],

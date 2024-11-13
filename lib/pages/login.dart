@@ -94,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
         }
         return null;
       },
-      logo: Global.themeMode == 0
+      logo: Global.appPersistentData.themeMode == 0
           ? "assets/images/logo/logo_light1.png"
           : "assets/images/logo/logo_dark0.png",
       onLogin: _login,
