@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:chewie/chewie.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:drop_down_list/drop_down_list.dart';
 import 'package:drop_down_list/model/selected_list_item.dart';
@@ -12,8 +13,8 @@ import 'package:fulifuli_app/utils/file_type_judge.dart';
 import 'package:fulifuli_app/utils/reverse_color.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:pod_player/pod_player.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
+import 'package:video_player/video_player.dart';
 
 class SubmitPage extends StatefulWidget {
   const SubmitPage({super.key});
@@ -28,9 +29,11 @@ class SubmitPage extends StatefulWidget {
 
 class _SubmitPageState extends State<SubmitPage> {
   File? video;
+  bool _playerReady = false;
   bool _onUploading = false;
   double _uploadingPercent = 0.0;
-  PodPlayerController? _playerController;
+  VideoPlayerController? _playerController;
+  ChewieController? _chewieController;
   late String _selectedCategory = "";
   late List<TDTag> tags = [];
   late ButtonStyle _shardButtonStyle;
@@ -84,20 +87,22 @@ class _SubmitPageState extends State<SubmitPage> {
         body: Center(
           child: Column(
             children: [
-              const SizedBox(height: 1),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   video != null &&
                           _playerController != null &&
-                          _playerController!.isInitialised
+                          _chewieController != null &&
+                          _playerReady
                       ? ConstrainedBox(
                           constraints: BoxConstraints(
                             maxWidth: MediaQuery.of(context).size.width,
                             maxHeight:
                                 MediaQuery.of(context).size.width / 16 * 9,
                           ),
-                          child: PodVideoPlayer(controller: _playerController!),
+                          child: Chewie(
+                            controller: _chewieController!,
+                          ),
                         )
                       : _getUnselectedWidget(context)
                 ],
@@ -134,11 +139,47 @@ class _SubmitPageState extends State<SubmitPage> {
           File? file = await _pickFile();
           if (file != null) {
             video = file;
-            _playerController =
-                PodPlayerController(playVideoFrom: PlayVideoFrom.file(video!))
-                  ..initialise().then((_) {
-                    setState(() {});
-                  });
+            _playerController = VideoPlayerController.file(video!);
+            if (_playerController != null) {
+              _chewieController = ChewieController(
+                videoPlayerController: _playerController!,
+                autoPlay: false,
+                looping: false,
+                allowMuting: false,
+                allowPlaybackSpeedChanging: true,
+                allowFullScreen: true,
+                showControls: true,
+                showOptions: false,
+                showControlsOnInitialize: false,
+                aspectRatio: 16 / 9,
+                materialProgressColors: context.mounted
+                    ? ChewieProgressColors(
+                        playedColor: Theme.of(context).primaryColor,
+                        handleColor: Theme.of(context).primaryColor,
+                        backgroundColor: Theme.of(context).dividerColor,
+                        bufferedColor: Theme.of(context).unselectedWidgetColor,
+                      )
+                    : ChewieProgressColors(
+                        playedColor: Colors.transparent,
+                        handleColor: Colors.transparent,
+                        backgroundColor: Colors.transparent,
+                        bufferedColor: Colors.transparent,
+                      ),
+                placeholder: Container(
+                  color: context.mounted
+                      ? Theme.of(context).cardColor
+                      : Colors.transparent,
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+              );
+              _playerController!.initialize().then((value) {
+                setState(() {
+                  _playerReady = true;
+                });
+              });
+            }
             setState(() {});
           }
         },
@@ -182,7 +223,7 @@ class _SubmitPageState extends State<SubmitPage> {
       child: !_onUploading
           ? Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
               SizedBox(
-                width: MediaQuery.of(context).size.width / 4,
+                width: MediaQuery.of(context).size.width * 0.4,
                 child: ElevatedButton(
                     onPressed: () {
                       reset();
@@ -199,7 +240,7 @@ class _SubmitPageState extends State<SubmitPage> {
                         style: TextStyle(color: Colors.white))),
               ),
               SizedBox(
-                width: MediaQuery.of(context).size.width / 4,
+                width: MediaQuery.of(context).size.width * 0.4,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     elevation: 4,
@@ -580,90 +621,99 @@ class _SubmitPageState extends State<SubmitPage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  tags.clear();
-                                  setState(() {});
-                                  setBuilderState(() {});
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 4,
-                                  backgroundColor: Colors.red,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.4,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    tags.clear();
+                                    setState(() {});
+                                    setBuilderState(() {});
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: 4,
+                                    backgroundColor: Colors.red,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    alignment: Alignment.centerLeft,
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 0),
+                                    iconColor: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .color,
                                   ),
-                                  alignment: Alignment.centerLeft,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 8, horizontal: 0),
-                                  iconColor: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge!
-                                      .color,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 24, right: 24),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Icon(Icons.clear,
-                                          color: Colors.white),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        '清空',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge!
-                                              .fontSize,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 24, right: 24),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const Icon(Icons.clear,
+                                            color: Colors.white),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          '清空',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge!
+                                                .fontSize,
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 4,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.4,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: 4,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    alignment: Alignment.centerLeft,
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 0),
+                                    iconColor: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .color,
                                   ),
-                                  alignment: Alignment.centerLeft,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 8, horizontal: 0),
-                                  iconColor: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge!
-                                      .color,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 24, right: 24),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.done,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        '完成',
-                                        style: TextStyle(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 24, right: 24),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.done,
                                           color: Theme.of(context).primaryColor,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge!
-                                              .fontSize,
                                         ),
-                                      ),
-                                    ],
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          '完成',
+                                          style: TextStyle(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge!
+                                                .fontSize,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               )
