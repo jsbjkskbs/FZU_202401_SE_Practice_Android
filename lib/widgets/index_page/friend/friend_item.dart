@@ -3,19 +3,19 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/utils/number_converter.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
-class SearchPageUserItem extends StatefulWidget {
-  const SearchPageUserItem({super.key, required this.onTap});
+class FriendItem extends StatefulWidget {
+  const FriendItem({super.key, required this.onTap});
 
   final Function onTap;
   final bool isFollowed = false;
 
   @override
   State<StatefulWidget> createState() {
-    return _SearchPageUserItemState();
+    return _FriendItemState();
   }
 }
 
-class _SearchPageUserItemState extends State<SearchPageUserItem> {
+class _FriendItemState extends State<FriendItem> {
   late bool isFollowed = widget.isFollowed;
 
   Widget _getFollowButton(BuildContext context) {

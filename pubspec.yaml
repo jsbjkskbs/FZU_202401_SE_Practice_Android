@@ -64,6 +64,11 @@ dependencies:
   visibility_detector: ^0.4.0+2
   json_serializable: ^6.8.0
   build_runner: ^2.4.13
+  file_picker: ^8.1.4
+  mime: ^2.0.0
+  pod_player: ^0.2.2
+  dotted_border: ^2.1.0
+  percent_indicator: ^4.0.1
 
 dev_dependencies:
   flutter_test:

@@ -16,6 +16,7 @@ import 'package:fulifuli_app/pages/mfa_verification.dart';
 import 'package:fulifuli_app/pages/search.dart';
 import 'package:fulifuli_app/pages/settings.dart';
 import 'package:fulifuli_app/pages/space.dart';
+import 'package:fulifuli_app/pages/submission_manage.dart';
 import 'package:fulifuli_app/test.dart';
 import 'package:fulifuli_app/utils/scheme_reflect.dart';
 
@@ -131,6 +132,8 @@ class MyAppState extends State<MyApp> {
                 SettingsPage.routeName: (context) => const SettingsPage(),
                 SpacePage.routeName: (context) => const SpacePage(),
                 SearchPage.routeName: (context) => const SearchPage(),
+                SubmissionManagePage.routeName: (context) =>
+                    const SubmissionManagePage(),
               },
             ));
   }

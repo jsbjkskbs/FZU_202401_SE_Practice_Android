@@ -42,6 +42,8 @@ class Global {
   static Map<String, List<String>> cachedMapDynamicList = {};
   static Map<String, List<String>> cachedMapUserList = {};
   static List<Video> cachedSearchVideoList = [];
+
+  static const List<String> categoryList = ["游戏", "知识", "生活", "军事", "影音", "新闻"];
 }
 
 class Storage {

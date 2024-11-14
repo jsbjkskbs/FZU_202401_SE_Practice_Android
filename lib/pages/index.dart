@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/pages/tabs/activity.dart';
-import 'package:fulifuli_app/pages/tabs/favorite.dart';
+import 'package:fulifuli_app/pages/tabs/friend.dart';
 import 'package:fulifuli_app/pages/tabs/home.dart';
 import 'package:fulifuli_app/pages/tabs/mine.dart';
 import 'package:fulifuli_app/pages/tabs/submit.dart';
@@ -21,13 +21,7 @@ class IndexPage extends StatefulWidget {
 class _IndexPageState extends State<IndexPage> {
   int _currentIndex = 0;
   late Color _backgroundColor;
-  final List<Widget> _pages = const [
-    HomePage(),
-    ActivityPage(),
-    SubmitPage(),
-    FavoritePage(),
-    MinePage(),
-  ];
+  late List<Widget> _pages;
 
   void _setBackgroundColor() {
     setState(() {
@@ -41,6 +35,13 @@ class _IndexPageState extends State<IndexPage> {
 
   @override
   Widget build(BuildContext context) {
+    _pages = [
+      const HomePage(),
+      const ActivityPage(),
+      const SubmitPage(),
+      const FriendPage(),
+      const MinePage(),
+    ];
     _setBackgroundColor();
     return SafeArea(
         child: Scaffold(
@@ -64,7 +65,7 @@ class _IndexPageState extends State<IndexPage> {
           ),
           BottomNavigationBarItem(
             icon: const Icon(DisplayIcons.friend),
-            label: AppLocalizations.of(context)!.index_tabs_message,
+            label: AppLocalizations.of(context)!.index_tabs_friend,
           ),
           BottomNavigationBarItem(
             icon: const Icon(DisplayIcons.mine),
@@ -76,7 +77,11 @@ class _IndexPageState extends State<IndexPage> {
         onTap: (index) {
           if (index != _currentIndex) {
             setState(() {
+              var lastIndex = _currentIndex;
               _currentIndex = index;
+              if (lastIndex == 2) {
+                _pages[lastIndex] = const SubmitPage();
+              }
             });
             _setBackgroundColor();
           }

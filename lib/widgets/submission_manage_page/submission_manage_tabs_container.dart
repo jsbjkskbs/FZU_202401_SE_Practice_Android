@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/widgets/index_page/home/video_tabs_view.dart';
-import 'package:fulifuli_app/widgets/search_page/search_page_user_tabs_view.dart';
-import 'package:fulifuli_app/widgets/search_page/search_page_video_tabs_view.dart';
+import 'package:fulifuli_app/widgets/submission_manage_page/submission_manage_video_tabs_view.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
-class SearchPageTabsContainer extends StatefulWidget {
-  const SearchPageTabsContainer({super.key, required this.tabs});
+class SubmissionManageTabsContainer extends StatefulWidget {
+  const SubmissionManageTabsContainer({super.key, required this.tabs});
 
   final List<String> tabs;
 
   @override
   State<StatefulWidget> createState() {
-    return _SearchPageTabsContainerState();
+    return _SubmissionManageTabsContainer();
   }
 }
 
-class _SearchPageTabsContainerState extends State<SearchPageTabsContainer>
-    with TickerProviderStateMixin {
+class _SubmissionManageTabsContainer
+    extends State<SubmissionManageTabsContainer> with TickerProviderStateMixin {
+  static const _uniqueKeyPrefix = 'SubmissionManageTabsContainer';
   late TabController _tabController;
   int _currentIndex = 0;
   List<TDTab> tabs = [];
@@ -54,8 +54,9 @@ class _SearchPageTabsContainerState extends State<SearchPageTabsContainer>
   void dispose() {
     super.dispose();
     _tabController.dispose();
-    Global.cachedMapUserList.remove(SearchPageUserTabsView.uniqueKey);
-    Global.cachedMapVideoList.remove(SearchPageVideoTabsView.uniqueKey);
+    for (var i = 0; i < tabs.length; i++) {
+      Global.cachedMapVideoList.remove('$_uniqueKeyPrefix-$i');
+    }
   }
 
   @override
@@ -70,20 +71,16 @@ class _SearchPageTabsContainerState extends State<SearchPageTabsContainer>
           labelColor: Theme.of(context).primaryColor,
           unselectedLabelColor: Theme.of(context).unselectedWidgetColor,
           indicatorColor: Theme.of(context).primaryColor,
-          labelPadding: const EdgeInsets.symmetric(horizontal: 20.0),
         ),
         Expanded(
           child: TabBarView(
             controller: _tabController,
             children: [
-              SearchPageVideoTabsView(
-                currentIndex: _currentIndex,
-                assignedIndex: 0,
-              ),
-              SearchPageUserTabsView(
-                currentIndex: _currentIndex,
-                assignedIndex: 1,
-              ),
+              for (var i = 0; i < tabs.length; i++)
+                SubmissionManageVideoTabsView(
+                    currentIndex: _currentIndex,
+                    assignedIndex: i,
+                    uniqueKey: '$_uniqueKeyPrefix-$i'),
             ],
           ),
         )

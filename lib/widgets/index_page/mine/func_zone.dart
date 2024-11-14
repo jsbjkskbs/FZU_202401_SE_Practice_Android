@@ -35,7 +35,7 @@ class _FuncZoneState extends State<FuncZone> {
             Icons.add,
             color: Theme.of(context).primaryColor,
           ),
-          "/submit"),
+          "/submission/manage"),
       FuncItem(
           AppLocalizations.of(context)!.mine_func_zone_settings,
           Icon(
