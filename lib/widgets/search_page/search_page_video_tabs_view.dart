@@ -7,8 +7,7 @@ import 'package:fulifuli_app/widgets/search_page/search_page_video_item.dart';
 import '../../model/video.dart';
 
 class SearchPageVideoTabsView extends StatefulWidget {
-  const SearchPageVideoTabsView(
-      {super.key, required this.currentIndex, required this.assignedIndex});
+  const SearchPageVideoTabsView({super.key, required this.currentIndex, required this.assignedIndex});
 
   static const String uniqueKey = "search-video";
   final int currentIndex;
@@ -30,13 +29,10 @@ class _SearchPageVideoTabsViewState extends State<SearchPageVideoTabsView> {
   @override
   void initState() {
     super.initState();
-    bool isCached = Global.cachedMapVideoList
-        .containsKey(SearchPageVideoTabsView.uniqueKey);
+    bool isCached = Global.cachedMapVideoList.containsKey(SearchPageVideoTabsView.uniqueKey);
     if (!isCached) {
-      Global.cachedMapVideoList
-          .addEntries([MapEntry(SearchPageVideoTabsView.uniqueKey, videoList)]);
-      debugPrint(
-          'Added new video list with key: ${SearchPageVideoTabsView.uniqueKey}');
+      Global.cachedMapVideoList.addEntries([MapEntry(SearchPageVideoTabsView.uniqueKey, videoList)]);
+      debugPrint('Added new video list with key: ${SearchPageVideoTabsView.uniqueKey}');
     }
     videoList = Global.cachedMapVideoList[SearchPageVideoTabsView.uniqueKey]!;
 

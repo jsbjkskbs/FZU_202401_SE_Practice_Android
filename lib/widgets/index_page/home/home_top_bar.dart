@@ -48,11 +48,9 @@ class _HomeTopBarState extends State<HomeTopBar> {
                     defaultUrl: "assets/images/default_avatar.gif",
                     onTap: () {
                       if (Global.isLogin()) {
-                        Navigator.of(context).pushNamed('/space',
-                            arguments: {'user_id': "用户ID七个字"});
+                        Navigator.of(context).pushNamed('/space', arguments: {'user_id': "用户ID七个字"});
                       } else {
-                        ToastificationUtils.showSimpleToastification(context,
-                            AppLocalizations.of(context)!.home_login_hint);
+                        ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.home_login_hint);
                         Navigator.of(context).pushNamed('/login');
                       }
                     },
@@ -66,13 +64,9 @@ class _HomeTopBarState extends State<HomeTopBar> {
                       Icons.search,
                       color: Theme.of(context).unselectedWidgetColor,
                     ),
-                    shadowColor: WidgetStatePropertyAll(
-                        Theme.of(context).shadowColor.withOpacity(0.4)),
-                    backgroundColor: WidgetStatePropertyAll(
-                        Theme.of(context).scaffoldBackgroundColor),
-                    side: WidgetStateProperty.all(BorderSide(
-                        width: 1.5,
-                        color: Theme.of(context).textTheme.labelLarge!.color!)),
+                    shadowColor: WidgetStatePropertyAll(Theme.of(context).shadowColor.withOpacity(0.4)),
+                    backgroundColor: WidgetStatePropertyAll(Theme.of(context).scaffoldBackgroundColor),
+                    side: WidgetStateProperty.all(BorderSide(width: 1.5, color: Theme.of(context).textTheme.labelLarge!.color!)),
                     onTap: () {
                       Navigator.of(context).pushNamed('/search');
                     },
@@ -96,10 +90,7 @@ class _HomeTopBarState extends State<HomeTopBar> {
                           break;
                       }
                       Storage.storePersistentData(Global.appPersistentData);
-                      ToastificationUtils.showSimpleToastification(
-                          context,
-                          AppLocalizations.of(context)!
-                              .home_theme_switch_toast);
+                      ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.home_theme_switch_toast);
                     }),
                     iconList: [
                       Icon(

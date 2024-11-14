@@ -41,9 +41,7 @@ class _MFAVerificationState extends State<MFAVerification> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Global.appPersistentData.themeMode == 0
-            ? Theme.of(context).primaryColor
-            : Theme.of(context).primaryColor,
+        backgroundColor: Global.appPersistentData.themeMode == 0 ? Theme.of(context).primaryColor : Theme.of(context).primaryColor,
         body: Center(
           child: FractionallySizedBox(
             widthFactor: 0.9,
@@ -79,8 +77,7 @@ class _MFAVerificationState extends State<MFAVerification> {
                         fontSize: 16,
                         color: Colors.red,
                       ),
-                      errorText:
-                          AppLocalizations.of(context)!.mfa_validation_error,
+                      errorText: AppLocalizations.of(context)!.mfa_validation_error,
                       inputFormatters: createOtpInputFormatters(),
                       pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
                       enabled: _enableInput,
@@ -99,8 +96,7 @@ class _MFAVerificationState extends State<MFAVerification> {
                           setState(() {
                             _enableInput = true;
                           });
-                          return AppLocalizations.of(context)!
-                              .mfa_validation_error;
+                          return AppLocalizations.of(context)!.mfa_validation_error;
                         }
                       },
                       onCompleted: (pin) {
@@ -108,29 +104,27 @@ class _MFAVerificationState extends State<MFAVerification> {
                       },
                     ),
                     const SizedBox(height: 48),
-                    AnimatedTextKit(
-                        repeatForever: true,
-                        animatedTexts: <AnimatedText>[
-                          _enableInput
-                              ? TyperAnimatedText(
-                                  'MFA Code: 123456...',
-                                  curve: Curves.easeIn,
-                                  textStyle: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  speed: const Duration(milliseconds: 150),
-                                )
-                              : TyperAnimatedText(
-                                  AppLocalizations.of(context)!.mfa_verifying,
-                                  curve: Curves.easeIn,
-                                  textStyle: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  speed: const Duration(milliseconds: 150),
-                                )
-                        ]),
+                    AnimatedTextKit(repeatForever: true, animatedTexts: <AnimatedText>[
+                      _enableInput
+                          ? TyperAnimatedText(
+                              'MFA Code: 123456...',
+                              curve: Curves.easeIn,
+                              textStyle: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              speed: const Duration(milliseconds: 150),
+                            )
+                          : TyperAnimatedText(
+                              AppLocalizations.of(context)!.mfa_verifying,
+                              curve: Curves.easeIn,
+                              textStyle: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              speed: const Duration(milliseconds: 150),
+                            )
+                    ]),
                     const SizedBox(height: 36)
                   ],
                 ),
@@ -144,14 +138,12 @@ class _MFAVerificationState extends State<MFAVerification> {
 
   static Route _createRoute() {
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) =>
-          const IndexPage(),
+      pageBuilder: (context, animation, secondaryAnimation) => const IndexPage(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         var begin = const Offset(1.0, 1.0);
         var end = Offset.zero;
         var curve = Curves.ease;
-        var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
         var offsetAnimation = animation.drive(tween);
         return ScaleTransition(
           scale: animation.drive(

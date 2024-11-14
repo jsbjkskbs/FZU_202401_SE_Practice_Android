@@ -58,12 +58,8 @@ class _ProfileState extends State<Profile> {
                 child: Column(
                   children: [
                     Text("0",
-                        style: _labelStyle.copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontSize: Theme.of(context)
-                                .textTheme
-                                .bodyLarge!
-                                .fontSize)),
+                        style:
+                            _labelStyle.copyWith(fontWeight: FontWeight.bold, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize)),
                     Text(
                       AppLocalizations.of(context)!.space_follower,
                       style: _labelStyle,
@@ -75,12 +71,8 @@ class _ProfileState extends State<Profile> {
                 child: Column(
                   children: [
                     Text("0",
-                        style: _labelStyle.copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontSize: Theme.of(context)
-                                .textTheme
-                                .bodyLarge!
-                                .fontSize)),
+                        style:
+                            _labelStyle.copyWith(fontWeight: FontWeight.bold, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize)),
                     Text(
                       AppLocalizations.of(context)!.space_following,
                       style: _labelStyle,
@@ -93,10 +85,7 @@ class _ProfileState extends State<Profile> {
                   children: [
                     Text(
                       NumberConverter.convertNumber(0),
-                      style: _labelStyle.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize:
-                              Theme.of(context).textTheme.bodyLarge!.fontSize),
+                      style: _labelStyle.copyWith(fontWeight: FontWeight.bold, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize),
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
@@ -112,12 +101,9 @@ class _ProfileState extends State<Profile> {
         TextButton(
           onPressed: () {},
           style: ButtonStyle(
-            overlayColor: WidgetStateProperty.all(
-                Theme.of(context).scaffoldBackgroundColor.withOpacity(0.5)),
-            backgroundColor:
-                WidgetStateProperty.all(Theme.of(context).primaryColor),
-            shape: WidgetStateProperty.all(RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0))),
+            overlayColor: WidgetStateProperty.all(Theme.of(context).scaffoldBackgroundColor.withOpacity(0.5)),
+            backgroundColor: WidgetStateProperty.all(Theme.of(context).primaryColor),
+            shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0))),
           ),
           child: Text(
             "Edit Profile",

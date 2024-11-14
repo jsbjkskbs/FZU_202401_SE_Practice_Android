@@ -38,8 +38,7 @@ class OptionGridView extends StatelessWidget {
           physics: physics ?? const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           controller: controller ?? ScrollController(keepScrollOffset: false),
-          separatorBuilder: (context, index) =>
-              SizedBox(height: mainAxisSpacing),
+          separatorBuilder: (context, index) => SizedBox(height: mainAxisSpacing),
           itemBuilder: (context, index) => buildRow(context, index),
         ));
   }

@@ -3,8 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SchemeReflect {
-  static FlexScheme getFlexScheme(String name,
-      {FlexScheme defaultScheme = FlexScheme.sakura}) {
+  static FlexScheme getFlexScheme(String name, {FlexScheme defaultScheme = FlexScheme.sakura}) {
     for (var value in FlexScheme.values) {
       if (value.name == name) {
         debugPrint('SchemeReflect.getFlexScheme: Found scheme name: $name');
@@ -54,8 +53,7 @@ class SchemeReflect {
       'rosewood': AppLocalizations.of(context)!.flex_scheme_rosewood,
       'blumineBlue': AppLocalizations.of(context)!.flex_scheme_blumineBlue,
       'flutterDash': AppLocalizations.of(context)!.flex_scheme_flutterDash,
-      'materialBaseline':
-          AppLocalizations.of(context)!.flex_scheme_materialBaseline,
+      'materialBaseline': AppLocalizations.of(context)!.flex_scheme_materialBaseline,
       'verdunHemlock': AppLocalizations.of(context)!.flex_scheme_verdunHemlock,
       'dellGenoa': AppLocalizations.of(context)!.flex_scheme_dellGenoa,
       'redM3': AppLocalizations.of(context)!.flex_scheme_redM3,

@@ -7,11 +7,7 @@ import 'package:fulifuli_app/widgets/submission_manage_page/submission_manage_vi
 import '../../model/video.dart';
 
 class SubmissionManageVideoTabsView extends StatefulWidget {
-  const SubmissionManageVideoTabsView(
-      {super.key,
-      required this.currentIndex,
-      required this.assignedIndex,
-      required this.uniqueKey});
+  const SubmissionManageVideoTabsView({super.key, required this.currentIndex, required this.assignedIndex, required this.uniqueKey});
 
   final String uniqueKey;
   final int currentIndex;
@@ -23,8 +19,7 @@ class SubmissionManageVideoTabsView extends StatefulWidget {
   }
 }
 
-class _SubmissionManageVideoTabsViewState
-    extends State<SubmissionManageVideoTabsView> {
+class _SubmissionManageVideoTabsViewState extends State<SubmissionManageVideoTabsView> {
   late List<Video> videoList = [];
   final EasyRefreshController _controller = EasyRefreshController(
     controlFinishRefresh: true,
@@ -36,8 +31,7 @@ class _SubmissionManageVideoTabsViewState
     super.initState();
     bool isCached = Global.cachedMapVideoList.containsKey(widget.uniqueKey);
     if (!isCached) {
-      Global.cachedMapVideoList
-          .addEntries([MapEntry(widget.uniqueKey, videoList)]);
+      Global.cachedMapVideoList.addEntries([MapEntry(widget.uniqueKey, videoList)]);
       debugPrint('Added new video list with key: ${widget.uniqueKey}');
     }
     videoList = Global.cachedMapVideoList[widget.uniqueKey]!;

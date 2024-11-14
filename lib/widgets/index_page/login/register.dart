@@ -14,8 +14,7 @@ class RegisterForm extends StatefulWidget {
 }
 
 class _RegisterFormState extends State<RegisterForm> {
-  late Timer _countdownTimer =
-      Timer.periodic(const Duration(seconds: 1), (timer) {});
+  late Timer _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {});
   int _countdownTime = 0;
   bool _emailValid = true;
   final bool _verifyCodeValid = true;
@@ -24,8 +23,7 @@ class _RegisterFormState extends State<RegisterForm> {
     if (email.isEmpty) {
       return false;
     }
-    return RegExp(r'^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$')
-        .hasMatch(email);
+    return RegExp(r'^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$').hasMatch(email);
   }
 
   @override
@@ -39,9 +37,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const SizedBox(height: 16),
-                      const Text("重置密码",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold)),
+                      const Text("重置密码", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 16),
                       TDInput(
                         leftLabel: "邮箱",
@@ -87,12 +83,9 @@ class _RegisterFormState extends State<RegisterForm> {
                               _countdownTime > 0
                                   ? TDText(
                                       '重发($_countdownTime秒)',
-                                      textColor: Theme.of(context)
-                                          .secondaryHeaderColor,
+                                      textColor: Theme.of(context).secondaryHeaderColor,
                                     )
-                                  : TDText('发送验证码',
-                                      textColor:
-                                          Theme.of(context).primaryColor),
+                                  : TDText('发送验证码', textColor: Theme.of(context).primaryColor),
                             ],
                           ),
                         ),
@@ -102,8 +95,7 @@ class _RegisterFormState extends State<RegisterForm> {
                             setState(() {
                               _countdownTime = 60;
                               _countdownTimer.cancel();
-                              _countdownTimer = Timer.periodic(
-                                  const Duration(seconds: 1), (timer) {
+                              _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
                                 if (_countdownTime == 0) {
                                   timer.cancel();
                                 } else {

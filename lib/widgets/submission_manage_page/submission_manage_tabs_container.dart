@@ -15,8 +15,7 @@ class SubmissionManageTabsContainer extends StatefulWidget {
   }
 }
 
-class _SubmissionManageTabsContainer
-    extends State<SubmissionManageTabsContainer> with TickerProviderStateMixin {
+class _SubmissionManageTabsContainer extends State<SubmissionManageTabsContainer> with TickerProviderStateMixin {
   static const _uniqueKeyPrefix = 'SubmissionManageTabsContainer';
   late TabController _tabController;
   int _currentIndex = 0;
@@ -77,10 +76,7 @@ class _SubmissionManageTabsContainer
             controller: _tabController,
             children: [
               for (var i = 0; i < tabs.length; i++)
-                SubmissionManageVideoTabsView(
-                    currentIndex: _currentIndex,
-                    assignedIndex: i,
-                    uniqueKey: '$_uniqueKeyPrefix-$i'),
+                SubmissionManageVideoTabsView(currentIndex: _currentIndex, assignedIndex: i, uniqueKey: '$_uniqueKeyPrefix-$i'),
             ],
           ),
         )

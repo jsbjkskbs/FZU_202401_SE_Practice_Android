@@ -2,8 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:toastification/toastification.dart';
 
 class ToastificationUtils {
-  static showSimpleToastification(BuildContext context, String text,
-      {Duration duration = const Duration(milliseconds: 1500)}) {
+  static showSimpleToastification(BuildContext context, String text, {Duration duration = const Duration(milliseconds: 1500)}) {
     toastification.show(
       context: context,
       autoCloseDuration: duration,

@@ -8,11 +8,5 @@ class SettingsItem {
   Function? onTap;
   Icon? icon;
 
-  SettingsItem(
-      {required this.label,
-      required this.kind,
-      required this.labelIndex,
-      required this.kindIndex,
-      this.onTap,
-      this.icon});
+  SettingsItem({required this.label, required this.kind, required this.labelIndex, required this.kindIndex, this.onTap, this.icon});
 }

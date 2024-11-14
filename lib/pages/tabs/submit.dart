@@ -8,8 +8,10 @@ import 'package:drop_down_list/drop_down_list.dart';
 import 'package:drop_down_list/model/selected_list_item.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/utils/file_type_judge.dart';
+import 'package:fulifuli_app/utils/language_reflect.dart';
 import 'package:fulifuli_app/utils/reverse_color.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -35,10 +37,12 @@ class _SubmitPageState extends State<SubmitPage> {
   VideoPlayerController? _playerController;
   ChewieController? _chewieController;
   late String _selectedCategory = "";
+  late String _selectedCategoryInner = "";
   late List<TDTag> tags = [];
   late ButtonStyle _shardButtonStyle;
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _popupController = TextEditingController();
 
   @override
   void dispose() {
@@ -53,12 +57,12 @@ class _SubmitPageState extends State<SubmitPage> {
     }
     _titleController.dispose();
     _descriptionController.dispose();
+    _popupController.dispose();
     super.dispose();
   }
 
   Future<File?> _pickFile() async {
     var result = await FilePicker.platform.pickFiles(
-      dialogTitle: 'Please select a video',
       allowMultiple: false,
       type: FileType.video,
     );
@@ -93,15 +97,11 @@ class _SubmitPageState extends State<SubmitPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  video != null &&
-                          _playerController != null &&
-                          _chewieController != null &&
-                          _playerReady
+                  video != null && _playerController != null && _chewieController != null && _playerReady
                       ? ConstrainedBox(
                           constraints: BoxConstraints(
                             maxWidth: MediaQuery.of(context).size.width,
-                            maxHeight:
-                                MediaQuery.of(context).size.width / 16 * 9,
+                            maxHeight: MediaQuery.of(context).size.width / 16 * 9,
                           ),
                           child: Chewie(
                             controller: _chewieController!,
@@ -169,9 +169,7 @@ class _SubmitPageState extends State<SubmitPage> {
                         bufferedColor: Colors.transparent,
                       ),
                 placeholder: Container(
-                  color: context.mounted
-                      ? Theme.of(context).cardColor
-                      : Colors.transparent,
+                  color: context.mounted ? Theme.of(context).cardColor : Colors.transparent,
                   child: const Center(
                     child: CircularProgressIndicator(),
                   ),
@@ -193,10 +191,10 @@ class _SubmitPageState extends State<SubmitPage> {
               strokeWidth: 4,
               dashPattern: const [4, 8],
               borderPadding: const EdgeInsets.all(4),
-              child: const Center(
+              child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Icon(Icons.add, size: 48), Text('Select a video')],
+                  children: [const Icon(Icons.video_call_outlined, size: 48), Text(AppLocalizations.of(context)!.submit_select_video_hint)],
                 ),
               ),
             )),
@@ -213,7 +211,9 @@ class _SubmitPageState extends State<SubmitPage> {
     }
     _titleController.clear();
     _descriptionController.clear();
+    _popupController.clear();
     _selectedCategory = "";
+    _selectedCategoryInner = "";
     tags.clear();
     setState(() {});
   }
@@ -239,8 +239,7 @@ class _SubmitPageState extends State<SubmitPage> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text('Clear',
-                        style: TextStyle(color: Colors.white))),
+                    child: Text(AppLocalizations.of(context)!.submit_clear_button, style: const TextStyle(color: Colors.white))),
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.4,
@@ -255,91 +254,67 @@ class _SubmitPageState extends State<SubmitPage> {
                   ),
                   onPressed: video == null
                       ? () {
-                          ToastificationUtils.showSimpleToastification(
-                              context, 'Please select a video');
+                          ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.submit_video_not_selected);
                         }
                       : () {
                           _onUploading = true;
                           setState(() {});
                           _progressTest(context);
-                          ToastificationUtils.showSimpleToastification(
-                              context, '上传中，请不要离开本页面');
+                          ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.submit_video_uploading_hint);
                         },
-                  child: Text('Submit',
-                      style: TextStyle(
-                          color: video == null
-                              ? Theme.of(context).unselectedWidgetColor
-                              : Theme.of(context).primaryColor)),
+                  child: Text(AppLocalizations.of(context)!.submit_submit_button,
+                      style: TextStyle(color: video == null ? Theme.of(context).unselectedWidgetColor : Theme.of(context).primaryColor)),
                 ),
               ),
             ])
           : Center(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    SizedBox(
-                      height: 32,
-                      width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          LinearPercentIndicator(
-                            width: MediaQuery.of(context).size.width - 32,
-                            percent:
-                                _uploadingPercent > 1 ? 1 : _uploadingPercent,
-                            animation: true,
-                            animateFromLastPercent: true,
-                            animationDuration: 1000,
-                            center: Text(
-                              '${((_uploadingPercent > 1 ? 1 : _uploadingPercent) * 100).toStringAsFixed(2)}%',
-                              style: TextStyle(
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .color,
-                                fontWeight: FontWeight.bold,
-                                fontSize: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .fontSize,
-                              ),
-                            ),
-                            lineHeight: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .fontSize! *
-                                1.5,
-                            backgroundColor: Theme.of(context).dividerColor,
-                            barRadius: const Radius.circular(8),
-                            progressColor: Theme.of(context).primaryColor,
-                            trailing: _uploadingPercent >= 1
-                                ? const Icon(Icons.done, color: Colors.green)
-                                : const Icon(Icons.cloud_upload_outlined,
-                                    color: Colors.blue),
-                          )
-                        ],
+              child: Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                SizedBox(
+                  height: 32,
+                  width: MediaQuery.of(context).size.width,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      LinearPercentIndicator(
+                        width: MediaQuery.of(context).size.width - 32,
+                        percent: _uploadingPercent > 1 ? 1 : _uploadingPercent,
+                        animation: true,
+                        animateFromLastPercent: true,
+                        animationDuration: 1000,
+                        center: Text(
+                          '${((_uploadingPercent > 1 ? 1 : _uploadingPercent) * 100).toStringAsFixed(2)}%',
+                          style: TextStyle(
+                            color: Theme.of(context).textTheme.bodyMedium!.color,
+                            fontWeight: FontWeight.bold,
+                            fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                          ),
+                        ),
+                        lineHeight: Theme.of(context).textTheme.bodyMedium!.fontSize! * 1.5,
+                        backgroundColor: Theme.of(context).dividerColor,
+                        barRadius: const Radius.circular(8),
+                        progressColor: Theme.of(context).primaryColor,
+                        trailing: _uploadingPercent >= 1
+                            ? const Icon(Icons.done, color: Colors.green)
+                            : const Icon(Icons.cloud_upload_outlined, color: Colors.blue),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(
+                    height: 16,
+                    child: AnimatedTextKit(repeatForever: true, animatedTexts: [
+                      TypewriterAnimatedText(
+                        AppLocalizations.of(context)!.submit_video_uploading_hint_bottom,
+                        speed: const Duration(milliseconds: 200),
+                        textStyle: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                        height: 16,
-                        child: AnimatedTextKit(
-                            repeatForever: true,
-                            animatedTexts: [
-                              TypewriterAnimatedText(
-                                'Uploading......',
-                                speed: const Duration(milliseconds: 200),
-                                textStyle: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .fontSize,
-                                ),
-                              ),
-                            ])),
-                    const SizedBox()
-                  ]),
+                    ])),
+                const SizedBox()
+              ]),
             ),
     );
   }
@@ -357,7 +332,7 @@ class _SubmitPageState extends State<SubmitPage> {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  '标题',
+                  AppLocalizations.of(context)!.submit_video_title_hint,
                   style: TextStyle(
                     color: Theme.of(context).textTheme.bodyLarge!.color,
                     fontWeight: FontWeight.bold,
@@ -368,13 +343,11 @@ class _SubmitPageState extends State<SubmitPage> {
             ),
             TDInput(
                 controller: _titleController,
-                hintText: '请输入标题',
+                hintText: AppLocalizations.of(context)!.submit_video_title_input_hint,
                 autofocus: false,
                 maxLength: 64,
-                additionInfo: '${_titleController.text.length}/64 字符',
-                additionInfoColor: _titleController.text.length >= 64
-                    ? Colors.red
-                    : Theme.of(context).hintColor,
+                additionInfo: AppLocalizations.of(context)!.submit_video_title_additional_hint(_titleController.text.length, 64),
+                additionInfoColor: _titleController.text.length >= 64 ? Colors.red : Theme.of(context).hintColor,
                 onClearTap: () {
                   _titleController.clear();
                   setState(() {});
@@ -409,7 +382,7 @@ class _SubmitPageState extends State<SubmitPage> {
               const Icon(Icons.description),
               const SizedBox(width: 8),
               Text(
-                '简介',
+                AppLocalizations.of(context)!.submit_video_description_hint,
                 style: TextStyle(
                   color: Theme.of(context).textTheme.bodyLarge!.color,
                   fontWeight: FontWeight.bold,
@@ -420,7 +393,7 @@ class _SubmitPageState extends State<SubmitPage> {
           ),
           TDTextarea(
             controller: _descriptionController,
-            hintText: '请输入简介',
+            hintText: AppLocalizations.of(context)!.submit_video_description_input_hint,
             autofocus: false,
             minLines: 1,
             indicator: true,
@@ -443,17 +416,19 @@ class _SubmitPageState extends State<SubmitPage> {
       style: _shardButtonStyle,
       onPressed: () {
         DropDownState(DropDown(
+          searchHintText: AppLocalizations.of(context)!.home_top_bar_search,
           data: [
             for (var category in Global.categoryList)
               SelectedListItem(
-                  name: category,
-                  isSelected: _selectedCategory.isNotEmpty &&
-                      _selectedCategory == category)
+                  name: LanguageReflect.categoryReflect(context, category),
+                  value: category,
+                  isSelected: _selectedCategory.isNotEmpty && _selectedCategoryInner == category)
           ],
           enableMultipleSelection: false,
           onSelected: (item) {
             setState(() {
               _selectedCategory = item.first.name;
+              _selectedCategoryInner = item.first.value!;
             });
           },
         )).showModal(context);
@@ -466,7 +441,7 @@ class _SubmitPageState extends State<SubmitPage> {
               const Icon(Icons.category),
               const SizedBox(width: 8),
               Text(
-                '选择分区',
+                AppLocalizations.of(context)!.submit_video_category_hint,
                 style: TextStyle(
                   color: Theme.of(context).textTheme.bodyLarge!.color,
                   fontWeight: FontWeight.bold,
@@ -501,10 +476,7 @@ class _SubmitPageState extends State<SubmitPage> {
                           style: TextStyle(
                             color: Theme.of(context).primaryColor,
                             fontWeight: FontWeight.bold,
-                            fontSize: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .fontSize,
+                            fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
                           ),
                         ),
                       )))
@@ -518,8 +490,7 @@ class _SubmitPageState extends State<SubmitPage> {
       style: _shardButtonStyle,
       onPressed: () {
         Navigator.of(context).push(TDSlidePopupRoute(
-            modalBarrierColor:
-                Theme.of(context).textTheme.bodySmall!.color!.withOpacity(0.5),
+            modalBarrierColor: Theme.of(context).textTheme.bodySmall!.color!.withOpacity(0.2),
             slideTransitionFrom: SlideTransitionFrom.bottom,
             builder: (context) {
               return StatefulBuilder(builder: (context, setBuilderState) {
@@ -532,27 +503,19 @@ class _SubmitPageState extends State<SubmitPage> {
                       topRight: Radius.circular(16),
                     ),
                   ),
-                  child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        const SizedBox(height: 16),
-                        Material(
-                          child: Text('标签 ${tags.length} 个',
-                              style: TextStyle(
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge!
-                                    .color,
-                                fontWeight: FontWeight.bold,
-                                fontSize: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge!
-                                    .fontSize,
-                              )),
-                        ),
-                        Material(
-                            child: Padding(
+                  child: Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                    const SizedBox(height: 16),
+                    Material(
+                      child: Text(AppLocalizations.of(context)!.submit_video_tag_additional_hint(tags.length),
+                          style: TextStyle(
+                            color: Theme.of(context).textTheme.bodyLarge!.color,
+                            fontWeight: FontWeight.bold,
+                            fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                          )),
+                    ),
+                    Material(
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        child: Padding(
                           padding: const EdgeInsets.all(8),
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width,
@@ -563,168 +526,155 @@ class _SubmitPageState extends State<SubmitPage> {
                             ),
                           ),
                         )),
-                        const SizedBox(height: 16),
-                        Material(
-                          child: SizedBox(
-                            height: 100,
-                            child: TDInput(
-                                type: TDInputType.normal,
-                                leftLabel: '标签文字',
-                                hintText: '请输入文字',
-                                maxLength: 16,
-                                additionInfo: '最大输入16个字符',
-                                backgroundColor:
-                                    Theme.of(context).scaffoldBackgroundColor,
-                                onSubmitted: (value) {
-                                  if (value.isNotEmpty) {
-                                    if (tags.any(
-                                        (element) => element.text == value)) {
-                                      ToastificationUtils
-                                          .showSimpleToastification(
-                                              context, '标签已存在');
-                                    } else {
-                                      var inColor =
-                                          ColorUtils.getRandomModerateColor();
-                                      tags.add(TDTag(value,
-                                          isLight: true,
-                                          style: TDTagStyle(
-                                            textColor: Colors.grey[800],
-                                            backgroundColor:
-                                                inColor.withOpacity(0.5),
-                                            fontWeight: FontWeight.bold,
-                                            font: Font(size: 16, lineHeight: 2),
-                                            border: 2,
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                                    Radius.circular(4)),
-                                            borderColor:
-                                                inColor.withOpacity(0.5),
-                                          ),
-                                          icon: Icons.bookmark_added,
-                                          padding: const EdgeInsets.all(8),
-                                          size: TDTagSize.large,
-                                          isOutline: true,
-                                          needCloseIcon: true, onCloseTap: () {
-                                        tags.removeWhere(
-                                            (element) => element.text == value);
-                                        setState(() {});
-                                        setBuilderState(() {});
-                                      }));
-                                      setState(() {});
-                                      setBuilderState(() {
-                                        tags = tags;
-                                      });
-                                    }
-                                  }
-                                }),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Material(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.4,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    tags.clear();
+                    const SizedBox(height: 16),
+                    Material(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      child: SizedBox(
+                        height: 100,
+                        child: TDInput(
+                            controller: _popupController,
+                            type: TDInputType.normal,
+                            leftLabel: AppLocalizations.of(context)!.submit_popup_tag_label,
+                            leftLabelStyle: TextStyle(
+                              color: Theme.of(context).textTheme.bodyLarge!.color,
+                              fontWeight: FontWeight.bold,
+                              fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                            ),
+                            hintText: AppLocalizations.of(context)!.submit_popup_tag_hint,
+                            hintTextStyle: TextStyle(
+                              color: Theme.of(context).hintColor,
+                              fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                            ),
+                            maxLength: 16,
+                            additionInfo: AppLocalizations.of(context)!.submit_popup_additional_hint(16),
+                            additionInfoColor: _popupController.text.length >= 16 ? Colors.red : Theme.of(context).hintColor,
+                            autofocus: true,
+                            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                            onChanged: (value) {
+                              setBuilderState(() {});
+                            },
+                            onSubmitted: (value) {
+                              if (value.isNotEmpty) {
+                                if (tags.any((element) => element.text == value)) {
+                                  ToastificationUtils.showSimpleToastification(
+                                      context, AppLocalizations.of(context)!.submit_video_tag_duplicate);
+                                } else {
+                                  var inColor = ColorUtils.getRandomModerateColor();
+                                  tags.add(TDTag(value,
+                                      isLight: true,
+                                      style: TDTagStyle(
+                                        textColor: Colors.grey[800],
+                                        backgroundColor: inColor.withOpacity(0.5),
+                                        fontWeight: FontWeight.bold,
+                                        font: Font(size: 16, lineHeight: 2),
+                                        border: 2,
+                                        borderRadius: const BorderRadius.all(Radius.circular(4)),
+                                        borderColor: inColor.withOpacity(0.5),
+                                      ),
+                                      icon: Icons.bookmark_added,
+                                      padding: const EdgeInsets.all(8),
+                                      size: TDTagSize.large,
+                                      isOutline: true,
+                                      needCloseIcon: true, onCloseTap: () {
+                                    tags.removeWhere((element) => element.text == value);
                                     setState(() {});
                                     setBuilderState(() {});
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    elevation: 4,
-                                    backgroundColor: Colors.red,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
+                                  }));
+                                  _popupController.clear();
+                                  setState(() {});
+                                  setBuilderState(() {});
+                                }
+                              }
+                            }),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Material(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                tags.clear();
+                                setState(() {});
+                                setBuilderState(() {});
+                              },
+                              style: ElevatedButton.styleFrom(
+                                elevation: 4,
+                                backgroundColor: Colors.red,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                alignment: Alignment.centerLeft,
+                                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
+                                iconColor: Theme.of(context).textTheme.bodyLarge!.color,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 24, right: 24),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(Icons.clear, color: Colors.white),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      AppLocalizations.of(context)!.submit_popup_clear_button,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                                      ),
                                     ),
-                                    alignment: Alignment.centerLeft,
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 8, horizontal: 0),
-                                    iconColor: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge!
-                                        .color,
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 24, right: 24),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        const Icon(Icons.clear,
-                                            color: Colors.white),
-                                        const SizedBox(width: 8),
-                                        Text(
-                                          '清空',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: Theme.of(context)
-                                                .textTheme
-                                                .bodyLarge!
-                                                .fontSize,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                  ],
                                 ),
                               ),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.4,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    elevation: 4,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    alignment: Alignment.centerLeft,
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 8, horizontal: 0),
-                                    iconColor: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge!
-                                        .color,
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 24, right: 24),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.done,
-                                          color: Theme.of(context).primaryColor,
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Text(
-                                          '完成',
-                                          style: TextStyle(
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: Theme.of(context)
-                                                .textTheme
-                                                .bodyLarge!
-                                                .fontSize,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 16),
-                      ]),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                elevation: 4,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                alignment: Alignment.centerLeft,
+                                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
+                                iconColor: Theme.of(context).textTheme.bodyLarge!.color,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 24, right: 24),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.done,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      AppLocalizations.of(context)!.submit_popup_confirm_button,
+                                      style: TextStyle(
+                                        color: Theme.of(context).primaryColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                  ]),
                 ));
               });
             }));
@@ -741,7 +691,7 @@ class _SubmitPageState extends State<SubmitPage> {
                   const Icon(Icons.tag),
                   const SizedBox(width: 8),
                   Text(
-                    '添加标签',
+                    AppLocalizations.of(context)!.submit_video_tag_hint,
                     style: TextStyle(
                       color: Theme.of(context).textTheme.bodyLarge!.color,
                       fontWeight: FontWeight.bold,
@@ -788,7 +738,7 @@ class _SubmitPageState extends State<SubmitPage> {
         reset();
         setState(() {});
         if (context.mounted) {
-          ToastificationUtils.showSimpleToastification(context, '上传完成');
+          ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.submit_video_uploading_success);
         }
       }
     });

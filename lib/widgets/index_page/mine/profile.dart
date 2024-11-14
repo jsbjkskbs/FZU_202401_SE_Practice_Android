@@ -22,13 +22,11 @@ class _ProfileViewState extends State<ProfileView> {
           elevation: WidgetStateProperty.all<double>(0),
           shadowColor: WidgetStateProperty.all<Color>(Colors.transparent),
           padding: WidgetStateProperty.all<EdgeInsets>(EdgeInsets.zero),
-          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-              const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
+          shape: WidgetStateProperty.all<RoundedRectangleBorder>(const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
         ),
         onPressed: () {
           if (Global.self.isValidUser()) {
-            Navigator.of(context)
-                .pushNamed("/space", arguments: {"user_id": Global.self.id});
+            Navigator.of(context).pushNamed("/space", arguments: {"user_id": Global.self.id});
           } else {
             Navigator.of(context).pushNamed("/login");
           }
@@ -46,9 +44,7 @@ class _ProfileViewState extends State<ProfileView> {
                   padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                   child: TDAvatar(
                     size: TDAvatarSize.large,
-                    avatarUrl: Global.self.avatarUrl == ""
-                        ? null
-                        : Global.self.avatarUrl,
+                    avatarUrl: Global.self.avatarUrl == "" ? null : Global.self.avatarUrl,
                     defaultUrl: "assets/images/default_avatar.gif",
                   ),
                 ),
@@ -58,10 +54,7 @@ class _ProfileViewState extends State<ProfileView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        Global.self.name == ""
-                            ? AppLocalizations.of(context)!
-                                .mine_profile_login_or_register
-                            : Global.self.name,
+                        Global.self.name == "" ? AppLocalizations.of(context)!.mine_profile_login_or_register : Global.self.name,
                         style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontSize: 20.0,
@@ -75,11 +68,7 @@ class _ProfileViewState extends State<ProfileView> {
             ),
             Row(
               children: [
-                Text(
-                    Global.self.isValidUser()
-                        ? AppLocalizations.of(context)!
-                            .mine_profile_view_profile
-                        : "",
+                Text(Global.self.isValidUser() ? AppLocalizations.of(context)!.mine_profile_view_profile : "",
                     style: TextStyle(
                       color: Theme.of(context).primaryColor,
                       fontSize: 16.0,

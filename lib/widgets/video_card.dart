@@ -35,9 +35,8 @@ class _VideoCardState extends State<VideoCard> {
                 TextButton(
                     style: ButtonStyle(
                       alignment: Alignment.centerLeft,
-                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(0))),
+                      shape:
+                          WidgetStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(0))),
                       minimumSize: WidgetStateProperty.all(const Size(140, 50)),
                     ),
                     onPressed: () {},
@@ -52,25 +51,20 @@ class _VideoCardState extends State<VideoCard> {
                 TextButton(
                     style: ButtonStyle(
                       alignment: Alignment.centerLeft,
-                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(0))),
+                      shape:
+                          WidgetStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(0))),
                       minimumSize: WidgetStateProperty.all(const Size(140, 50)),
                     ),
                     onPressed: () {
                       Navigator.of(context).pop();
-                      ToastificationUtils.showSimpleToastification(
-                          context,
-                          AppLocalizations.of(context)!
-                              .video_card_uninterested_success);
+                      ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.video_card_uninterested_success);
                     },
                     child: IntrinsicWidth(
                         child: Row(
                       children: [
                         const Icon(DisplayIcons.not_interest),
                         const SizedBox(width: 4),
-                        Text(AppLocalizations.of(context)!
-                            .video_card_uninterested),
+                        Text(AppLocalizations.of(context)!.video_card_uninterested),
                       ],
                     ))),
               ],
@@ -102,25 +96,15 @@ class _VideoCardState extends State<VideoCard> {
                             const SizedBox(width: 4),
                             Icon(
                               DisplayIcons.video_player,
-                              size: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .fontSize,
-                              color:
-                                  Theme.of(context).textTheme.bodyMedium!.color,
+                              size: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                              color: Theme.of(context).textTheme.bodyMedium!.color,
                             ),
                             const SizedBox(width: 2),
                             Text(
                               video.viewCount.toString(),
                               style: TextStyle(
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .color,
-                                fontSize: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .fontSize,
+                                color: Theme.of(context).textTheme.bodyMedium!.color,
+                                fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
                               ),
                             ),
                           ],
@@ -132,15 +116,12 @@ class _VideoCardState extends State<VideoCard> {
                   FractionallySizedBox(
                       widthFactor: 0.9,
                       child: SizedBox(
-                        height:
-                            Theme.of(context).textTheme.bodyLarge!.fontSize! *
-                                2.7,
+                        height: Theme.of(context).textTheme.bodyLarge!.fontSize! * 2.7,
                         child: Text(
                           video.title,
                           style: TextStyle(
                             color: Theme.of(context).textTheme.bodyLarge!.color,
-                            fontSize:
-                                Theme.of(context).textTheme.bodyLarge!.fontSize,
+                            fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
                             fontWeight: FontWeight.bold,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -157,28 +138,18 @@ class _VideoCardState extends State<VideoCard> {
                           const SizedBox(width: 4),
                           Icon(
                             DisplayIcons.up_er,
-                            size: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall!
-                                    .fontSize! *
-                                1.6,
+                            size: Theme.of(context).textTheme.bodySmall!.fontSize! * 1.6,
                             color: Theme.of(context).hintColor,
                           ),
                           const SizedBox(width: 4),
                           ConstrainedBox(
-                              constraints: BoxConstraints(
-                                  maxWidth:
-                                      MediaQuery.of(context).size.width / 3),
-                              child:
-                                  Text("作者名字七个字: ${video.userId}12313131321231",
-                                      style: TextStyle(
-                                        color: Theme.of(context).hintColor,
-                                        fontSize: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall!
-                                            .fontSize,
-                                        overflow: TextOverflow.ellipsis,
-                                      )))
+                              constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 3),
+                              child: Text("作者名字七个字: ${video.userId}12313131321231",
+                                  style: TextStyle(
+                                    color: Theme.of(context).hintColor,
+                                    fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+                                    overflow: TextOverflow.ellipsis,
+                                  )))
                         ],
                       )),
                   const SizedBox(height: 12),

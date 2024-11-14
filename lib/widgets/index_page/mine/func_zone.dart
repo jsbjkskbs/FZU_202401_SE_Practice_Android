@@ -57,8 +57,7 @@ class _FuncZoneState extends State<FuncZone> {
               style: ButtonStyle(
                 shadowColor: WidgetStateProperty.all(Colors.transparent),
                 backgroundColor: WidgetStateProperty.all(Colors.transparent),
-                shape: WidgetStateProperty.all(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0))),
+                shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(0))),
                 padding: WidgetStateProperty.all(const EdgeInsets.all(8)),
               ),
               child: Padding(
@@ -73,8 +72,7 @@ class _FuncZoneState extends State<FuncZone> {
                         const SizedBox(width: 4),
                         Text(
                           item.content,
-                          style:
-                              TextStyle(color: Theme.of(context).primaryColor),
+                          style: TextStyle(color: Theme.of(context).primaryColor),
                         )
                       ],
                     ),

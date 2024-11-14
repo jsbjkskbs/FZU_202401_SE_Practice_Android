@@ -78,4 +78,10 @@ class DisplayIcons {
     fontFamily: "icons",
     matchTextDirection: true,
   );
+
+  static const IconData edit = IconData(
+    0xe90d,
+    fontFamily: "icons",
+    matchTextDirection: true,
+  );
 }

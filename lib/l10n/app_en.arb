@@ -180,5 +180,53 @@
   "flex_scheme_deepOrangeM3": "Rust deep orange",
   "flex_scheme_blackWhite": "Black and white",
   "flex_scheme_greys": "Grey",
-  "flex_scheme_sepia": "Sepia"
+  "flex_scheme_sepia": "Sepia",
+  "submit_select_video_hint": "Select video",
+  "submit_video_title_hint": "Title",
+  "submit_video_title_input_hint": "Enter title",
+  "submit_video_title_additional_hint": " {count}/{max} characters",
+  "@submit_video_title_additional_hint": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "submit_video_title_error": "Title cannot be empty",
+  "submit_video_description_hint": "Description",
+  "submit_video_description_input_hint": "Enter description",
+  "submit_video_description_error": "Description cannot be empty",
+  "submit_video_category_hint": "Select category",
+  "submit_video_category_error": "Category cannot be empty",
+  "submit_video_tag_hint": "Add tags",
+  "submit_video_tag_additional_hint": "{count} tags entered",
+  "@submit_video_tag_additional_hint": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "submit_popup_tag_label": "Tags",
+  "submit_popup_tag_hint": "Enter tags",
+  "submit_popup_additional_hint": "Maximum {count} characters",
+  "submit_popup_clear_button": "Clear",
+  "submit_popup_confirm_button": "Confirm",
+  "submit_video_tag_duplicate": "Duplicate tag",
+  "submit_clear_button": "Clear",
+  "submit_submit_button": "Submit",
+  "submit_video_not_selected": "No video selected",
+  "submit_video_uploading_hint": "Uploading, please do not close the page",
+  "submit_video_uploading_hint_bottom": "Uploading...",
+  "submit_video_uploading_success": "Upload successful",
+  "friend_title": "My Friends",
+  "friend_about_description": "Friends are people who follow each other",
+  "submission_management_title": "Submission Management",
+  "submission_management_kind_all": "All",
+  "submission_management_kind_passed": "Passed",
+  "submission_management_kind_review": "Review",
+  "submission_management_kind_locked": "Locked"
 }

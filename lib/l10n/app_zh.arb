@@ -180,5 +180,53 @@
   "flex_scheme_deepOrangeM3": "锈深橙色",
   "flex_scheme_blackWhite": "黑白",
   "flex_scheme_greys": "灰色",
-  "flex_scheme_sepia": "棕褐色"
+  "flex_scheme_sepia": "棕褐色",
+  "submit_select_video_hint": "选择视频",
+  "submit_video_title_hint": "标题",
+  "submit_video_title_input_hint": "请输入标题",
+  "submit_video_title_additional_hint": " {count}/{max} 字",
+  "@submit_video_title_additional_hint": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "submit_video_title_error": "标题不能为空",
+  "submit_video_description_hint": "简介",
+  "submit_video_description_input_hint": "请输入简介",
+  "submit_video_description_error": "简介不能为空",
+  "submit_video_category_hint": "选择分区",
+  "submit_video_category_error": "分区不能为空",
+  "submit_video_tag_hint": "添加标签",
+  "submit_video_tag_additional_hint": "已输入 {count} 个标签",
+  "@submit_video_tag_additional_hint": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "submit_popup_tag_label": "标签",
+  "submit_popup_tag_hint": "请输入标签",
+  "submit_popup_additional_hint": "最大输入 {count} 个字",
+  "submit_popup_clear_button": "清空",
+  "submit_popup_confirm_button": "确认",
+  "submit_video_tag_duplicate": "标签重复",
+  "submit_clear_button": "清空",
+  "submit_submit_button": "提交",
+  "submit_video_not_selected": "未选择视频",
+  "submit_video_uploading_hint": "上传中，请不要关闭页面",
+  "submit_video_uploading_hint_bottom": "上传中......",
+  "submit_video_uploading_success": "上传成功",
+  "friend_title": "我的朋友",
+  "friend_about_description": "朋友就是互相关注的人",
+  "submission_management_title": "投稿管理",
+  "submission_management_kind_all": "全部",
+  "submission_management_kind_passed": "已通过",
+  "submission_management_kind_review": "待审核",
+  "submission_management_kind_locked": "被锁定"
 }

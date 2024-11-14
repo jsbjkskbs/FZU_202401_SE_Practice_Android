@@ -25,10 +25,8 @@ class _UserInfoViewState extends State<UserInfoView> {
             onPressed: () {},
             child: Column(
               children: [
-                Text("0",
-                    style: TextStyle(color: Theme.of(context).primaryColor)),
-                Text(AppLocalizations.of(context)!.mine_user_info_like,
-                    style: TextStyle(color: Theme.of(context).primaryColor)),
+                Text("0", style: TextStyle(color: Theme.of(context).primaryColor)),
+                Text(AppLocalizations.of(context)!.mine_user_info_like, style: TextStyle(color: Theme.of(context).primaryColor)),
               ],
             ),
           ),
@@ -40,10 +38,8 @@ class _UserInfoViewState extends State<UserInfoView> {
               onPressed: () {},
               child: Column(
                 children: [
-                  Text("0",
-                      style: TextStyle(color: Theme.of(context).primaryColor)),
-                  Text(AppLocalizations.of(context)!.mine_user_info_subscribe,
-                      style: TextStyle(color: Theme.of(context).primaryColor)),
+                  Text("0", style: TextStyle(color: Theme.of(context).primaryColor)),
+                  Text(AppLocalizations.of(context)!.mine_user_info_subscribe, style: TextStyle(color: Theme.of(context).primaryColor)),
                 ],
               ),
             )),
@@ -54,10 +50,8 @@ class _UserInfoViewState extends State<UserInfoView> {
               onPressed: () {},
               child: Column(
                 children: [
-                  Text("0",
-                      style: TextStyle(color: Theme.of(context).primaryColor)),
-                  Text(AppLocalizations.of(context)!.mine_user_info_follower,
-                      style: TextStyle(color: Theme.of(context).primaryColor)),
+                  Text("0", style: TextStyle(color: Theme.of(context).primaryColor)),
+                  Text(AppLocalizations.of(context)!.mine_user_info_follower, style: TextStyle(color: Theme.of(context).primaryColor)),
                 ],
               ),
             )),
@@ -68,10 +62,7 @@ class _UserInfoViewState extends State<UserInfoView> {
 }
 
 class DivideBox extends StatelessWidget {
-  const DivideBox(
-      {super.key,
-      required this.height,
-      this.decoColor = const Color(0xFFE0E0E0)});
+  const DivideBox({super.key, required this.height, this.decoColor = const Color(0xFFE0E0E0)});
 
   final double height;
   final Color decoColor;

@@ -32,8 +32,7 @@ class _LoadingPageState extends State<LoadingPage> {
               height: MediaQuery.of(context).size.height / 12,
               child: GestureDetector(
                   onTap: () {
-                    Navigator.of(context)
-                        .pushReplacementNamed(IndexPage.routeName);
+                    Navigator.of(context).pushReplacementNamed(IndexPage.routeName);
                   },
                   child: CircularCountDownTimer(
                     width: MediaQuery.of(context).size.width / 10,
@@ -49,10 +48,8 @@ class _LoadingPageState extends State<LoadingPage> {
                         color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.bold),
                     onComplete: () {
-                      Navigator.of(context)
-                          .pushReplacementNamed(IndexPage.routeName);
-                      ToastificationUtils.showSimpleToastification(
-                          context, AppLocalizations.of(context)!.loading_hint,
+                      Navigator.of(context).pushReplacementNamed(IndexPage.routeName);
+                      ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.loading_hint,
                           duration: const Duration(seconds: 3));
                     },
                   )),
@@ -72,13 +69,10 @@ class _LoadingPageState extends State<LoadingPage> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Padding(
-              padding: EdgeInsets.only(
-                  right: MediaQuery.of(context).size.width / 20,
-                  bottom: MediaQuery.of(context).size.height / 24),
+              padding: EdgeInsets.only(right: MediaQuery.of(context).size.width / 20, bottom: MediaQuery.of(context).size.height / 24),
               child: ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context)
-                        .pushReplacementNamed(IndexPage.routeName);
+                    Navigator.of(context).pushReplacementNamed(IndexPage.routeName);
                   },
                   child: Text(AppLocalizations.of(context)!.loading_skip,
                       style: TextStyle(
@@ -90,20 +84,17 @@ class _LoadingPageState extends State<LoadingPage> {
           ],
         ),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          AnimatedTextKit(
-              repeatForever: false,
-              totalRepeatCount: 1,
-              animatedTexts: [
-                WavyAnimatedText(
-                  'FuliFuli',
-                  textStyle: TextStyle(
-                      fontSize: MediaQuery.of(context).size.width / 6,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).indicatorColor,
-                      fontFamily: "Ponari"),
-                  speed: const Duration(milliseconds: 360),
-                ),
-              ]),
+          AnimatedTextKit(repeatForever: false, totalRepeatCount: 1, animatedTexts: [
+            WavyAnimatedText(
+              'FuliFuli',
+              textStyle: TextStyle(
+                  fontSize: MediaQuery.of(context).size.width / 6,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).indicatorColor,
+                  fontFamily: "Ponari"),
+              speed: const Duration(milliseconds: 360),
+            ),
+          ]),
         ]),
         SizedBox(height: MediaQuery.of(context).size.height / 8),
       ],

@@ -5,8 +5,7 @@ import 'package:fulifuli_app/widgets/icons/def.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 class SearchPageVideoItem extends StatelessWidget {
-  const SearchPageVideoItem(
-      {super.key, required this.onTap, required this.data});
+  const SearchPageVideoItem({super.key, required this.onTap, required this.data});
 
   final Function onTap;
   final Video data;
@@ -39,27 +38,13 @@ class SearchPageVideoItem extends StatelessWidget {
                       ConstrainedBox(
                         constraints: BoxConstraints(
                             maxWidth: MediaQuery.of(context).size.width / 2 - 8,
-                            minHeight: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .fontSize! *
-                                    3 +
-                                4,
-                            maxHeight: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .fontSize! *
-                                    3 +
-                                4),
+                            minHeight: Theme.of(context).textTheme.bodyMedium!.fontSize! * 3 + 4,
+                            maxHeight: Theme.of(context).textTheme.bodyMedium!.fontSize! * 3 + 4),
                         child: Text(
                           data.title,
                           style: TextStyle(
-                            fontSize: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .fontSize,
-                            color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
+                            fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                            color: Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                           maxLines: 2,
                           softWrap: true,
@@ -74,12 +59,7 @@ class SearchPageVideoItem extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Icon(DisplayIcons.up_er,
-                                    size: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall!
-                                            .fontSize! *
-                                        1.6,
-                                    color: Theme.of(context).hintColor),
+                                    size: Theme.of(context).textTheme.bodySmall!.fontSize! * 1.6, color: Theme.of(context).hintColor),
                                 const SizedBox(
                                   width: 4,
                                 ),
@@ -88,10 +68,7 @@ class SearchPageVideoItem extends StatelessWidget {
                                   child: Text(
                                     data.userId,
                                     style: TextStyle(
-                                      fontSize: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall!
-                                          .fontSize,
+                                      fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
                                       color: Theme.of(context).hintColor,
                                     ),
                                     overflow: TextOverflow.ellipsis,
@@ -107,25 +84,16 @@ class SearchPageVideoItem extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Icon(DisplayIcons.video_player,
-                                    size: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall!
-                                            .fontSize! *
-                                        1.6,
-                                    color: Theme.of(context).hintColor),
+                                    size: Theme.of(context).textTheme.bodySmall!.fontSize! * 1.6, color: Theme.of(context).hintColor),
                                 const SizedBox(
                                   width: 4,
                                 ),
                                 SizedBox(
                                   width: MediaQuery.of(context).size.width / 8,
                                   child: Text(
-                                    NumberConverter.convertNumber(
-                                        data.viewCount),
+                                    NumberConverter.convertNumber(data.viewCount),
                                     style: TextStyle(
-                                      fontSize: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall!
-                                          .fontSize,
+                                      fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
                                       color: Theme.of(context).hintColor,
                                     ),
                                     overflow: TextOverflow.ellipsis,
@@ -133,16 +101,9 @@ class SearchPageVideoItem extends StatelessWidget {
                                 ),
                                 Row(children: [
                                   Text(
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                            data.createdAt,
-                                            isUtc: true)
-                                        .toString()
-                                        .substring(0, 10),
+                                    DateTime.fromMillisecondsSinceEpoch(data.createdAt, isUtc: true).toString().substring(0, 10),
                                     style: TextStyle(
-                                      fontSize: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall!
-                                          .fontSize,
+                                      fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
                                       color: Theme.of(context).hintColor,
                                     ),
                                     overflow: TextOverflow.ellipsis,

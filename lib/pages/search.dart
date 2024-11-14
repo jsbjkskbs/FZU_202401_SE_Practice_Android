@@ -30,10 +30,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _getTabsView() {
-    return SearchPageTabsContainer(tabs: [
-      AppLocalizations.of(context)!.search_video,
-      AppLocalizations.of(context)!.search_user
-    ]);
+    return SearchPageTabsContainer(tabs: [AppLocalizations.of(context)!.search_video, AppLocalizations.of(context)!.search_user]);
   }
 
   @override

@@ -21,25 +21,15 @@ class _SearchPageUserItemState extends State<SearchPageUserItem> {
   Widget _getFollowButton(BuildContext context) {
     var elStyle = ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        backgroundColor: isFollowed
-            ? Theme.of(context).disabledColor
-            : Theme.of(context).primaryColor,
+        backgroundColor: isFollowed ? Theme.of(context).disabledColor : Theme.of(context).primaryColor,
         padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
-        overlayColor: isFollowed
-            ? Theme.of(context).disabledColor
-            : Theme.of(context).primaryColor);
+        overlayColor: isFollowed ? Theme.of(context).disabledColor : Theme.of(context).primaryColor);
     var icon = isFollowed ? Icons.check : Icons.add;
-    var text = isFollowed
-        ? AppLocalizations.of(context)!.search_followed
-        : AppLocalizations.of(context)!.search_follow;
-    var iconColor = isFollowed
-        ? Theme.of(context).hintColor
-        : Theme.of(context).scaffoldBackgroundColor;
+    var text = isFollowed ? AppLocalizations.of(context)!.search_followed : AppLocalizations.of(context)!.search_follow;
+    var iconColor = isFollowed ? Theme.of(context).hintColor : Theme.of(context).scaffoldBackgroundColor;
     var iconSize = Theme.of(context).textTheme.bodySmall!.fontSize;
     var textStyle = TextStyle(
-        color: isFollowed
-            ? Theme.of(context).hintColor
-            : Theme.of(context).scaffoldBackgroundColor,
+        color: isFollowed ? Theme.of(context).hintColor : Theme.of(context).scaffoldBackgroundColor,
         fontSize: Theme.of(context).textTheme.bodySmall!.fontSize);
     return Padding(
         padding: const EdgeInsets.only(right: 16),
@@ -62,8 +52,7 @@ class _SearchPageUserItemState extends State<SearchPageUserItem> {
                     width: 2,
                   ),
                   SizedBox(
-                    width:
-                        Theme.of(context).textTheme.bodySmall!.fontSize! * 4.2,
+                    width: Theme.of(context).textTheme.bodySmall!.fontSize! * 4.2,
                     child: Text(
                       text,
                       style: textStyle,
@@ -94,12 +83,7 @@ class _SearchPageUserItemState extends State<SearchPageUserItem> {
                       Column(
                         children: [
                           TDImage(
-                              height: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .fontSize! *
-                                      5 +
-                                  4,
+                              height: Theme.of(context).textTheme.bodyMedium!.fontSize! * 5 + 4,
                               type: TDImageType.circle,
                               assetUrl: 'assets/images/default_avatar.gif')
                         ],
@@ -115,10 +99,7 @@ class _SearchPageUserItemState extends State<SearchPageUserItem> {
                             '用户名',
                             style: TextStyle(
                               color: Theme.of(context).primaryColor,
-                              fontSize: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge!
-                                  .fontSize,
+                              fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
                             ),
                           ),
                           const SizedBox(height: 8),
@@ -126,10 +107,7 @@ class _SearchPageUserItemState extends State<SearchPageUserItem> {
                             '${NumberConverter.convertNumber(173881931737)}${AppLocalizations.of(context)!.search_follower}',
                             style: TextStyle(
                               color: Theme.of(context).hintColor,
-                              fontSize: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .fontSize,
+                              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
                             ),
                           )
                         ],

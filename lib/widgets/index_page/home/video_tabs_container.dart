@@ -4,8 +4,7 @@ import 'package:fulifuli_app/widgets/index_page/home/video_tabs_view.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 class VideoTabsContainer extends StatefulWidget {
-  const VideoTabsContainer(
-      {super.key, required this.controller, required this.tabs});
+  const VideoTabsContainer({super.key, required this.controller, required this.tabs});
 
   final ScrollController controller;
   final List<String> tabs;
@@ -16,8 +15,7 @@ class VideoTabsContainer extends StatefulWidget {
   }
 }
 
-class _VideoTabsContainerState extends State<VideoTabsContainer>
-    with TickerProviderStateMixin {
+class _VideoTabsContainerState extends State<VideoTabsContainer> with TickerProviderStateMixin {
   late TabController _tabController;
   int _currentIndex = 0;
   List<TDTab> tabs = [];

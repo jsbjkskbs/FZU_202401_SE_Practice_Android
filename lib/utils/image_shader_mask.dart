@@ -19,12 +19,7 @@ class GradientImage extends StatelessWidget {
   final AlignmentGeometry end;
 
   const GradientImage(
-      {super.key,
-      required this.imgName,
-      this.width,
-      this.height,
-      this.begin = Alignment.topCenter,
-      this.end = Alignment.bottomCenter});
+      {super.key, required this.imgName, this.width, this.height, this.begin = Alignment.topCenter, this.end = Alignment.bottomCenter});
 
   @override
   Widget build(BuildContext context) {
@@ -44,14 +39,9 @@ class GradientImage extends StatelessWidget {
   /// 根据图片名判断是网络还是本地的图片
   Widget _createImage() {
     if (imgName.startsWith('http')) {
-      return CachedNetworkImage(
-          width: width, height: height, imageUrl: imgName, fit: BoxFit.cover);
+      return CachedNetworkImage(width: width, height: height, imageUrl: imgName, fit: BoxFit.cover);
     } else {
-      return Image.asset(imgName,
-          width: width,
-          height: height,
-          fit: BoxFit.cover,
-          alignment: Alignment.topCenter);
+      return Image.asset(imgName, width: width, height: height, fit: BoxFit.cover, alignment: Alignment.topCenter);
     }
   }
 }

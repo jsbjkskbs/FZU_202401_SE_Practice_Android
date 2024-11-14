@@ -40,13 +40,11 @@ class SettingsPage extends StatelessWidget {
         groupBy: (SettingsItem element) {
           return element.kind;
         },
-        groupSeparatorBuilder: (String groupByValue) =>
-            const SizedBox(height: 16),
+        groupSeparatorBuilder: (String groupByValue) => const SizedBox(height: 16),
         itemBuilder: (context, SettingsItem element) {
           return SettingsListItem(element);
         },
-        itemComparator: (item1, item2) =>
-            item1.labelIndex.compareTo(item2.labelIndex),
+        itemComparator: (item1, item2) => item1.labelIndex.compareTo(item2.labelIndex),
         useStickyGroupSeparators: false,
         floatingHeader: true,
         order: GroupedListOrder.ASC,
@@ -77,31 +75,22 @@ class _SettingsList {
             data: [
               SelectedListItem(
                 name: AppLocalizations.of(context)!.flex_scheme_default,
-                isSelected: Global.appPersistentData.themeSelection ==
-                    FlexScheme.sakura.name,
+                isSelected: Global.appPersistentData.themeSelection == FlexScheme.sakura.name,
                 value: FlexScheme.sakura.name,
               ),
               for (var value in FlexScheme.values)
                 if (value.name != 'custom') ...[
                   SelectedListItem(
-                      name: SchemeReflect.getFlexSchemeLocalizedName(
-                          value.name, context),
-                      isSelected:
-                          Global.appPersistentData.themeSelection == value.name,
+                      name: SchemeReflect.getFlexSchemeLocalizedName(value.name, context),
+                      isSelected: Global.appPersistentData.themeSelection == value.name,
                       value: value.name),
                 ]
             ],
             onSelected: (items) {
-              var val = items.first.value ??
-                  SchemeReflect.getFlexScheme(FlexScheme.sakura.name,
-                          defaultScheme: FlexScheme.sakura)
-                      .name;
+              var val = items.first.value ?? SchemeReflect.getFlexScheme(FlexScheme.sakura.name, defaultScheme: FlexScheme.sakura).name;
               Global.appPersistentData.themeSelection = val;
               Storage.storePersistentData(Global.appPersistentData);
-              MyAppState.appScheme.setSchemeWithContext(
-                  SchemeReflect.getFlexScheme(val,
-                      defaultScheme: FlexScheme.sakura),
-                  context);
+              MyAppState.appScheme.setSchemeWithContext(SchemeReflect.getFlexScheme(val, defaultScheme: FlexScheme.sakura), context);
             },
             searchHintText: AppLocalizations.of(context)!.home_top_bar_search,
           )).showModal(context);
@@ -124,14 +113,8 @@ class _SettingsList {
                 ),
               ),
               data: [
-                SelectedListItem(
-                    name: '简体中文',
-                    isSelected: Global.appPersistentData.languageCode == 'zh',
-                    value: 'zh'),
-                SelectedListItem(
-                    name: 'English',
-                    isSelected: Global.appPersistentData.languageCode == 'en',
-                    value: 'en'),
+                SelectedListItem(name: '简体中文', isSelected: Global.appPersistentData.languageCode == 'zh', value: 'zh'),
+                SelectedListItem(name: 'English', isSelected: Global.appPersistentData.languageCode == 'en', value: 'en'),
               ],
               onSelected: (items) {
                 var val = items.first.value ?? 'en';
@@ -149,9 +132,7 @@ class _SettingsList {
           kindIndex: 0,
           onTap: (BuildContext context) {
             Navigator.of(context).push(TDSlidePopupRoute(
-                modalBarrierColor: Global.appPersistentData.themeMode == 0
-                    ? Colors.black.withOpacity(0.5)
-                    : Colors.white.withOpacity(0.3),
+                modalBarrierColor: Global.appPersistentData.themeMode == 0 ? Colors.black.withOpacity(0.5) : Colors.white.withOpacity(0.3),
                 slideTransitionFrom: SlideTransitionFrom.bottom,
                 builder: (context) {
                   return Container(
@@ -168,14 +149,12 @@ class _SettingsList {
                         children: [
                           const SizedBox(height: 32),
                           const Image(
-                            image: AssetImage(
-                                'assets/images/cute/konata_dancing.webp'),
+                            image: AssetImage('assets/images/cute/konata_dancing.webp'),
                             height: 120,
                           ),
                           const SizedBox(height: 32),
                           Text(
-                            AppLocalizations.of(context)!
-                                .settings_about_us_noting,
+                            AppLocalizations.of(context)!.settings_about_us_noting,
                             style: TextStyle(
                               color: Theme.of(context).primaryColor,
                               fontSize: MediaQuery.of(context).size.width / 20,

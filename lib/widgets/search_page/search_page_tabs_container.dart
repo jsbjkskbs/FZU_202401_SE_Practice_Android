@@ -16,8 +16,7 @@ class SearchPageTabsContainer extends StatefulWidget {
   }
 }
 
-class _SearchPageTabsContainerState extends State<SearchPageTabsContainer>
-    with TickerProviderStateMixin {
+class _SearchPageTabsContainerState extends State<SearchPageTabsContainer> with TickerProviderStateMixin {
   late TabController _tabController;
   int _currentIndex = 0;
   List<TDTab> tabs = [];

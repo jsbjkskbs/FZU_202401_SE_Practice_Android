@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/widgets/index_page/friend/friend_list_view.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
@@ -11,18 +12,15 @@ class FriendPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('Friend'),
+            Text(AppLocalizations.of(context)!.friend_title, style: Theme.of(context).textTheme.headlineSmall),
             IconButton(
               onPressed: () {
                 Navigator.of(context).push(TDSlidePopupRoute(
-                    modalBarrierColor: Theme.of(context)
-                        .textTheme
-                        .bodySmall!
-                        .color!
-                        .withOpacity(0.5),
+                    modalBarrierColor: Theme.of(context).textTheme.bodySmall!.color!.withOpacity(0.5),
                     slideTransitionFrom: SlideTransitionFrom.bottom,
                     builder: (BuildContext context) {
                       return Container(
@@ -37,23 +35,21 @@ class FriendPage extends StatelessWidget {
                           ),
                           child: Center(
                             child: Text(
-                              '朋友就是互相关注的人',
+                              AppLocalizations.of(context)!.friend_about_description,
                               style: TextStyle(
                                 decoration: TextDecoration.none,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .headlineSmall!
-                                    .color,
-                                fontSize: Theme.of(context)
-                                    .textTheme
-                                    .headlineSmall!
-                                    .fontSize,
+                                color: Theme.of(context).textTheme.headlineSmall!.color,
+                                fontSize: Theme.of(context).textTheme.headlineSmall!.fontSize,
                               ),
                             ),
                           ));
                     }));
               },
-              icon: const Icon(DisplayIcons.about),
+              icon: Icon(
+                DisplayIcons.about,
+                size: Theme.of(context).textTheme.headlineSmall!.fontSize! * 1.2,
+                color: Theme.of(context).textTheme.headlineSmall!.color,
+              ),
             ),
           ],
         ),

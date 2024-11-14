@@ -40,8 +40,7 @@ class _SpaceVideoTabsViewState extends State<SpaceVideoTabsView> {
     super.initState();
     bool isCached = Global.cachedMapVideoList.containsKey(widget.uniqueKey);
     if (!isCached) {
-      Global.cachedMapVideoList
-          .addEntries([MapEntry(widget.uniqueKey, videoList)]);
+      Global.cachedMapVideoList.addEntries([MapEntry(widget.uniqueKey, videoList)]);
       debugPrint('Added new video list with key: ${widget.uniqueKey}');
     }
     videoList = Global.cachedMapVideoList[widget.uniqueKey]!;
@@ -134,20 +133,13 @@ class _SpaceVideoTabsViewState extends State<SpaceVideoTabsView> {
             color: Theme.of(context).primaryColor,
           ),
           dragText: AppLocalizations.of(context)!.home_page_refresher_drag_text,
-          armedText:
-              AppLocalizations.of(context)!.home_page_refresher_armed_text,
-          readyText:
-              AppLocalizations.of(context)!.home_page_refresher_ready_text,
-          processedText:
-              AppLocalizations.of(context)!.home_page_refresher_processed_text,
-          processingText:
-              AppLocalizations.of(context)!.home_page_refresher_processing_text,
-          noMoreText:
-              AppLocalizations.of(context)!.home_page_refresher_no_more_text,
-          failedText:
-              AppLocalizations.of(context)!.home_page_refresher_failed_text,
-          messageText:
-              AppLocalizations.of(context)!.home_page_refresher_message_text,
+          armedText: AppLocalizations.of(context)!.home_page_refresher_armed_text,
+          readyText: AppLocalizations.of(context)!.home_page_refresher_ready_text,
+          processedText: AppLocalizations.of(context)!.home_page_refresher_processed_text,
+          processingText: AppLocalizations.of(context)!.home_page_refresher_processing_text,
+          noMoreText: AppLocalizations.of(context)!.home_page_refresher_no_more_text,
+          failedText: AppLocalizations.of(context)!.home_page_refresher_failed_text,
+          messageText: AppLocalizations.of(context)!.home_page_refresher_message_text,
           iconTheme: IconThemeData(
             color: Theme.of(context).primaryColor,
           ),
@@ -203,19 +195,16 @@ class _SpaceVideoTabsViewState extends State<SpaceVideoTabsView> {
                           children: [
                             Column(
                               children: [
-                                Image.asset(
-                                    'assets/images/cute/konata_dancing.webp'),
+                                Image.asset('assets/images/cute/konata_dancing.webp'),
                                 Text(
-                                  AppLocalizations.of(context)!
-                                      .space_nothing_hint,
+                                  AppLocalizations.of(context)!.space_nothing_hint,
                                   style: hintStyle,
                                 ),
                               ],
                             ),
                             const SizedBox(),
                             Text(
-                              AppLocalizations.of(context)!
-                                  .space_nothing_hint_bottom,
+                              AppLocalizations.of(context)!.space_nothing_hint_bottom,
                               style: hintStyle,
                             ),
                             const SizedBox()

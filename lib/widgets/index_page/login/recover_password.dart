@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:fluid_dialog/fluid_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RecoverPasswordForm extends StatefulWidget {
   const RecoverPasswordForm({super.key});
@@ -16,12 +16,9 @@ class RecoverPasswordForm extends StatefulWidget {
 }
 
 class _RecoverPasswordState extends State<RecoverPasswordForm> {
-  final TextEditingController _recoverPasswordController1 =
-      TextEditingController();
-  final TextEditingController _recoverPasswordController2 =
-      TextEditingController();
-  late Timer _countdownTimer =
-      Timer.periodic(const Duration(seconds: 1), (timer) {});
+  final TextEditingController _recoverPasswordController1 = TextEditingController();
+  final TextEditingController _recoverPasswordController2 = TextEditingController();
+  late Timer _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {});
   int _countdownTime = 0;
   bool _emailValid = true;
   bool _passwordValid = true;
@@ -35,8 +32,7 @@ class _RecoverPasswordState extends State<RecoverPasswordForm> {
     if (email.isEmpty) {
       return false;
     }
-    return RegExp(r'^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$')
-        .hasMatch(email);
+    return RegExp(r'^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$').hasMatch(email);
   }
 
   bool _validatePassword(String password) {
@@ -72,53 +68,34 @@ class _RecoverPasswordState extends State<RecoverPasswordForm> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const SizedBox(height: 16),
-                      Text(
-                          AppLocalizations.of(context)!
-                              .login_recover_page_reset_password,
-                          style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold)),
+                      Text(AppLocalizations.of(context)!.login_recover_page_reset_password,
+                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 16),
                       TDInput(
-                        leftLabel: AppLocalizations.of(context)!
-                            .login_recover_page_reset_email,
+                        leftLabel: AppLocalizations.of(context)!.login_recover_page_reset_email,
                         leftLabelStyle: TextStyle(
                           color: Theme.of(context).indicatorColor,
                         ),
                         textStyle: TextStyle(
                           color: Theme.of(context).indicatorColor,
                         ),
-                        inputDecoration: _makeInputDecoration(
-                            AppLocalizations.of(context)!
-                                .login_recover_page_reset_email_hint,
-                            context),
+                        inputDecoration: _makeInputDecoration(AppLocalizations.of(context)!.login_recover_page_reset_email_hint, context),
                         onChanged: (value) {
                           setState(() {
                             _emailValid = _validateEmail(value);
                           });
                         },
-                        additionInfo: _emailValid
-                            ? ""
-                            : AppLocalizations.of(context)!
-                                .login_recover_page_reset_email_error,
+                        additionInfo: _emailValid ? "" : AppLocalizations.of(context)!.login_recover_page_reset_email_error,
                         additionInfoColor: Colors.red,
                       ),
                       TDInput(
-                        leftLabel: AppLocalizations.of(context)!
-                            .login_recover_page_reset_code,
-                        leftLabelStyle: TextStyle(
-                            color: Theme.of(context).indicatorColor,
-                            letterSpacing: 0),
+                        leftLabel: AppLocalizations.of(context)!.login_recover_page_reset_code,
+                        leftLabelStyle: TextStyle(color: Theme.of(context).indicatorColor, letterSpacing: 0),
                         textStyle: TextStyle(
                           color: Theme.of(context).indicatorColor,
                         ),
-                        inputDecoration: _makeInputDecoration(
-                            AppLocalizations.of(context)!
-                                .login_recover_page_reset_code_hint,
-                            context),
-                        additionInfo: _verifyCodeValid
-                            ? ""
-                            : AppLocalizations.of(context)!
-                                .login_recover_page_reset_code_error,
+                        inputDecoration: _makeInputDecoration(AppLocalizations.of(context)!.login_recover_page_reset_code_hint, context),
+                        additionInfo: _verifyCodeValid ? "" : AppLocalizations.of(context)!.login_recover_page_reset_code_error,
                         additionInfoColor: Colors.red,
                         rightBtn: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -133,30 +110,22 @@ class _RecoverPasswordState extends State<RecoverPasswordForm> {
                             ),
                             _countdownTime > 0
                                 ? TDText(
-                                    AppLocalizations.of(context)!
-                                        .login_recover_page_send_reset_code_on_countdown(
-                                            _countdownTime),
-                                    textColor:
-                                        Theme.of(context).secondaryHeaderColor,
+                                    AppLocalizations.of(context)!.login_recover_page_send_reset_code_on_countdown(_countdownTime),
+                                    textColor: Theme.of(context).secondaryHeaderColor,
                                   )
                                 : TDText(
-                                    AppLocalizations.of(context)!
-                                        .login_recover_page_send_reset_code,
+                                    AppLocalizations.of(context)!.login_recover_page_send_reset_code,
                                     textColor: Theme.of(context).primaryColor,
                                   ),
                           ],
                         ),
                         onBtnTap: () {
                           if (_countdownTime == 0) {
-                            TDToast.showText(
-                                AppLocalizations.of(context)!
-                                    .login_recover_page_reset_code_has_sent,
-                                context: context);
+                            TDToast.showText(AppLocalizations.of(context)!.login_recover_page_reset_code_has_sent, context: context);
                             setState(() {
                               _countdownTime = 60;
                               _countdownTimer.cancel();
-                              _countdownTimer = Timer.periodic(
-                                  const Duration(seconds: 1), (timer) {
+                              _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
                                 if (_countdownTime == 0) {
                                   timer.cancel();
                                 } else {
@@ -170,34 +139,25 @@ class _RecoverPasswordState extends State<RecoverPasswordForm> {
                         },
                       ),
                       TDInput(
-                        leftLabel: AppLocalizations.of(context)!
-                            .login_recover_page_new_password,
+                        leftLabel: AppLocalizations.of(context)!.login_recover_page_new_password,
                         leftLabelStyle: TextStyle(
                           color: Theme.of(context).indicatorColor,
                         ),
                         textStyle: TextStyle(
                           color: Theme.of(context).indicatorColor,
                         ),
-                        inputDecoration: _makeInputDecoration(
-                            AppLocalizations.of(context)!
-                                .login_recover_page_new_password_hint,
-                            context),
+                        inputDecoration: _makeInputDecoration(AppLocalizations.of(context)!.login_recover_page_new_password_hint, context),
                         controller: _recoverPasswordController1,
                         onChanged: (value) {
                           setState(() {
                             _passwordValid = _validatePassword(value);
                           });
                         },
-                        additionInfo: _passwordValid
-                            ? ""
-                            : AppLocalizations.of(context)!
-                                .login_recover_page_new_password_error,
+                        additionInfo: _passwordValid ? "" : AppLocalizations.of(context)!.login_recover_page_new_password_error,
                         additionInfoColor: Colors.red,
                         obscureText: !_passwordVisible,
                         rightBtn: IconButton(
-                          icon: Icon(_passwordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off),
+                          icon: Icon(_passwordVisible ? Icons.visibility : Icons.visibility_off),
                           onPressed: () {
                             setState(() {
                               _passwordVisible = !_passwordVisible;
@@ -207,35 +167,26 @@ class _RecoverPasswordState extends State<RecoverPasswordForm> {
                         needClear: false,
                       ),
                       TDInput(
-                        leftLabel: AppLocalizations.of(context)!
-                            .login_recover_page_confirm_password,
+                        leftLabel: AppLocalizations.of(context)!.login_recover_page_confirm_password,
                         leftLabelStyle: TextStyle(
                           color: Theme.of(context).indicatorColor,
                         ),
                         textStyle: TextStyle(
                           color: Theme.of(context).indicatorColor,
                         ),
-                        inputDecoration: _makeInputDecoration(
-                            AppLocalizations.of(context)!
-                                .login_recover_page_confirm_password_hint,
-                            context),
+                        inputDecoration:
+                            _makeInputDecoration(AppLocalizations.of(context)!.login_recover_page_confirm_password_hint, context),
                         controller: _recoverPasswordController2,
                         onChanged: (value) {
                           setState(() {
-                            _password2Valid = _validatePassword2(
-                                _recoverPasswordController1.text, value);
+                            _password2Valid = _validatePassword2(_recoverPasswordController1.text, value);
                           });
                         },
-                        additionInfo: _password2Valid
-                            ? ""
-                            : AppLocalizations.of(context)!
-                                .login_recover_page_confirm_password_error,
+                        additionInfo: _password2Valid ? "" : AppLocalizations.of(context)!.login_recover_page_confirm_password_error,
                         additionInfoColor: Colors.red,
                         obscureText: !_password2Visible,
                         rightBtn: IconButton(
-                          icon: Icon(_password2Visible
-                              ? Icons.visibility
-                              : Icons.visibility_off),
+                          icon: Icon(_password2Visible ? Icons.visibility : Icons.visibility_off),
                           onPressed: () {
                             setState(() {
                               _password2Visible = !_password2Visible;
@@ -253,36 +204,26 @@ class _RecoverPasswordState extends State<RecoverPasswordForm> {
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: Text(AppLocalizations.of(context)!
-                                .login_recover_page_cancel),
+                            child: Text(AppLocalizations.of(context)!.login_recover_page_cancel),
                           )),
                           const SizedBox(width: 48),
                           Expanded(
                               child: ElevatedButton(
                             onPressed: () {
-                              if (_recoverPasswordController1.text !=
-                                  _recoverPasswordController2.text) {
+                              if (_recoverPasswordController1.text != _recoverPasswordController2.text) {
                                 ToastificationUtils.showSimpleToastification(
-                                    context,
-                                    AppLocalizations.of(context)!
-                                        .login_recover_page_confirm_password_error);
+                                    context, AppLocalizations.of(context)!.login_recover_page_confirm_password_error);
                               } else {
                                 ToastificationUtils.showSimpleToastification(
-                                    context,
-                                    AppLocalizations.of(context)!
-                                        .login_recover_page_reset_password_success);
+                                    context, AppLocalizations.of(context)!.login_recover_page_reset_password_success);
                                 Navigator.of(context).pop();
                               }
                             },
                             style: ButtonStyle(
-                              backgroundColor: WidgetStatePropertyAll(
-                                  Theme.of(context).indicatorColor),
+                              backgroundColor: WidgetStatePropertyAll(Theme.of(context).indicatorColor),
                             ),
-                            child: Text(
-                                AppLocalizations.of(context)!
-                                    .login_recover_page_confirm,
-                                style: TextStyle(
-                                    color: Theme.of(context).cardColor)),
+                            child: Text(AppLocalizations.of(context)!.login_recover_page_confirm,
+                                style: TextStyle(color: Theme.of(context).cardColor)),
                           )),
                           const SizedBox(width: 36),
                         ],

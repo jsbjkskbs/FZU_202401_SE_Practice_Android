@@ -5,11 +5,7 @@ import 'package:fulifuli_app/widgets/space_page/space_video_tabs_view.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 class SpaceTabsContainer extends StatefulWidget {
-  const SpaceTabsContainer(
-      {super.key,
-      required this.tabs,
-      required this.uniqueKey,
-      this.scrollController});
+  const SpaceTabsContainer({super.key, required this.tabs, required this.uniqueKey, this.scrollController});
 
   final List<String> tabs;
   final String uniqueKey;
@@ -21,8 +17,7 @@ class SpaceTabsContainer extends StatefulWidget {
   }
 }
 
-class _SpaceTabsContainerState extends State<SpaceTabsContainer>
-    with TickerProviderStateMixin {
+class _SpaceTabsContainerState extends State<SpaceTabsContainer> with TickerProviderStateMixin {
   late TabController _tabController;
   late final ScrollController? _scrollController = widget.scrollController;
   int _currentIndex = 0;

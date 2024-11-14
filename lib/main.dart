@@ -46,8 +46,7 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
-  static AppLocale appLocale =
-      AppLocale(Locale(Global.appPersistentData.languageCode), (_) {});
+  static AppLocale appLocale = AppLocale(Locale(Global.appPersistentData.languageCode), (_) {});
   static AppScheme appScheme = AppScheme();
 
   @override
@@ -65,12 +64,9 @@ class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return AdaptiveTheme(
-        initial: Global.appPersistentData.themeMode == 0
-            ? AdaptiveThemeMode.light
-            : AdaptiveThemeMode.dark,
+        initial: Global.appPersistentData.themeMode == 0 ? AdaptiveThemeMode.light : AdaptiveThemeMode.dark,
         light: FlexThemeData.light(
-          scheme: SchemeReflect.getFlexScheme(
-              Global.appPersistentData.themeSelection),
+          scheme: SchemeReflect.getFlexScheme(Global.appPersistentData.themeSelection),
           subThemesData: const FlexSubThemesData(
             interactionEffects: true,
             tintedDisabledControls: true,
@@ -82,12 +78,10 @@ class MyAppState extends State<MyApp> {
             navigationRailLabelType: NavigationRailLabelType.all,
           ),
           visualDensity: FlexColorScheme.comfortablePlatformDensity,
-          cupertinoOverrideTheme:
-              const CupertinoThemeData(applyThemeToAll: true),
+          cupertinoOverrideTheme: const CupertinoThemeData(applyThemeToAll: true),
         ),
         dark: FlexThemeData.dark(
-          scheme: SchemeReflect.getFlexScheme(
-              Global.appPersistentData.themeSelection),
+          scheme: SchemeReflect.getFlexScheme(Global.appPersistentData.themeSelection),
           subThemesData: const FlexSubThemesData(
             interactionEffects: true,
             tintedDisabledControls: true,
@@ -100,14 +94,12 @@ class MyAppState extends State<MyApp> {
             navigationRailLabelType: NavigationRailLabelType.all,
           ),
           visualDensity: FlexColorScheme.comfortablePlatformDensity,
-          cupertinoOverrideTheme:
-              const CupertinoThemeData(applyThemeToAll: true),
+          cupertinoOverrideTheme: const CupertinoThemeData(applyThemeToAll: true),
         ),
         builder: (theme, darkTheme) => MaterialApp(
               locale: appLocale.locale,
               localeResolutionCallback: (locale, supportedLocales) {
-                var result = supportedLocales.where(
-                    (element) => element.languageCode == locale?.languageCode);
+                var result = supportedLocales.where((element) => element.languageCode == locale?.languageCode);
                 if (result.isNotEmpty) {
                   return locale;
                 }
@@ -116,11 +108,10 @@ class MyAppState extends State<MyApp> {
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               theme: theme.copyWith(
-                  pageTransitionsTheme: const PageTransitionsTheme(
-                      builders: <TargetPlatform, PageTransitionsBuilder>{
-                    TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-                    TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-                  })),
+                  pageTransitionsTheme: const PageTransitionsTheme(builders: <TargetPlatform, PageTransitionsBuilder>{
+                TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+                TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+              })),
               darkTheme: darkTheme,
               // initialRoute: IndexPage.routeName,
               initialRoute: LoadingPage.routeName,
@@ -132,8 +123,7 @@ class MyAppState extends State<MyApp> {
                 SettingsPage.routeName: (context) => const SettingsPage(),
                 SpacePage.routeName: (context) => const SpacePage(),
                 SearchPage.routeName: (context) => const SearchPage(),
-                SubmissionManagePage.routeName: (context) =>
-                    const SubmissionManagePage(),
+                SubmissionManagePage.routeName: (context) => const SubmissionManagePage(),
               },
             ));
   }

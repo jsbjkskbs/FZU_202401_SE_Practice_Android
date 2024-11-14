@@ -21,16 +21,14 @@ class SettingsListItem extends StatelessWidget {
         },
         style: ButtonStyle(
           shadowColor: WidgetStateProperty.all(Colors.transparent),
-          backgroundColor: WidgetStateProperty.all(
-              Theme.of(context).scaffoldBackgroundColor),
+          backgroundColor: WidgetStateProperty.all(Theme.of(context).scaffoldBackgroundColor),
           shape: WidgetStateProperty.all(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
           ),
           padding: WidgetStateProperty.all(const EdgeInsets.all(8)),
         ),
         child: Padding(
-            padding:
-                const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+            padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -42,8 +40,7 @@ class SettingsListItem extends StatelessWidget {
                       Text(
                         label,
                         style: TextStyle(
-                          fontSize:
-                              Theme.of(context).textTheme.bodyMedium!.fontSize,
+                          fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
                         ),
                       ),
                     ],

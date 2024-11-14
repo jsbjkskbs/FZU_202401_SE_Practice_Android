@@ -16,20 +16,15 @@ class AppPersistentData {
   String themeSelection;
   String languageCode;
 
-  AppPersistentData(
-      {required this.themeMode,
-      required this.languageCode,
-      required this.themeSelection});
+  AppPersistentData({required this.themeMode, required this.languageCode, required this.themeSelection});
 
-  factory AppPersistentData.fromJson(Map<String, dynamic> json) =>
-      _$AppPersistentDataFromJson(json);
+  factory AppPersistentData.fromJson(Map<String, dynamic> json) => _$AppPersistentDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$AppPersistentDataToJson(this);
 }
 
 class Global {
-  static AppPersistentData appPersistentData = AppPersistentData(
-      themeMode: 0, languageCode: "zh", themeSelection: FlexScheme.sakura.name);
+  static AppPersistentData appPersistentData = AppPersistentData(themeMode: 0, languageCode: "zh", themeSelection: FlexScheme.sakura.name);
 
   static User self = User();
 
@@ -61,10 +56,7 @@ class Storage {
       return AppPersistentData.fromJson(jsonDecode(data));
     } else {
       debugPrint("Storage.getPersistentData: default");
-      return AppPersistentData(
-          themeMode: 0,
-          languageCode: "zh",
-          themeSelection: FlexScheme.sakura.name);
+      return AppPersistentData(themeMode: 0, languageCode: "zh", themeSelection: FlexScheme.sakura.name);
     }
   }
 

@@ -5,10 +5,8 @@ class MFATheme {
   static PinTheme getDefaultPinTheme(BuildContext context) {
     return PinTheme(
       width: MediaQuery.of(context).size.width / 12,
-      margin: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width / 80),
-      padding: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width / 80),
+      margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 80),
+      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 80),
       textStyle: TextStyle(
         fontSize: MediaQuery.of(context).size.width / 16,
         fontWeight: FontWeight.bold,

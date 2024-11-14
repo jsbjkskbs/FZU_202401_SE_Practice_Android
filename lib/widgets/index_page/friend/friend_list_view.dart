@@ -26,11 +26,9 @@ class _FriendListViewState extends State<FriendListView> {
   void initState() {
     super.initState();
 
-    bool isCached =
-        Global.cachedMapUserList.containsKey(FriendListView.uniqueKey);
+    bool isCached = Global.cachedMapUserList.containsKey(FriendListView.uniqueKey);
     if (!isCached) {
-      Global.cachedMapUserList
-          .addEntries([MapEntry(FriendListView.uniqueKey, userList)]);
+      Global.cachedMapUserList.addEntries([MapEntry(FriendListView.uniqueKey, userList)]);
       debugPrint('Added new user list with key: ${FriendListView.uniqueKey}');
     }
     userList = Global.cachedMapUserList[FriendListView.uniqueKey]!;

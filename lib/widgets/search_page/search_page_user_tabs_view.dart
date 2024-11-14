@@ -4,8 +4,7 @@ import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/widgets/search_page/search_page_user_item.dart';
 
 class SearchPageUserTabsView extends StatefulWidget {
-  const SearchPageUserTabsView(
-      {super.key, required this.currentIndex, required this.assignedIndex});
+  const SearchPageUserTabsView({super.key, required this.currentIndex, required this.assignedIndex});
 
   static const String uniqueKey = "search-user";
   final int currentIndex;
@@ -28,13 +27,10 @@ class _SearchPageUserTabsViewState extends State<SearchPageUserTabsView> {
   void initState() {
     super.initState();
 
-    bool isCached =
-        Global.cachedMapUserList.containsKey(SearchPageUserTabsView.uniqueKey);
+    bool isCached = Global.cachedMapUserList.containsKey(SearchPageUserTabsView.uniqueKey);
     if (!isCached) {
-      Global.cachedMapUserList
-          .addEntries([MapEntry(SearchPageUserTabsView.uniqueKey, userList)]);
-      debugPrint(
-          'Added new user list with key: ${SearchPageUserTabsView.uniqueKey}');
+      Global.cachedMapUserList.addEntries([MapEntry(SearchPageUserTabsView.uniqueKey, userList)]);
+      debugPrint('Added new user list with key: ${SearchPageUserTabsView.uniqueKey}');
     }
     userList = Global.cachedMapUserList[SearchPageUserTabsView.uniqueKey]!;
 

@@ -8,11 +8,7 @@ import '../../video_card.dart';
 
 class VideoTabsView extends StatefulWidget {
   const VideoTabsView(
-      {super.key,
-      required this.controller,
-      required this.currentIndex,
-      required this.onUpdate,
-      required this.assignedIndex});
+      {super.key, required this.controller, required this.currentIndex, required this.onUpdate, required this.assignedIndex});
 
   final ScrollController controller;
   final int currentIndex;
@@ -63,8 +59,7 @@ class _VideoTabsViewState extends State<VideoTabsView> {
             width: 25,
             height: 25,
             child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).scaffoldBackgroundColor),
+              valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).scaffoldBackgroundColor),
               strokeWidth: 4,
             ),
           ),
