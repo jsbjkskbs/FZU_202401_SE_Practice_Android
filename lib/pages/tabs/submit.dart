@@ -45,6 +45,9 @@ class _SubmitPageState extends State<SubmitPage> {
     if (_playerController != null) {
       _playerController!.dispose();
     }
+    if (_chewieController != null) {
+      _chewieController!.dispose();
+    }
     if (video != null) {
       video = null;
     }
