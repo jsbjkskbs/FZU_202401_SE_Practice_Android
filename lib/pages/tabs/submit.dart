@@ -14,6 +14,7 @@ import 'package:fulifuli_app/utils/file_type_judge.dart';
 import 'package:fulifuli_app/utils/language_reflect.dart';
 import 'package:fulifuli_app/utils/reverse_color.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
+import 'package:fulifuli_app/widgets/icons/def.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 import 'package:video_player/video_player.dart';
@@ -194,7 +195,17 @@ class _SubmitPageState extends State<SubmitPage> {
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [const Icon(Icons.video_call_outlined, size: 48), Text(AppLocalizations.of(context)!.submit_select_video_hint)],
+                  children: [
+                    const Icon(DisplayIcons.upload_video, size: 48),
+                    Text(
+                      AppLocalizations.of(context)!.submit_select_video_hint,
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.bodyLarge!.color,
+                        fontWeight: FontWeight.bold,
+                        fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                      ),
+                    )
+                  ],
                 ),
               ),
             )),
@@ -345,9 +356,9 @@ class _SubmitPageState extends State<SubmitPage> {
                 controller: _titleController,
                 hintText: AppLocalizations.of(context)!.submit_video_title_input_hint,
                 autofocus: false,
-                maxLength: 64,
-                additionInfo: AppLocalizations.of(context)!.submit_video_title_additional_hint(_titleController.text.length, 64),
-                additionInfoColor: _titleController.text.length >= 64 ? Colors.red : Theme.of(context).hintColor,
+                maxLength: 32,
+                additionInfo: AppLocalizations.of(context)!.submit_video_title_additional_hint(_titleController.text.length, 32),
+                additionInfoColor: _titleController.text.length >= 32 ? Colors.red : Theme.of(context).hintColor,
                 onClearTap: () {
                   _titleController.clear();
                   setState(() {});
@@ -395,8 +406,9 @@ class _SubmitPageState extends State<SubmitPage> {
             controller: _descriptionController,
             hintText: AppLocalizations.of(context)!.submit_video_description_input_hint,
             autofocus: false,
-            minLines: 1,
-            indicator: true,
+            minLines: 4,
+            additionInfo: AppLocalizations.of(context)!.submit_video_title_additional_hint(_descriptionController.text.length, 256),
+            additionInfoColor: _descriptionController.text.length >= 256 ? Colors.red : Theme.of(context).hintColor,
             maxLength: 256,
             onChanged: (value) {
               setState(() {});

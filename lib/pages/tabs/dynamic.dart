@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fulifuli_app/pages/dynamic_post.dart';
 import 'package:fulifuli_app/widgets/icons/def.dart';
+import 'package:fulifuli_app/widgets/index_page/dynamic/dynamic_list_view.dart';
 
 class ActivityPage extends StatelessWidget {
   const ActivityPage({super.key});
@@ -18,7 +20,7 @@ class ActivityPage extends StatelessWidget {
               width: MediaQuery.of(context).size.width / 3,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [Text('Activity', style: Theme.of(context).textTheme.headlineSmall)],
+                children: [Text('动态', style: Theme.of(context).textTheme.headlineSmall)],
               ),
             ),
             SizedBox(
@@ -27,7 +29,9 @@ class ActivityPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, DynamicPostPage.routeName);
+                    },
                     style: ElevatedButton.styleFrom(
                       elevation: 0,
                       overlayColor: Colors.transparent,
@@ -45,8 +49,10 @@ class ActivityPage extends StatelessWidget {
           ],
         ),
       ),
-      body: Center(
-        child: Text('Activity'),
+      backgroundColor: Theme.of(context).dialogBackgroundColor,
+      body: const Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [Expanded(child: DynamicListView())],
       ),
     );
   }

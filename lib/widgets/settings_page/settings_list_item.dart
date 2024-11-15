@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fulifuli_app/model/settings.dart';
 
 class SettingsListItem extends StatelessWidget {
-  SettingsListItem(SettingsItem item, {super.key})
+  SettingsListItem(SettingsItem item, {super.key, this.rightWidget})
       : label = item.label,
         onTap = item.onTap,
         icon = item.icon;
@@ -10,6 +10,7 @@ class SettingsListItem extends StatelessWidget {
   final Icon? icon;
   final String label;
   final Function? onTap;
+  final Widget? rightWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -29,29 +30,33 @@ class SettingsListItem extends StatelessWidget {
         ),
         child: Padding(
             padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                IntrinsicWidth(
-                  child: Row(
-                    children: [
-                      if (icon != null) icon!,
-                      if (icon != null) const SizedBox(width: 8),
-                      Text(
-                        label,
-                        style: TextStyle(
-                          fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+            child: SizedBox(
+              height: 36,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  IntrinsicWidth(
+                    child: Row(
+                      children: [
+                        if (icon != null) icon!,
+                        if (icon != null) const SizedBox(width: 8),
+                        Text(
+                          label,
+                          style: TextStyle(
+                            fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  color: Theme.of(context).primaryColor,
-                  size: MediaQuery.of(context).size.width / 24,
-                ),
-              ],
+                  rightWidget ??
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        color: Theme.of(context).primaryColor,
+                        size: MediaQuery.of(context).size.width / 24,
+                      ),
+                ],
+              ),
             )));
   }
 }

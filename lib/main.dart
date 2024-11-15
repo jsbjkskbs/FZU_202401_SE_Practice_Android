@@ -9,6 +9,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/model/locale.dart';
 import 'package:fulifuli_app/model/scheme.dart';
+import 'package:fulifuli_app/pages/dynamic_post.dart';
 import 'package:fulifuli_app/pages/index.dart';
 import 'package:fulifuli_app/pages/loading.dart';
 import 'package:fulifuli_app/pages/login.dart';
@@ -124,6 +125,7 @@ class MyAppState extends State<MyApp> {
                 SpacePage.routeName: (context) => const SpacePage(),
                 SearchPage.routeName: (context) => const SearchPage(),
                 SubmissionManagePage.routeName: (context) => const SubmissionManagePage(),
+                DynamicPostPage.routeName: (context) => const DynamicPostPage(),
               },
             ));
   }

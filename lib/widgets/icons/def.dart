@@ -84,4 +84,76 @@ class DisplayIcons {
     fontFamily: "icons",
     matchTextDirection: true,
   );
+
+  static const IconData fulifuli = IconData(
+    0xe90e,
+    fontFamily: "icons",
+    matchTextDirection: true,
+  );
+
+  static const IconData cat = IconData(
+    0xe90f,
+    fontFamily: "icons",
+    matchTextDirection: true,
+  );
+
+  static const IconData comment = IconData(
+    0xe910,
+    fontFamily: "icons",
+    matchTextDirection: true,
+  );
+
+  static const IconData dislike = IconData(
+    0xe911,
+    fontFamily: "icons",
+    matchTextDirection: true,
+  );
+
+  static const IconData dislike_filled = IconData(
+    0xe912,
+    fontFamily: "icons",
+    matchTextDirection: true,
+  );
+
+  static const IconData report_flag = IconData(
+    0xe913,
+    fontFamily: "icons",
+    matchTextDirection: true,
+  );
+
+  static const IconData like = IconData(
+    0xe914,
+    fontFamily: "icons",
+    matchTextDirection: true,
+  );
+
+  static const IconData like_filled = IconData(
+    0xe915,
+    fontFamily: "icons",
+    matchTextDirection: true,
+  );
+
+  static const IconData post = IconData(
+    0xe916,
+    fontFamily: "icons",
+    matchTextDirection: true,
+  );
+
+  static const IconData clear = IconData(
+    0xe917,
+    fontFamily: "icons",
+    matchTextDirection: true,
+  );
+
+  static const IconData upload_video = IconData(
+    0xe918,
+    fontFamily: "icons",
+    matchTextDirection: true,
+  );
+
+  static const IconData angry_text_deco = IconData(
+    0xe919,
+    fontFamily: "icons",
+    matchTextDirection: true,
+  );
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:fulifuli_app/pages/tabs/activity.dart';
+import 'package:fulifuli_app/pages/tabs/dynamic.dart';
 import 'package:fulifuli_app/pages/tabs/friend.dart';
 import 'package:fulifuli_app/pages/tabs/home.dart';
 import 'package:fulifuli_app/pages/tabs/mine.dart';

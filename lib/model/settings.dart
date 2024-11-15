@@ -7,6 +7,14 @@ class SettingsItem {
   final int kindIndex;
   Function? onTap;
   Icon? icon;
+  Widget? rightWidget;
 
-  SettingsItem({required this.label, required this.kind, required this.labelIndex, required this.kindIndex, this.onTap, this.icon});
+  SettingsItem(
+      {required this.label,
+      required this.kind,
+      required this.labelIndex,
+      required this.kindIndex,
+      this.onTap,
+      this.icon,
+      this.rightWidget});
 }

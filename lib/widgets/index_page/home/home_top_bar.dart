@@ -1,9 +1,9 @@
-import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
+import 'package:fulifuli_app/widgets/icons/def.dart';
+import 'package:like_button/like_button.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 class HomeTopBar extends StatefulWidget {
@@ -74,52 +74,32 @@ class _HomeTopBarState extends State<HomeTopBar> {
                   ),
                 ),
                 const SizedBox(width: 16),
-                SizedBox(
-                  width: 80,
-                  child: AnimatedToggleSwitch<int>.rolling(
-                    current: Global.appPersistentData.themeMode,
-                    values: const [0, 1],
-                    onChanged: (index) => setState(() {
-                      Global.appPersistentData.themeMode = index;
-                      switch (Global.appPersistentData.themeMode) {
-                        case 0:
-                          AdaptiveTheme.of(context).setLight();
-                          break;
-                        case 1:
-                          AdaptiveTheme.of(context).setDark();
-                          break;
-                      }
-                      Storage.storePersistentData(Global.appPersistentData);
-                      ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.home_theme_switch_toast);
-                    }),
-                    iconList: [
-                      Icon(
-                        Icons.sunny,
-                        color: Theme.of(context).unselectedWidgetColor,
-                      ),
-                      Icon(
-                        Icons.nightlight,
-                        color: Theme.of(context).unselectedWidgetColor,
-                      ),
-                    ],
-                    borderWidth: 2,
-                    style: ToggleStyle(
-                      indicatorBorder: Border.all(
-                        color: Colors.transparent,
-                      ),
-                      indicatorColor: Theme.of(context).secondaryHeaderColor,
-                      borderColor: Theme.of(context).secondaryHeaderColor,
-                      backgroundColor: Theme.of(context).cardColor,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Theme.of(context).shadowColor.withOpacity(0.3),
-                          offset: const Offset(0, 1),
-                          blurRadius: 5,
-                          spreadRadius: 0.5,
-                        ),
-                      ],
-                    ),
+                LikeButton(
+                  circleColor: CircleColor(start: Theme.of(context).primaryColor, end: Theme.of(context).primaryColor),
+                  bubblesColor: BubblesColor(
+                    dotPrimaryColor: Theme.of(context).primaryColor,
+                    dotSecondaryColor: Theme.of(context).secondaryHeaderColor,
                   ),
+                  onTap: (b) {
+                    ToastificationUtils.showFlatToastification(
+                      context,
+                      '哇袄!',
+                      '哈利路大旋风!',
+                      icon: Icon(
+                        DisplayIcons.angry_text_deco,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      duration: const Duration(milliseconds: 3000),
+                    );
+                    return Future.value(!b);
+                  },
+                  likeBuilder: (bool isLiked) {
+                    return Icon(
+                      DisplayIcons.cat,
+                      size: 32,
+                      color: Theme.of(context).primaryColor,
+                    );
+                  },
                 ),
                 const SizedBox(width: 8),
               ],

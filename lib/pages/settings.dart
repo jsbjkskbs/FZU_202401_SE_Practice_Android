@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:drop_down_list/drop_down_list.dart';
 import 'package:drop_down_list/model/selected_list_item.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
@@ -8,9 +9,12 @@ import 'package:fulifuli_app/main.dart';
 import 'package:fulifuli_app/model/settings.dart';
 import 'package:fulifuli_app/utils/scheme_reflect.dart';
 import 'package:fulifuli_app/widgets/icons/def.dart';
+import 'package:fulifuli_app/widgets/settings_page/settings_light_dark_switch.dart';
 import 'package:fulifuli_app/widgets/settings_page/settings_list_item.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
+
+import '../utils/toastification.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -33,6 +37,7 @@ class SettingsPage extends StatelessWidget {
             Navigator.of(context).pop();
           },
         ),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       ),
       backgroundColor: Theme.of(context).dialogBackgroundColor,
       body: GroupedListView<SettingsItem, String>(
@@ -42,7 +47,10 @@ class SettingsPage extends StatelessWidget {
         },
         groupSeparatorBuilder: (String groupByValue) => const SizedBox(height: 16),
         itemBuilder: (context, SettingsItem element) {
-          return SettingsListItem(element);
+          return SettingsListItem(
+            element,
+            rightWidget: element.rightWidget,
+          );
         },
         itemComparator: (item1, item2) => item1.labelIndex.compareTo(item2.labelIndex),
         useStickyGroupSeparators: false,
@@ -57,10 +65,36 @@ class _SettingsList {
   static List<SettingsItem> getItems(BuildContext context) {
     return <SettingsItem>[
       SettingsItem(
-        icon: const Icon(DisplayIcons.palette),
+          icon: const Icon(
+            Icons.lightbulb_outline,
+            size: 24,
+          ),
+          label: '明暗模式',
+          kind: 'additional',
+          labelIndex: 0,
+          kindIndex: 0,
+          onTap: (context) {
+            Global.appPersistentData.themeMode = Global.appPersistentData.themeMode == 0 ? 1 : 0;
+            switch (Global.appPersistentData.themeMode) {
+              case 0:
+                AdaptiveTheme.of(context).setLight();
+                break;
+              case 1:
+                AdaptiveTheme.of(context).setDark();
+                break;
+            }
+            Storage.storePersistentData(Global.appPersistentData);
+            ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.home_theme_switch_toast);
+          },
+          rightWidget: const SettingsLightDarkSwitch()),
+      SettingsItem(
+        icon: const Icon(
+          DisplayIcons.palette,
+          size: 24,
+        ),
         label: AppLocalizations.of(context)!.settings_change_theme,
         kind: 'additional',
-        labelIndex: 0,
+        labelIndex: 1,
         kindIndex: 0,
         onTap: (BuildContext context) {
           DropDownState(DropDown(
@@ -97,10 +131,13 @@ class _SettingsList {
         },
       ),
       SettingsItem(
-          icon: const Icon(DisplayIcons.language_change),
+          icon: const Icon(
+            DisplayIcons.language_change,
+            size: 24,
+          ),
           label: AppLocalizations.of(context)!.settings_change_language,
           kind: 'additional',
-          labelIndex: 1,
+          labelIndex: 2,
           kindIndex: 0,
           onTap: (BuildContext context) {
             DropDownState(DropDown(
@@ -125,10 +162,13 @@ class _SettingsList {
             )).showModal(context);
           }),
       SettingsItem(
-          icon: const Icon(DisplayIcons.about),
+          icon: const Icon(
+            DisplayIcons.about,
+            size: 24,
+          ),
           label: AppLocalizations.of(context)!.settings_about_us,
           kind: 'additional',
-          labelIndex: 2,
+          labelIndex: 3,
           kindIndex: 0,
           onTap: (BuildContext context) {
             Navigator.of(context).push(TDSlidePopupRoute(
