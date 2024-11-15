@@ -5,6 +5,8 @@ import 'package:fulifuli_app/widgets/icons/def.dart';
 import 'package:like_button/like_button.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
+import 'comment_popup.dart';
+
 class CommentCard extends StatefulWidget {
   const CommentCard({
     super.key,
@@ -58,28 +60,33 @@ class _CommentCardState extends State<CommentCard> {
             ],
           ),
         ),
-        Padding(
-            padding: const EdgeInsets.only(left: 72, right: 16, bottom: 4),
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width - 32,
-              child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width - 32),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        longText.substring(0, 100),
-                        style: TextStyle(
-                          fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
-                          fontWeight: FontWeight.w400,
-                          color: Theme.of(context).textTheme.bodyMedium!.color,
-                          decoration: TextDecoration.none,
+        GestureDetector(
+          onTap: () {
+            CommentPopup.showReplyPanel(context);
+          },
+          child: Padding(
+              padding: const EdgeInsets.only(left: 72, right: 16, bottom: 4),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width - 32,
+                child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width - 32),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          longText.substring(0, 100),
+                          style: TextStyle(
+                            fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                            fontWeight: FontWeight.w400,
+                            color: Theme.of(context).textTheme.bodyMedium!.color,
+                            decoration: TextDecoration.none,
+                          ),
                         ),
-                      ),
-                    ],
-                  )),
-            )),
+                      ],
+                    )),
+              )),
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -129,7 +136,9 @@ class _CommentCardState extends State<CommentCard> {
                     icon: Icon(DisplayIcons.dislike, color: Theme.of(context).unselectedWidgetColor, size: 18)),
                 IconButton(
                     style: ButtonStyle(overlayColor: WidgetStateProperty.all(Colors.transparent)),
-                    onPressed: () {},
+                    onPressed: () {
+                      CommentPopup.showReplyPanel(context);
+                    },
                     icon: Icon(DisplayIcons.comment, color: Theme.of(context).unselectedWidgetColor, size: 18)),
               ],
             ),

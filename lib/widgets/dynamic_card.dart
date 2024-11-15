@@ -63,25 +63,29 @@ class _DynamicCardState extends State<DynamicCard> {
             ],
           ),
           const SizedBox(height: 16),
-          Padding(
-              padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width - 32,
-                child: ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width - 32),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          longText,
-                          style: TextStyle(
-                            fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
-                          ),
-                        ),
-                      ],
-                    )),
-              )),
+          GestureDetector(
+              onTap: () {
+                CommentPopup.show(context, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.8);
+              },
+              child: Padding(
+                  padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width - 32,
+                    child: ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width - 32),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              longText,
+                              style: TextStyle(
+                                fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                              ),
+                            ),
+                          ],
+                        )),
+                  ))),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -91,9 +95,9 @@ class _DynamicCardState extends State<DynamicCard> {
                   likeBuilder: (bool isLiked) {
                     return !isLiked
                         ? Icon(DisplayIcons.like,
-                            size: Theme.of(context).textTheme.headlineMedium!.fontSize, color: Theme.of(context).unselectedWidgetColor)
+                            size: Theme.of(context).textTheme.headlineSmall!.fontSize, color: Theme.of(context).unselectedWidgetColor)
                         : Icon(DisplayIcons.like_filled,
-                            size: Theme.of(context).textTheme.headlineMedium!.fontSize, color: Theme.of(context).primaryColor);
+                            size: Theme.of(context).textTheme.headlineSmall!.fontSize, color: Theme.of(context).primaryColor);
                   },
                   circleColor: CircleColor(start: Theme.of(context).unselectedWidgetColor, end: Theme.of(context).primaryColor),
                   bubblesColor: BubblesColor(
@@ -105,7 +109,7 @@ class _DynamicCardState extends State<DynamicCard> {
                     return Text(
                       NumberConverter.convertNumber(count!),
                       style: TextStyle(
-                        fontSize: Theme.of(context).textTheme.labelLarge!.fontSize,
+                        fontSize: Theme.of(context).textTheme.labelMedium!.fontSize,
                         fontWeight: FontWeight.bold,
                         color: isLiked ? Theme.of(context).primaryColor : Theme.of(context).unselectedWidgetColor,
                       ),
@@ -123,11 +127,11 @@ class _DynamicCardState extends State<DynamicCard> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(DisplayIcons.comment,
-                          size: Theme.of(context).textTheme.headlineMedium!.fontSize, color: Theme.of(context).unselectedWidgetColor),
+                          size: Theme.of(context).textTheme.headlineSmall!.fontSize, color: Theme.of(context).unselectedWidgetColor),
                       const SizedBox(width: 4),
                       Text('9999',
                           style: TextStyle(
-                              fontSize: Theme.of(context).textTheme.labelLarge!.fontSize,
+                              fontSize: Theme.of(context).textTheme.labelMedium!.fontSize,
                               fontWeight: FontWeight.bold,
                               color: Theme.of(context).unselectedWidgetColor)),
                     ],
@@ -140,11 +144,11 @@ class _DynamicCardState extends State<DynamicCard> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(DisplayIcons.report,
-                        size: Theme.of(context).textTheme.headlineMedium!.fontSize, color: Theme.of(context).unselectedWidgetColor),
+                        size: Theme.of(context).textTheme.headlineSmall!.fontSize, color: Theme.of(context).unselectedWidgetColor),
                     const SizedBox(width: 4),
                     Text('举报',
                         style: TextStyle(
-                            fontSize: Theme.of(context).textTheme.labelLarge!.fontSize,
+                            fontSize: Theme.of(context).textTheme.labelMedium!.fontSize,
                             fontWeight: FontWeight.bold,
                             color: Theme.of(context).unselectedWidgetColor)),
                   ],
