@@ -18,6 +18,7 @@ import 'package:fulifuli_app/pages/search.dart';
 import 'package:fulifuli_app/pages/settings.dart';
 import 'package:fulifuli_app/pages/space.dart';
 import 'package:fulifuli_app/pages/submission_manage.dart';
+import 'package:fulifuli_app/pages/video.dart';
 import 'package:fulifuli_app/test.dart';
 import 'package:fulifuli_app/utils/scheme_reflect.dart';
 
@@ -126,6 +127,7 @@ class MyAppState extends State<MyApp> {
                 SearchPage.routeName: (context) => const SearchPage(),
                 SubmissionManagePage.routeName: (context) => const SubmissionManagePage(),
                 DynamicPostPage.routeName: (context) => const DynamicPostPage(),
+                VideoPage.routeName: (context) => const VideoPage(),
               },
             ));
   }

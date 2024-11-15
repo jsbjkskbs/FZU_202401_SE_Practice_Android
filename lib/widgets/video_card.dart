@@ -69,91 +69,98 @@ class _VideoCardState extends State<VideoCard> {
                     ))),
               ],
             )),
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 0),
-          child: FractionallySizedBox(
-            widthFactor: 1,
-            child: Card(
-              color: Theme.of(context).cardColor,
-              elevation: 2,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(8)),
-              ),
-              child: Column(
-                children: [
-                  const SizedBox(height: 6),
-                  Stack(
-                    children: [
-                      const GradientImage(
-                        height: 120,
-                        imgName: 'assets/images/cover.png',
-                      ),
-                      Positioned(
-                        left: 0,
-                        bottom: 0,
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushNamed('/video', arguments: {
+              'vid': video.id,
+            });
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 0),
+            child: FractionallySizedBox(
+              widthFactor: 1,
+              child: Card(
+                color: Theme.of(context).cardColor,
+                elevation: 2,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 6),
+                    Stack(
+                      children: [
+                        const GradientImage(
+                          height: 120,
+                          imgName: 'assets/images/cover.png',
+                        ),
+                        Positioned(
+                          left: 0,
+                          bottom: 0,
+                          child: Row(
+                            children: [
+                              const SizedBox(width: 4),
+                              Icon(
+                                DisplayIcons.video_player,
+                                size: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                                color: Theme.of(context).textTheme.bodyMedium!.color,
+                              ),
+                              const SizedBox(width: 2),
+                              Text(
+                                video.viewCount.toString(),
+                                style: TextStyle(
+                                  color: Theme.of(context).textTheme.bodyMedium!.color,
+                                  fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    FractionallySizedBox(
+                        widthFactor: 0.9,
+                        child: SizedBox(
+                          height: Theme.of(context).textTheme.bodyLarge!.fontSize! * 2.7,
+                          child: Text(
+                            video.title,
+                            style: TextStyle(
+                              color: Theme.of(context).textTheme.bodyLarge!.color,
+                              fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                              fontWeight: FontWeight.bold,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            maxLines: 2,
+                          ),
+                        )),
+                    const SizedBox(
+                      height: 6,
+                    ),
+                    FractionallySizedBox(
+                        widthFactor: 1,
                         child: Row(
                           children: [
                             const SizedBox(width: 4),
                             Icon(
-                              DisplayIcons.video_player,
-                              size: Theme.of(context).textTheme.bodyMedium!.fontSize,
-                              color: Theme.of(context).textTheme.bodyMedium!.color,
+                              DisplayIcons.up_er,
+                              size: Theme.of(context).textTheme.bodySmall!.fontSize! * 1.6,
+                              color: Theme.of(context).hintColor,
                             ),
-                            const SizedBox(width: 2),
-                            Text(
-                              video.viewCount.toString(),
-                              style: TextStyle(
-                                color: Theme.of(context).textTheme.bodyMedium!.color,
-                                fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
-                              ),
-                            ),
+                            const SizedBox(width: 4),
+                            ConstrainedBox(
+                                constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 3),
+                                child: Text("作者名字七个字: ${video.userId}12313131321231",
+                                    style: TextStyle(
+                                      color: Theme.of(context).hintColor,
+                                      fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+                                      overflow: TextOverflow.ellipsis,
+                                    )))
                           ],
-                        ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 6),
-                  FractionallySizedBox(
-                      widthFactor: 0.9,
-                      child: SizedBox(
-                        height: Theme.of(context).textTheme.bodyLarge!.fontSize! * 2.7,
-                        child: Text(
-                          video.title,
-                          style: TextStyle(
-                            color: Theme.of(context).textTheme.bodyLarge!.color,
-                            fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
-                            fontWeight: FontWeight.bold,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          maxLines: 2,
-                        ),
-                      )),
-                  const SizedBox(
-                    height: 6,
-                  ),
-                  FractionallySizedBox(
-                      widthFactor: 1,
-                      child: Row(
-                        children: [
-                          const SizedBox(width: 4),
-                          Icon(
-                            DisplayIcons.up_er,
-                            size: Theme.of(context).textTheme.bodySmall!.fontSize! * 1.6,
-                            color: Theme.of(context).hintColor,
-                          ),
-                          const SizedBox(width: 4),
-                          ConstrainedBox(
-                              constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 3),
-                              child: Text("作者名字七个字: ${video.userId}12313131321231",
-                                  style: TextStyle(
-                                    color: Theme.of(context).hintColor,
-                                    fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
-                                    overflow: TextOverflow.ellipsis,
-                                  )))
-                        ],
-                      )),
-                  const SizedBox(height: 12),
-                ],
+                        )),
+                    const SizedBox(height: 12),
+                  ],
+                ),
               ),
             ),
           ),

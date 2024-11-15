@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:chewie/chewie.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:drop_down_list/drop_down_list.dart';
 import 'package:drop_down_list/model/selected_list_item.dart';
@@ -10,6 +9,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
+import 'package:fulifuli_app/pkg/chewie/chewie.dart';
 import 'package:fulifuli_app/utils/file_type_judge.dart';
 import 'package:fulifuli_app/utils/language_reflect.dart';
 import 'package:fulifuli_app/utils/reverse_color.dart';

@@ -43,7 +43,7 @@ dependencies:
   tdesign_flutter: ^0.1.7
   standard_searchbar: ^2.0.0
   animated_toggle_switch: ^0.8.3
-  flex_color_scheme: ^8.0.0
+  flex_color_scheme: ^8.0.1
   adaptive_theme: ^3.6.0
   outline_gradient_button: ^2.0.1+1
   toastification: ^2.3.0
@@ -68,9 +68,12 @@ dependencies:
   mime: ^2.0.0
   dotted_border: ^2.1.0
   percent_indicator: ^4.0.1
-  chewie: ^1.8.5
   video_player: ^2.9.2
   like_button: ^2.0.5
+  provider: ^6.1.2
+  wakelock_plus: ^1.2.8
+  marquee: ^2.3.0
+  auto_size_text: ^3.0.0
 
 dev_dependencies:
   flutter_test:
