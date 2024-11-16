@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'comment_card.dart';
 
 class CommentListView extends StatefulWidget {
-  const CommentListView({super.key, this.commentHead});
+  const CommentListView({super.key, this.commentHead, this.controller});
 
+  final ScrollController? controller;
   final Widget? commentHead;
 
   @override
@@ -24,25 +25,41 @@ class _CommentListViewState extends State<CommentListView> {
 
   @override
   Widget build(BuildContext context) {
-    return EasyRefresh(
-        header: const MaterialHeader(),
-        footer: const MaterialFooter(),
-        controller: _controller,
-        onRefresh: () async {
-          await Future<void>.delayed(const Duration(seconds: 1));
-          setState(() {
-            _count++;
-          });
-          _controller.finishRefresh();
-        },
-        onLoad: () async {
-          await Future<void>.delayed(const Duration(seconds: 1));
-          setState(() {
-            _count++;
-          });
-          _controller.finishLoad();
-        },
-        child: ListView.separated(
+    return EasyRefresh.builder(
+      header: const MaterialHeader(),
+      footer: BezierFooter(
+        foregroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: Theme.of(context).primaryColor,
+        spinWidget: SizedBox(
+          width: 25,
+          height: 25,
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).scaffoldBackgroundColor),
+            strokeWidth: 4,
+          ),
+        ),
+        springRebound: true,
+      ),
+      controller: _controller,
+      onRefresh: () async {
+        await Future<void>.delayed(const Duration(seconds: 1));
+        setState(() {
+          _count++;
+        });
+        _controller.finishRefresh();
+      },
+      onLoad: () async {
+        debugPrint('onLoad');
+        await Future<void>.delayed(const Duration(seconds: 1));
+        setState(() {
+          _count++;
+        });
+        _controller.finishLoad();
+      },
+      childBuilder: (BuildContext context, ScrollPhysics physics) {
+        return ListView.separated(
+            controller: widget.controller,
+            physics: physics,
             separatorBuilder: (_, index) => index >= 2
                 ? Divider(
                     color: Theme.of(context).unselectedWidgetColor,
@@ -68,6 +85,8 @@ class _CommentListViewState extends State<CommentListView> {
               }
               return const CommentCard();
             },
-            itemCount: _count + 1));
+            itemCount: _count + 1);
+      },
+    );
   }
 }

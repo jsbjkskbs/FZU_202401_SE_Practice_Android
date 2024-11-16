@@ -7,6 +7,7 @@ import 'package:drop_down_list/drop_down_list.dart';
 import 'package:drop_down_list/model/selected_list_item.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/pkg/chewie/chewie.dart';
@@ -15,6 +16,7 @@ import 'package:fulifuli_app/utils/language_reflect.dart';
 import 'package:fulifuli_app/utils/reverse_color.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:fulifuli_app/widgets/icons/def.dart';
+import 'package:fulifuli_app/widgets/video_page/custom_controls/custom_controls.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 import 'package:video_player/video_player.dart';
@@ -175,6 +177,15 @@ class _SubmitPageState extends State<SubmitPage> {
                     child: CircularProgressIndicator(),
                   ),
                 ),
+                customControls: const CustomControls(),
+                deviceOrientationsOnEnterFullScreen: [
+                  DeviceOrientation.landscapeLeft,
+                  DeviceOrientation.landscapeRight,
+                ],
+                deviceOrientationsAfterFullScreen: [
+                  DeviceOrientation.portraitUp,
+                  DeviceOrientation.portraitDown,
+                ],
               );
               _playerController!.initialize().then((value) {
                 setState(() {

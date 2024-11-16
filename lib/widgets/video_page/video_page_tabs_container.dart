@@ -1,13 +1,16 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
+import 'package:fulifuli_app/widgets/comment_popup.dart';
 import 'package:fulifuli_app/widgets/index_page/home/video_tabs_view.dart';
 import 'package:fulifuli_app/widgets/video_page/video_introduction_view.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 class VideoPageTabsContainer extends StatefulWidget {
-  const VideoPageTabsContainer({super.key, required this.tabs});
+  const VideoPageTabsContainer({super.key, required this.tabs, required this.controller, required this.controller0});
 
+  final ScrollController controller;
+  final ScrollController controller0;
   final List<String> tabs;
 
   @override
@@ -37,10 +40,15 @@ class _VideoPageTabsContainer extends State<VideoPageTabsContainer> with TickerP
 
   void _initTabController() {
     _tabController = TabController(length: tabs.length, vsync: this);
-    _tabController.addListener(() {
+    _tabController.addListener(() async {
+      var old = _currentIndex;
       setState(() {
         _currentIndex = _tabController.index;
       });
+      if (old != _tabController.index && _tabController.index == 1) {
+        await CommentPopup.show(context, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.8, radius: 0);
+        _tabController.animateTo(old);
+      }
     });
   }
 
@@ -64,31 +72,36 @@ class _VideoPageTabsContainer extends State<VideoPageTabsContainer> with TickerP
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            TDTabBar(
-              height: 48,
-              width: MediaQuery.of(context).size.width / 3,
-              tabs: tabs,
-              controller: _tabController,
-              showIndicator: true,
-              isScrollable: false,
-              labelColor: Theme.of(context).primaryColor,
-              unselectedLabelColor: Theme.of(context).unselectedWidgetColor,
-              indicatorColor: Theme.of(context).primaryColor,
-            ),
+            Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: TDTabBar(
+                  height: 38,
+                  width: MediaQuery.of(context).size.width / 3,
+                  tabs: tabs,
+                  controller: _tabController,
+                  showIndicator: true,
+                  isScrollable: false,
+                  labelStyle: const TextStyle(fontWeight: FontWeight.normal, fontSize: 16),
+                  unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal, fontSize: 16),
+                  labelColor: Theme.of(context).primaryColor,
+                  unselectedLabelColor: Theme.of(context).unselectedWidgetColor,
+                  indicatorColor: Theme.of(context).primaryColor,
+                  dividerColor: Colors.transparent,
+                )),
             Padding(
                 padding: const EdgeInsets.only(right: 16),
                 child: AnimatedToggleSwitch<int>.rolling(
                   current: _currentRollingIndex,
-                  height: 44,
+                  height: 34,
                   values: const [0, 1, 2, 3],
                   onChanged: (index) => setState(() {
                     _currentRollingIndex = index;
                   }),
                   iconList: [
-                    Image.asset('assets/images/logo/f.png', width: 24, height: 24),
-                    Image.asset('assets/images/logo/u.png', width: 24, height: 24),
-                    Image.asset('assets/images/logo/l.png', width: 24, height: 24),
-                    Image.asset('assets/images/logo/i.png', width: 24, height: 24),
+                    Image.asset('assets/images/logo/f.png', width: 16, height: 16),
+                    Image.asset('assets/images/logo/u.png', width: 16, height: 16),
+                    Image.asset('assets/images/logo/l.png', width: 16, height: 16),
+                    Image.asset('assets/images/logo/i.png', width: 16, height: 16),
                   ],
                   onTap: (_) {
                     ToastificationUtils.showFlatToastification(
@@ -105,13 +118,13 @@ class _VideoPageTabsContainer extends State<VideoPageTabsContainer> with TickerP
                 ))
           ],
         ),
+        const Divider(
+          height: 0,
+        ),
         Expanded(
           child: TabBarView(
             controller: _tabController,
-            children: [
-              VideoIntroductionView(),
-              Text('评论'),
-            ],
+            children: [VideoIntroductionView(controller: widget.controller), const Center()],
           ),
         )
       ],
