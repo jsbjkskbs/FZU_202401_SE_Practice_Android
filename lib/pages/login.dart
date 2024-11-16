@@ -2,15 +2,15 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:fulifuli_app/global.dart';
-import 'package:fulifuli_app/model/user.dart';
 import 'package:fulifuli_app/widgets/index_page/login/recover_password.dart';
 
+import '../model/user.dart';
 import 'index.dart';
-import 'mfa_verification.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -26,23 +26,39 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   Duration get loginTime => const Duration(milliseconds: 1500);
   final RecoverPasswordForm _recoverPasswordForm = const RecoverPasswordForm();
-  final User _user = User(name: "", password: "");
-  bool _needMFA = false;
+  final dio = Dio(BaseOptions(baseUrl: Global.baseUrl));
+
+  String _cachedEmail = "";
 
   Future<String?> _login(LoginData data) async {
-    setState(() {
-      _user.name = data.name;
-      _user.password = data.password;
-      _needMFA = true;
+    Response response;
+    response = await dio.post('/api/v1/user/login', data: {
+      "username": data.name,
+      "password": data.password,
     });
-    await Future.delayed(loginTime);
-    Global.self = _user;
-    Global.self.id = "1";
+
+    if (response.data["code"] != Global.successCode) {
+      return response.data["msg"];
+    }
+
+    Global.self = User.fromJson(response.data["data"]);
+    if (!Global.self.isValidUser()) {
+      return 'Login failed';
+    }
+    Global.updateDioToken(accessToken: Global.self.accessToken, refreshToken: Global.self.refreshToken);
+    Storage.storePersistentData(Global.appPersistentData.copyWith(user: Global.self));
     return null;
   }
 
   Future<String?> _signup(SignupData data) async {
-    await Future.delayed(loginTime);
+    _cachedEmail = data.additionalSignupData!["email"]!;
+    Response response;
+    response = await dio.post('/api/v1/user/security/email/code', data: {
+      'email': _cachedEmail,
+    });
+    if (response.data["code"] != Global.successCode) {
+      return response.data["msg"];
+    }
     return null;
   }
 
@@ -57,23 +73,69 @@ class _LoginScreenState extends State<LoginScreen> {
     return null;
   }
 
-  Future<String?> _onConfirmSignup(String name, LoginData data) async {
-    await Future.delayed(loginTime);
+  Future<String?> _onConfirmSignup(String code, LoginData data) async {
+    Response response;
+    response = await dio.post('/api/v1/user/register', data: {
+      'username': data.name,
+      'password': data.password,
+      'email': _cachedEmail,
+      'code': code,
+    });
+
+    if (response.data["code"] != Global.successCode) {
+      return response.data["msg"];
+    }
+
+    response = await dio.post('/api/v1/user/login', data: {
+      "username": data.name,
+      "password": data.password,
+    });
+
+    if (response.data["code"] != Global.successCode) {
+      return response.data["msg"];
+    }
+
+    Global.self = User.fromJson(response.data["data"]);
+    if (!Global.self.isValidUser()) {
+      return 'Login failed';
+    }
+    Global.updateDioToken(accessToken: Global.self.accessToken, refreshToken: Global.self.refreshToken);
+    Storage.storePersistentData(Global.appPersistentData.copyWith(user: Global.self));
     return null;
   }
 
   Future<String?> _onResendCode(SignupData data) async {
-    await Future.delayed(loginTime);
+    Response response;
+    response = await dio.post('/api/v1/user/security/email/code', data: {
+      'email': _cachedEmail,
+    });
+    if (response.data["code"] != Global.successCode) {
+      return response.data["msg"];
+    }
     return null;
   }
 
   Future<String?> _onRecoverPassword(String name) async {
-    await Future.delayed(loginTime);
+    Response response;
+    response = await dio.post('/api/v1/user/security/password/retrieve/username', data: {
+      'username': name,
+    });
+    if (response.data["code"] != Global.successCode) {
+      return response.data["msg"];
+    }
     return null;
   }
 
-  Future<String?> _onConfirmRecover(String name, LoginData data) async {
-    await Future.delayed(loginTime);
+  Future<String?> _onConfirmRecover(String code, LoginData data) async {
+    Response response;
+    response = await dio.post('/api/v1/user/security/password/reset/username', data: {
+      'username': data.name,
+      'password': data.password,
+      'code': code,
+    });
+    if (response.data["code"] != Global.successCode) {
+      return response.data["msg"];
+    }
     return null;
   }
 
@@ -102,6 +164,8 @@ class _LoginScreenState extends State<LoginScreen> {
       onRecoverPassword: _onRecoverPassword,
       onConfirmRecover: _onConfirmRecover,
       hideForgotPasswordButton: false,
+      navigateBackAfterRecovery: true,
+      loginAfterSignUp: true,
       additionalSignupFields: [
         UserFormField(
           keyName: "email",
@@ -119,14 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ],
       onSubmitAnimationCompleted: () {
-        if (_needMFA) {
-          Navigator.of(context).pushReplacementNamed(
-            MFAVerification.routeName,
-            arguments: _user,
-          );
-        } else {
-          Navigator.of(context).pushReplacementNamed(IndexPage.routeName);
-        }
+        Navigator.of(context).pushReplacementNamed(IndexPage.routeName);
       },
       messages: LoginMessages(
         userHint: AppLocalizations.of(context)!.login_user_hint,

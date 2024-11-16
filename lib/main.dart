@@ -19,8 +19,9 @@ import 'package:fulifuli_app/pages/settings.dart';
 import 'package:fulifuli_app/pages/space.dart';
 import 'package:fulifuli_app/pages/submission_manage.dart';
 import 'package:fulifuli_app/pages/video.dart';
-import 'package:fulifuli_app/test.dart';
 import 'package:fulifuli_app/utils/scheme_reflect.dart';
+
+import 'model/user.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,13 +30,9 @@ Future<void> main() async {
     DeviceOrientation.portraitDown,
   ]);
   Global.appPersistentData = await Storage.getPersistentData();
-  _fetchVideoList();
+  Global.self = Global.appPersistentData.user ?? User();
+  Global.updateDioToken(accessToken: Global.self.accessToken, refreshToken: Global.self.refreshToken);
   runApp(const MyApp());
-}
-
-Future<void> _fetchVideoList() async {
-  // TODO: fetch video list
-  Global.cachedVideoList.add(videoListForTest);
 }
 
 class MyApp extends StatefulWidget {

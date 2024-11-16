@@ -1,6 +1,7 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:fulifuli_app/global.dart';
+import 'package:fulifuli_app/utils/toastification.dart';
 
 import '../../../model/video.dart';
 import '../../../utils/option_grid_view.dart';
@@ -8,12 +9,18 @@ import '../../video_card.dart';
 
 class VideoTabsView extends StatefulWidget {
   const VideoTabsView(
-      {super.key, required this.controller, required this.currentIndex, required this.onUpdate, required this.assignedIndex});
+      {super.key,
+      required this.controller,
+      required this.currentIndex,
+      required this.onUpdate,
+      required this.assignedIndex,
+      this.category});
 
   final ScrollController controller;
   final int currentIndex;
   final Function onUpdate;
   final int assignedIndex;
+  final String? category;
 
   @override
   State<VideoTabsView> createState() {
@@ -22,7 +29,10 @@ class VideoTabsView extends StatefulWidget {
 }
 
 class _VideoTabsViewState extends State<VideoTabsView> {
-  late List<Video> videoList = [];
+  static const int _n = 10;
+  late List<Video> videoList;
+  int offset = 0;
+  bool isEnd = false;
   final EasyRefreshController _easyRefreshController = EasyRefreshController(
     controlFinishLoad: true,
     controlFinishRefresh: true,
@@ -31,7 +41,14 @@ class _VideoTabsViewState extends State<VideoTabsView> {
   @override
   void initState() {
     super.initState();
-    videoList = Global.cachedVideoList[widget.assignedIndex];
+    videoList = Global.cachedVideoList[widget.assignedIndex.toString()]!.key;
+    isEnd = Global.cachedVideoList[widget.assignedIndex.toString()]!.value;
+    WidgetsBinding widgetsBinding = WidgetsBinding.instance;
+    widgetsBinding.addPostFrameCallback((_) {
+      if (videoList.isEmpty && widget.currentIndex == widget.assignedIndex) {
+        _easyRefreshController.callRefresh();
+      }
+    });
   }
 
   @override
@@ -68,43 +85,130 @@ class _VideoTabsViewState extends State<VideoTabsView> {
         controller: _easyRefreshController,
         onRefresh: () async {
           await Future<void>.delayed(const Duration(milliseconds: 500));
+          if (isEnd) {
+            if (context.mounted) {
+              ToastificationUtils.showSimpleToastification(context, '没有更多了');
+            }
+            _easyRefreshController.finishRefresh();
+            _easyRefreshController.resetHeader();
+            return;
+          }
           if (!mounted) {
             return;
           }
-          videoList.add(
-            Video(
-              id: '1',
-              userId: 'user1',
-              title: 'Video 21',
-              description: 'Description 1',
-              category: 'Category 1',
-              labels: ['label1', 'label2'],
-              coverUrl: 'http://example.com/cover1.jpg',
-              videoUrl: 'http://example.com/video1.mp4',
-              viewCount: 100,
-              likeCount: 10,
-              commentCount: 5,
-              createdAt: 1633036800,
-              updatedAt: 1633123200,
-              deletedAt: 0,
-              status: 'active',
-            ),
-          );
-          debugPrint('onRefresh');
-          await Future<void>.delayed(const Duration(milliseconds: 1000));
+          if (Global.self.accessToken != null && Global.self.accessToken!.isNotEmpty) {
+            Global.dio.get('/api/v1/video/custom/feed', data: {
+              "offset": offset,
+              "n": _n,
+              if (widget.category != null) "category": widget.category,
+            }).then((data) {
+              List<Video> list = [];
+              for (var item in data.data["data"]["items"]) {
+                list.add(Video.fromJson(item));
+              }
+              if (list.isEmpty) {
+                isEnd = true;
+                if (context.mounted) {
+                  ToastificationUtils.showSimpleToastification(context, '没有更多了');
+                }
+              } else {
+                offset += _n;
+              }
+              videoList = [...list, ...videoList];
+              Global.cachedVideoList[widget.assignedIndex.toString()] = MapEntry(videoList, isEnd);
+              setState(() {});
+            });
+          } else {
+            Global.dio.get('/api/v1/video/feed', data: {
+              "offset": offset,
+              "n": _n,
+              if (widget.category != null) "category": widget.category,
+            }).then((data) {
+              List<Video> list = [];
+              for (var item in data.data["data"]["items"]) {
+                list.add(Video.fromJson(item));
+              }
+              if (list.isEmpty) {
+                isEnd = true;
+                if (context.mounted) {
+                  ToastificationUtils.showSimpleToastification(context, '没有更多了');
+                }
+              } else {
+                offset += _n;
+              }
+              videoList = [...list, ...videoList];
+              Global.cachedVideoList[widget.assignedIndex.toString()] = MapEntry(videoList, isEnd);
+              setState(() {});
+            });
+          }
           _easyRefreshController.finishRefresh();
           _easyRefreshController.resetHeader();
           setState(() {});
         },
         onLoad: () async {
-          await Future<void>.delayed(const Duration(milliseconds: 4000));
-          debugPrint('onLoad');
+          await Future<void>.delayed(const Duration(milliseconds: 500));
+          if (isEnd) {
+            if (context.mounted) {
+              ToastificationUtils.showSimpleToastification(context, '没有更多了');
+            }
+            _easyRefreshController.finishLoad();
+            _easyRefreshController.resetFooter();
+            return IndicatorResult.noMore;
+          }
           if (!mounted) {
             return IndicatorResult.noMore;
           }
+          if (Global.self.accessToken != null && Global.self.accessToken!.isNotEmpty) {
+            Global.dio.get('/api/v1/video/custom/feed', data: {
+              "offset": offset,
+              "n": _n,
+              if (widget.category != null) "category": widget.category,
+            }).then((data) {
+              List<Video> list = [];
+              for (var item in data.data["data"]["items"]) {
+                list.add(Video.fromJson(item));
+              }
+              if (list.isEmpty) {
+                isEnd = true;
+                if (context.mounted) {
+                  ToastificationUtils.showSimpleToastification(context, '没有更多了');
+                }
+              } else {
+                offset += _n;
+              }
+              videoList = [...videoList, ...list];
+              Global.cachedVideoList[widget.assignedIndex.toString()] = MapEntry(videoList, isEnd);
+              setState(() {});
+            });
+          } else {
+            Global.dio.get('/api/v1/video/feed', data: {
+              "offset": offset,
+              "n": _n,
+              if (widget.category != null) "category": widget.category,
+            }).then((data) {
+              List<Video> list = [];
+              for (var item in data.data["data"]["items"]) {
+                list.add(Video.fromJson(item));
+              }
+              if (list.isEmpty) {
+                isEnd = true;
+                if (context.mounted) {
+                  ToastificationUtils.showSimpleToastification(context, '没有更多了');
+                }
+              } else {
+                offset += _n;
+              }
+              videoList = [...videoList, ...list];
+              Global.cachedVideoList[widget.assignedIndex.toString()] = MapEntry(videoList, isEnd);
+              setState(() {});
+            });
+          }
           _easyRefreshController.finishLoad();
           _easyRefreshController.resetFooter();
-          return IndicatorResult.noMore;
+          if (isEnd) {
+            return IndicatorResult.noMore;
+          }
+          return IndicatorResult.success;
         },
         childBuilder: (BuildContext context, ScrollPhysics physics) {
           return OptionGridView(

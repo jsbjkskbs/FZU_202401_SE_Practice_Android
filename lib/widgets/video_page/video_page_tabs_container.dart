@@ -6,11 +6,13 @@ import 'package:fulifuli_app/widgets/index_page/home/video_tabs_view.dart';
 import 'package:fulifuli_app/widgets/video_page/video_introduction_view.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
+import '../comment_list.dart';
+import '../comment_reply_fake_container.dart';
+
 class VideoPageTabsContainer extends StatefulWidget {
-  const VideoPageTabsContainer({super.key, required this.tabs, required this.controller, required this.controller0});
+  const VideoPageTabsContainer({super.key, required this.tabs, required this.controller});
 
   final ScrollController controller;
-  final ScrollController controller0;
   final List<String> tabs;
 
   @override
@@ -40,14 +42,12 @@ class _VideoPageTabsContainer extends State<VideoPageTabsContainer> with TickerP
 
   void _initTabController() {
     _tabController = TabController(length: tabs.length, vsync: this);
-    _tabController.addListener(() async {
-      var old = _currentIndex;
-      setState(() {
-        _currentIndex = _tabController.index;
-      });
-      if (old != _tabController.index && _tabController.index == 1) {
-        await CommentPopup.show(context, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.8, radius: 0);
-        _tabController.animateTo(old);
+    _tabController.addListener(() {
+      debugPrint('${_currentIndex != _tabController.index && _tabController.index == 1}');
+      if (_currentIndex != _tabController.index) {
+        setState(() {
+          _currentIndex = _tabController.index;
+        });
       }
     });
   }
@@ -124,7 +124,20 @@ class _VideoPageTabsContainer extends State<VideoPageTabsContainer> with TickerP
         Expanded(
           child: TabBarView(
             controller: _tabController,
-            children: [VideoIntroductionView(controller: widget.controller), const Center()],
+            children: [
+              VideoIntroductionView(controller: widget.controller),
+              Column(
+                children: [
+                  const Expanded(child: CommentListView()),
+                  GestureDetector(
+                    onTap: () {
+                      CommentPopup.showReplyPanel(context);
+                    },
+                    child: const CommentReplyPopupFakeContainer(),
+                  ),
+                ],
+              )
+            ],
           ),
         )
       ],

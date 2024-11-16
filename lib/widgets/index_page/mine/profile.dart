@@ -54,7 +54,7 @@ class _ProfileViewState extends State<ProfileView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        Global.self.name == "" ? AppLocalizations.of(context)!.mine_profile_login_or_register : Global.self.name,
+                        Global.self.name ?? AppLocalizations.of(context)!.mine_profile_login_or_register,
                         style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontSize: 20.0,

@@ -7,6 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/main.dart';
 import 'package:fulifuli_app/model/settings.dart';
+import 'package:fulifuli_app/pages/index.dart';
 import 'package:fulifuli_app/utils/scheme_reflect.dart';
 import 'package:fulifuli_app/widgets/icons/def.dart';
 import 'package:fulifuli_app/widgets/settings_page/settings_light_dark_switch.dart';
@@ -14,6 +15,7 @@ import 'package:fulifuli_app/widgets/settings_page/settings_list_item.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
+import '../model/user.dart';
 import '../utils/toastification.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -205,6 +207,22 @@ class _SettingsList {
                       ));
                 }));
           }),
+      SettingsItem(
+        label: '退出登录',
+        kind: 'security',
+        labelIndex: 0,
+        kindIndex: 1,
+        onTap: (BuildContext context) {
+          Global.self = User();
+          Storage.storePersistentData(Global.appPersistentData.copyWith(user: Global.self));
+          Navigator.of(context).pushNamedAndRemoveUntil(IndexPage.routeName, (route) => false);
+          ToastificationUtils.showSimpleToastification(context, '退出登录成功');
+        },
+        icon: const Icon(
+          Icons.exit_to_app,
+          size: 24,
+        ),
+      )
     ];
   }
 }

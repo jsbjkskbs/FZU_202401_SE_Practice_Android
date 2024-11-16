@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:fluid_dialog/fluid_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
@@ -16,6 +18,8 @@ class RecoverPasswordForm extends StatefulWidget {
 }
 
 class _RecoverPasswordState extends State<RecoverPasswordForm> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _codeController = TextEditingController();
   final TextEditingController _recoverPasswordController1 = TextEditingController();
   final TextEditingController _recoverPasswordController2 = TextEditingController();
   late Timer _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {});
@@ -72,6 +76,7 @@ class _RecoverPasswordState extends State<RecoverPasswordForm> {
                           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 16),
                       TDInput(
+                        controller: _emailController,
                         leftLabel: AppLocalizations.of(context)!.login_recover_page_reset_email,
                         leftLabelStyle: TextStyle(
                           color: Theme.of(context).indicatorColor,
@@ -89,6 +94,7 @@ class _RecoverPasswordState extends State<RecoverPasswordForm> {
                         additionInfoColor: Colors.red,
                       ),
                       TDInput(
+                        controller: _codeController,
                         leftLabel: AppLocalizations.of(context)!.login_recover_page_reset_code,
                         leftLabelStyle: TextStyle(color: Theme.of(context).indicatorColor, letterSpacing: 0),
                         textStyle: TextStyle(
@@ -119,22 +125,35 @@ class _RecoverPasswordState extends State<RecoverPasswordForm> {
                                   ),
                           ],
                         ),
-                        onBtnTap: () {
+                        onBtnTap: () async {
                           if (_countdownTime == 0) {
-                            TDToast.showText(AppLocalizations.of(context)!.login_recover_page_reset_code_has_sent, context: context);
-                            setState(() {
-                              _countdownTime = 60;
-                              _countdownTimer.cancel();
-                              _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-                                if (_countdownTime == 0) {
-                                  timer.cancel();
-                                } else {
-                                  setState(() {
-                                    _countdownTime--;
-                                  });
-                                }
+                            Response response;
+                            response = await Dio(BaseOptions(
+                              baseUrl: Global.baseUrl,
+                            )).post(
+                              "/api/v1/user/security/password/retrieve/email",
+                              data: {
+                                "email": _emailController.text,
+                              },
+                            );
+                            if (response.data["code"] != Global.successCode && context.mounted) {
+                              TDToast.showText(response.data["msg"], context: context);
+                            } else if (context.mounted) {
+                              TDToast.showText(AppLocalizations.of(context)!.login_recover_page_reset_code_has_sent, context: context);
+                              setState(() {
+                                _countdownTime = 60;
+                                _countdownTimer.cancel();
+                                _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+                                  if (_countdownTime == 0) {
+                                    timer.cancel();
+                                  } else {
+                                    setState(() {
+                                      _countdownTime--;
+                                    });
+                                  }
+                                });
                               });
-                            });
+                            }
                           }
                         },
                       ),
@@ -209,14 +228,32 @@ class _RecoverPasswordState extends State<RecoverPasswordForm> {
                           const SizedBox(width: 48),
                           Expanded(
                               child: ElevatedButton(
-                            onPressed: () {
+                            onPressed: () async {
                               if (_recoverPasswordController1.text != _recoverPasswordController2.text) {
                                 ToastificationUtils.showSimpleToastification(
                                     context, AppLocalizations.of(context)!.login_recover_page_confirm_password_error);
                               } else {
-                                ToastificationUtils.showSimpleToastification(
-                                    context, AppLocalizations.of(context)!.login_recover_page_reset_password_success);
-                                Navigator.of(context).pop();
+                                Response response;
+                                response = await Dio(
+                                  BaseOptions(
+                                    baseUrl: Global.baseUrl,
+                                  ),
+                                ).post(
+                                  "/api/v1/user/security/password/reset/email",
+                                  data: {
+                                    "email": _emailController.text,
+                                    "password": _recoverPasswordController1.text,
+                                    "code": _codeController.text,
+                                  },
+                                );
+
+                                if (response.data["code"] != Global.successCode && context.mounted) {
+                                  ToastificationUtils.showSimpleToastification(context, response.data["msg"]);
+                                } else if (context.mounted) {
+                                  ToastificationUtils.showSimpleToastification(
+                                      context, AppLocalizations.of(context)!.login_recover_page_reset_password_success);
+                                  Navigator.of(context).pop();
+                                }
                               }
                             },
                             style: ButtonStyle(

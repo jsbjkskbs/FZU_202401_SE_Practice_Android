@@ -48,7 +48,7 @@ class _HomeTopBarState extends State<HomeTopBar> {
                     defaultUrl: "assets/images/default_avatar.gif",
                     onTap: () {
                       if (Global.isLogin()) {
-                        Navigator.of(context).pushNamed('/space', arguments: {'user_id': "用户ID七个字"});
+                        Navigator.of(context).pushNamed('/space', arguments: {'user_id': Global.self.id});
                       } else {
                         ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.home_login_hint);
                         Navigator.of(context).pushNamed('/login');

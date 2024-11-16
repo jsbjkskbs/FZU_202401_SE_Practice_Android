@@ -31,10 +31,10 @@ class _SearchPageVideoTabsViewState extends State<SearchPageVideoTabsView> {
     super.initState();
     bool isCached = Global.cachedMapVideoList.containsKey(SearchPageVideoTabsView.uniqueKey);
     if (!isCached) {
-      Global.cachedMapVideoList.addEntries([MapEntry(SearchPageVideoTabsView.uniqueKey, videoList)]);
+      Global.cachedMapVideoList.addEntries([MapEntry(SearchPageVideoTabsView.uniqueKey, MapEntry(videoList, false))]);
       debugPrint('Added new video list with key: ${SearchPageVideoTabsView.uniqueKey}');
     }
-    videoList = Global.cachedMapVideoList[SearchPageVideoTabsView.uniqueKey]!;
+    videoList = Global.cachedMapVideoList[SearchPageVideoTabsView.uniqueKey]!.key;
 
     if (isCached) {
       return;

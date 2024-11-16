@@ -76,6 +76,7 @@ dependencies:
   auto_size_text: ^3.0.0
   sensors_plus: ^6.1.0
   rect_getter: ^1.1.0
+  dio: ^5.7.0
 
 dev_dependencies:
   flutter_test:

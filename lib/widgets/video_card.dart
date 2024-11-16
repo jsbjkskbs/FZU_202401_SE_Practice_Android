@@ -90,9 +90,9 @@ class _VideoCardState extends State<VideoCard> {
                     const SizedBox(height: 6),
                     Stack(
                       children: [
-                        const GradientImage(
+                        GradientImage(
                           height: 120,
-                          imgName: 'assets/images/cover.png',
+                          imgName: video.coverUrl!,
                         ),
                         Positioned(
                           left: 0,
@@ -107,7 +107,7 @@ class _VideoCardState extends State<VideoCard> {
                               ),
                               const SizedBox(width: 2),
                               Text(
-                                video.viewCount.toString(),
+                                video.visitCount.toString(),
                                 style: TextStyle(
                                   color: Theme.of(context).textTheme.bodyMedium!.color,
                                   fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
@@ -124,7 +124,7 @@ class _VideoCardState extends State<VideoCard> {
                         child: SizedBox(
                           height: Theme.of(context).textTheme.bodyLarge!.fontSize! * 2.7,
                           child: Text(
-                            video.title,
+                            video.title!,
                             style: TextStyle(
                               color: Theme.of(context).textTheme.bodyLarge!.color,
                               fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
@@ -150,7 +150,7 @@ class _VideoCardState extends State<VideoCard> {
                             const SizedBox(width: 4),
                             ConstrainedBox(
                                 constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 3),
-                                child: Text("作者名字七个字: ${video.userId}12313131321231",
+                                child: Text("${video.user?.name}",
                                     style: TextStyle(
                                       color: Theme.of(context).hintColor,
                                       fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,

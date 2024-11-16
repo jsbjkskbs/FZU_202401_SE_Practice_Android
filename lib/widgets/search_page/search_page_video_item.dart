@@ -41,7 +41,7 @@ class SearchPageVideoItem extends StatelessWidget {
                             minHeight: Theme.of(context).textTheme.bodyMedium!.fontSize! * 3 + 4,
                             maxHeight: Theme.of(context).textTheme.bodyMedium!.fontSize! * 3 + 4),
                         child: Text(
-                          data.title,
+                          data.title!,
                           style: TextStyle(
                             fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
                             color: Theme.of(context).textTheme.bodyMedium!.color,
@@ -66,7 +66,7 @@ class SearchPageVideoItem extends StatelessWidget {
                                 SizedBox(
                                   width: MediaQuery.of(context).size.width / 3,
                                   child: Text(
-                                    data.userId,
+                                    data.user!.id!,
                                     style: TextStyle(
                                       fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
                                       color: Theme.of(context).hintColor,
@@ -91,7 +91,7 @@ class SearchPageVideoItem extends StatelessWidget {
                                 SizedBox(
                                   width: MediaQuery.of(context).size.width / 8,
                                   child: Text(
-                                    NumberConverter.convertNumber(data.viewCount),
+                                    NumberConverter.convertNumber(data.visitCount!),
                                     style: TextStyle(
                                       fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
                                       color: Theme.of(context).hintColor,
@@ -101,7 +101,7 @@ class SearchPageVideoItem extends StatelessWidget {
                                 ),
                                 Row(children: [
                                   Text(
-                                    DateTime.fromMillisecondsSinceEpoch(data.createdAt, isUtc: true).toString().substring(0, 10),
+                                    DateTime.fromMillisecondsSinceEpoch(data.createdAt!, isUtc: true).toString().substring(0, 10),
                                     style: TextStyle(
                                       fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
                                       color: Theme.of(context).hintColor,

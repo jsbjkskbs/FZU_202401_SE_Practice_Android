@@ -31,10 +31,10 @@ class _SubmissionManageVideoTabsViewState extends State<SubmissionManageVideoTab
     super.initState();
     bool isCached = Global.cachedMapVideoList.containsKey(widget.uniqueKey);
     if (!isCached) {
-      Global.cachedMapVideoList.addEntries([MapEntry(widget.uniqueKey, videoList)]);
+      Global.cachedMapVideoList.addEntries([MapEntry(widget.uniqueKey, MapEntry(videoList, false))]);
       debugPrint('Added new video list with key: ${widget.uniqueKey}');
     }
-    videoList = Global.cachedMapVideoList[widget.uniqueKey]!;
+    videoList = Global.cachedMapVideoList[widget.uniqueKey]!.key;
 
     if (isCached) {
       return;

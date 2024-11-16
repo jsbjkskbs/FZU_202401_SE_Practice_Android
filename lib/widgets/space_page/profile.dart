@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fulifuli_app/global.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 import '../../utils/number_converter.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({super.key});
+  const Profile({super.key, required this.userId});
 
-  static String routeName = '/profile';
+  final String userId;
 
   @override
   State<StatefulWidget> createState() {
@@ -34,7 +35,7 @@ class _ProfileState extends State<Profile> {
                   TDImageViewer.showImageViewer(
                       context: context,
                       images: [
-                        "assets/images/default_avatar.gif",
+                        Global.cachedMapUser[widget.userId]?.avatarUrl ?? Global.defaultAvatarUrl,
                         "assets/images/dot.png",
                       ],
                       onIndexChange: (index) {
@@ -44,7 +45,9 @@ class _ProfileState extends State<Profile> {
                       });
                 },
                 child: TDImage(
-                  assetUrl: "assets/images/default_avatar.gif",
+                  imgUrl: Global.cachedMapUser[widget.userId]?.avatarUrl ?? Global.defaultAvatarUrl,
+                  errorWidget: const Icon(Icons.error),
+                  loadingWidget: const CircularProgressIndicator(),
                   height: MediaQuery.of(context).size.width / 4,
                   width: MediaQuery.of(context).size.width / 4,
                   type: TDImageType.circle,
@@ -57,7 +60,10 @@ class _ProfileState extends State<Profile> {
                 width: MediaQuery.of(context).size.width / 4,
                 child: Column(
                   children: [
-                    Text("0",
+                    Text(
+                        Global.cachedMapUser[widget.userId] != null
+                            ? NumberConverter.convertNumber(Global.cachedMapUser[widget.userId]!.followerCount ?? 0)
+                            : "NaN",
                         style:
                             _labelStyle.copyWith(fontWeight: FontWeight.bold, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize)),
                     Text(
@@ -70,7 +76,10 @@ class _ProfileState extends State<Profile> {
                 width: MediaQuery.of(context).size.width / 4,
                 child: Column(
                   children: [
-                    Text("0",
+                    Text(
+                        Global.cachedMapUser[widget.userId] != null
+                            ? NumberConverter.convertNumber(Global.cachedMapUser[widget.userId]!.followingCount ?? 0)
+                            : "NaN",
                         style:
                             _labelStyle.copyWith(fontWeight: FontWeight.bold, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize)),
                     Text(
@@ -84,7 +93,9 @@ class _ProfileState extends State<Profile> {
                 child: Column(
                   children: [
                     Text(
-                      NumberConverter.convertNumber(0),
+                      Global.cachedMapUser[widget.userId] != null
+                          ? NumberConverter.convertNumber(Global.cachedMapUser[widget.userId]!.likeCount ?? 0)
+                          : "NaN",
                       style: _labelStyle.copyWith(fontWeight: FontWeight.bold, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -106,7 +117,7 @@ class _ProfileState extends State<Profile> {
             shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0))),
           ),
           child: Text(
-            "Edit Profile",
+            Global.self.id == widget.userId ? "上传头像" : "关注",
             style: TextStyle(
                 color: Theme.of(context).scaffoldBackgroundColor,
                 fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,

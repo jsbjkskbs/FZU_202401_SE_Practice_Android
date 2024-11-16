@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -15,12 +16,32 @@ class AppPersistentData {
   int themeMode;
   String themeSelection;
   String languageCode;
+  User? user;
 
-  AppPersistentData({required this.themeMode, required this.languageCode, required this.themeSelection});
+  AppPersistentData({
+    required this.themeMode,
+    required this.languageCode,
+    required this.themeSelection,
+    this.user,
+  });
 
   factory AppPersistentData.fromJson(Map<String, dynamic> json) => _$AppPersistentDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$AppPersistentDataToJson(this);
+
+  AppPersistentData copyWith({
+    int? themeMode,
+    String? themeSelection,
+    String? languageCode,
+    User? user,
+  }) {
+    return AppPersistentData(
+      themeMode: themeMode ?? this.themeMode,
+      themeSelection: themeSelection ?? this.themeSelection,
+      languageCode: languageCode ?? this.languageCode,
+      user: user ?? this.user,
+    );
+  }
 }
 
 class Global {
@@ -28,12 +49,37 @@ class Global {
 
   static User self = User();
 
-  static bool isLogin() {
-    return self.id.isNotEmpty;
+  static const defaultAvatarUrl = "assets/images/default_avatar.gif";
+
+  static const baseUrl = "http://1.94.121.141";
+
+  static const successCode = 0;
+
+  static Dio dio = Dio(BaseOptions(
+    baseUrl: baseUrl,
+    connectTimeout: const Duration(seconds: 5),
+    receiveTimeout: const Duration(seconds: 5),
+  ));
+
+  static updateDioToken({String? accessToken, String? refreshToken}) {
+    if (accessToken != null) {
+      dio.options.headers["Access-Token"] = accessToken;
+    }
+    if (refreshToken != null) {
+      dio.options.headers["Refresh-Token"] = refreshToken;
+    }
+    debugPrint("Global.updateDioToken: ${dio.options.headers}");
   }
 
-  static List<List<Video>> cachedVideoList = [];
-  static Map<String, List<Video>> cachedMapVideoList = {};
+  static bool isLogin() {
+    return self.isValidUser();
+  }
+
+  static Map<String, MapEntry<List<Video>, bool>> cachedVideoList = {};
+  static Map<String, User> cachedMapUser = {};
+
+  static Map<String, MapEntry<List<Video>, bool>> cachedMapVideoList = {};
+
   static Map<String, List<String>> cachedMapDynamicList = {};
   static Map<String, List<String>> cachedMapUserList = {};
   static List<Video> cachedSearchVideoList = [];
@@ -44,6 +90,10 @@ class Global {
 class Storage {
   static storePersistentData(AppPersistentData data) async {
     final prefs = await SharedPreferences.getInstance();
+    data = data.user != null
+        ? data
+        : AppPersistentData(
+            themeMode: data.themeMode, languageCode: data.languageCode, themeSelection: data.themeSelection, user: Global.self);
     await prefs.setString("appPersistentData", jsonEncode(data));
     debugPrint("Storage.storePersistentData: ${data.toJson()}");
   }
@@ -56,7 +106,7 @@ class Storage {
       return AppPersistentData.fromJson(jsonDecode(data));
     } else {
       debugPrint("Storage.getPersistentData: default");
-      return AppPersistentData(themeMode: 0, languageCode: "zh", themeSelection: FlexScheme.sakura.name);
+      return AppPersistentData(themeMode: 0, languageCode: "zh", themeSelection: FlexScheme.sakura.name, user: null);
     }
   }
 

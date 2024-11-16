@@ -31,7 +31,6 @@ class _VideoPageState extends State<VideoPage> {
   final GlobalKey<RectGetterState> _rectGetterKey = RectGetter.createGlobalKey();
   late ScrollController _headerScrollController;
   late ScrollController _bodyScrollController;
-  late ScrollController _bodyScrollController0;
   double _chewieOpacity = 0;
 
   @override
@@ -53,7 +52,6 @@ class _VideoPageState extends State<VideoPage> {
     }, cancelOnError: true);
     _headerScrollController = _scrollControllerGroup.addAndGet();
     _bodyScrollController = _scrollControllerGroup.addAndGet();
-    _bodyScrollController0 = _scrollControllerGroup.addAndGet();
   }
 
   @override
@@ -67,7 +65,6 @@ class _VideoPageState extends State<VideoPage> {
     accelerometerHandler!.cancel();
     _headerScrollController.dispose();
     _bodyScrollController.dispose();
-    _bodyScrollController0.dispose();
     super.dispose();
   }
 
@@ -122,7 +119,6 @@ class _VideoPageState extends State<VideoPage> {
                 child: Material(
               child: VideoPageTabsContainer(
                 controller: _bodyScrollController,
-                controller0: _bodyScrollController0,
                 tabs: const [
                   '简介',
                   '评论',

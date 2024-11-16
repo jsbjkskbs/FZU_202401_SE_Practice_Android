@@ -1,9 +1,8 @@
-import 'dart:math';
-
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
+import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:fulifuli_app/widgets/video_card.dart';
 
 import '../../../model/video.dart';
@@ -34,16 +33,18 @@ class SpaceVideoTabsView extends StatefulWidget {
 class _SpaceVideoTabsViewState extends State<SpaceVideoTabsView> {
   late List<Video> videoList = [];
   late EasyRefreshController _easyRefreshController;
+  int pageNum = 0;
+  bool isEnd = false;
 
   @override
   void initState() {
     super.initState();
     bool isCached = Global.cachedMapVideoList.containsKey(widget.uniqueKey);
     if (!isCached) {
-      Global.cachedMapVideoList.addEntries([MapEntry(widget.uniqueKey, videoList)]);
-      debugPrint('Added new video list with key: ${widget.uniqueKey}');
+      Global.cachedMapVideoList.addEntries([MapEntry(widget.uniqueKey, MapEntry(videoList, isEnd))]);
     }
-    videoList = Global.cachedMapVideoList[widget.uniqueKey]!;
+    videoList = Global.cachedMapVideoList[widget.uniqueKey]!.key;
+    isEnd = Global.cachedMapVideoList[widget.uniqueKey]!.value;
 
     if (isCached) {
       return;
@@ -51,24 +52,22 @@ class _SpaceVideoTabsViewState extends State<SpaceVideoTabsView> {
     var widgetsBinding = WidgetsBinding.instance;
     widgetsBinding.addPostFrameCallback((_) {
       if (widget.currentIndex == widget.assignedIndex) {
-        debugPrint('Adding new video item');
-        videoList.add(Video(
-          id: '1',
-          userId: 'user1',
-          title: 'Video 1',
-          description: 'Description 1',
-          category: 'Category 1',
-          labels: ['label1', 'label2'],
-          coverUrl: 'http://example.com/cover1.jpg',
-          videoUrl: 'http://example.com/video1.mp4',
-          viewCount: 100,
-          likeCount: 10,
-          commentCount: 5,
-          createdAt: 1633036800,
-          updatedAt: 1633123200,
-          deletedAt: 0,
-          status: 'active',
-        ));
+        Global.dio.get("/api/v1/video/list", data: {
+          "user_id": widget.uniqueKey,
+          "page_num": pageNum,
+          "page_size": 10,
+        }).then((data) {
+          if (data.data["code"] == Global.successCode) {
+            for (var item in data.data["data"]["items"]) {
+              videoList.add(Video.fromJson(item));
+            }
+            isEnd = data.data["data"]["is_end"];
+            Global.cachedMapVideoList[widget.uniqueKey] = MapEntry(videoList, isEnd);
+            setState(() {
+              pageNum++;
+            });
+          }
+        });
       }
       setState(() {});
     });
@@ -78,27 +77,6 @@ class _SpaceVideoTabsViewState extends State<SpaceVideoTabsView> {
   void didUpdateWidget(covariant SpaceVideoTabsView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (videoList.isEmpty && widget.currentIndex == widget.assignedIndex) {
-      switch (Random().nextInt(3)) {
-        case 0:
-          videoList.add(Video(
-            id: '1',
-            userId: 'user1',
-            title: 'Video 1',
-            description: 'Description 1',
-            category: 'Category 1',
-            labels: ['label1', 'label2'],
-            coverUrl: 'http://example.com/cover1.jpg',
-            videoUrl: 'http://example.com/video1.mp4',
-            viewCount: 100,
-            likeCount: 10,
-            commentCount: 5,
-            createdAt: 1633036800,
-            updatedAt: 1633123200,
-            deletedAt: 0,
-            status: 'active',
-          ));
-          break;
-      }
       setState(() {});
     }
   }
@@ -150,35 +128,70 @@ class _SpaceVideoTabsViewState extends State<SpaceVideoTabsView> {
           if (!mounted) {
             return;
           }
-          videoList.add(Video(
-            id: '1',
-            userId: 'user1',
-            title: 'Video 1',
-            description: 'Description 1',
-            category: 'Category 1',
-            labels: ['label1', 'label2'],
-            coverUrl: 'http://example.com/cover1.jpg',
-            videoUrl: 'http://example.com/video1.mp4',
-            viewCount: 100,
-            likeCount: 10,
-            commentCount: 5,
-            createdAt: 1633036800,
-            updatedAt: 1633123200,
-            deletedAt: 0,
-            status: 'active',
-          ));
+          videoList.clear();
+          pageNum = 0;
+          Global.dio.get("/api/v1/video/list", data: {
+            "user_id": widget.uniqueKey,
+            "page_num": pageNum,
+            "page_size": 10,
+          }).then((data) {
+            if (data.data["code"] == Global.successCode) {
+              for (var item in data.data["data"]["items"]) {
+                videoList.add(Video.fromJson(item));
+              }
+              isEnd = data.data["data"]["is_end"];
+              Global.cachedMapVideoList[widget.uniqueKey] = MapEntry(videoList, isEnd);
+              setState(() {
+                pageNum++;
+              });
+            }
+          });
+          if (context.mounted) {
+            ToastificationUtils.showSimpleToastification(context, '刷新成功');
+          }
           _easyRefreshController.finishRefresh();
           _easyRefreshController.resetHeader();
           setState(() {});
         },
         onLoad: () async {
-          await Future<void>.delayed(const Duration(milliseconds: 4000));
+          await Future<void>.delayed(const Duration(milliseconds: 500));
+          if (isEnd) {
+            if (context.mounted) {
+              ToastificationUtils.showSimpleToastification(context, '没有更多了');
+            }
+            _easyRefreshController.finishLoad();
+            _easyRefreshController.resetFooter();
+            return IndicatorResult.noMore;
+          }
           if (!mounted) {
             return IndicatorResult.noMore;
           }
+          Global.dio.get("/api/v1/video/list", data: {
+            "user_id": widget.uniqueKey,
+            "page_num": pageNum,
+            "page_size": 10,
+          }).then((data) {
+            if (data.data["code"] == Global.successCode) {
+              for (var item in data.data["data"]["items"]) {
+                videoList.add(Video.fromJson(item));
+              }
+              isEnd = data.data["data"]["is_end"];
+              Global.cachedMapVideoList[widget.uniqueKey] = MapEntry(videoList, isEnd);
+              setState(() {
+                pageNum++;
+              });
+            }
+          });
+          if (context.mounted) {
+            ToastificationUtils.showSimpleToastification(context, '加载成功');
+          }
           _easyRefreshController.finishLoad();
           _easyRefreshController.resetFooter();
-          return IndicatorResult.noMore;
+          if (isEnd && context.mounted) {
+            ToastificationUtils.showSimpleToastification(context, '没有更多了');
+            return IndicatorResult.noMore;
+          }
+          return IndicatorResult.success;
         },
         scrollController: widget.controller,
         childBuilder: (BuildContext context, ScrollPhysics physics) {
