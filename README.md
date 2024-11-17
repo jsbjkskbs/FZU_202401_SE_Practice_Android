@@ -10,13 +10,16 @@ English | [简体中文](README.zh-CN.md)
 
 This is a mobile application for FuliFuli, a platform for sharing and discovering beautiful things around the world.
 
-This project is built with Flutter, a cross-platform mobile app development framework. It is designed to run on both Android and iOS devices.
+This project is built with Flutter, a cross-platform mobile app development framework. It is designed to run on both Android and iOS
+devices.
 
-Now, we're in the early stage of development. We're working on the basic features of the app, such as user authentication, content sharing, and content discovery.
+Now, we're in the early stage of development. We're working on the basic features of the app, such as user authentication, content sharing,
+and content discovery.
 
 ## Feature
 
-1. Internationalization: Support multiple languages.(Although we only have English and Chinese now, we will add more languages in the future.)
+1. Internationalization: Support multiple languages.(Although we only have English and Chinese now, we will add more languages in the
+   future.)
 2. User Authentication: Users can sign up, sign in, and sign out.
 3. Content Sharing: Users can share beautiful things with others.
 4. Content Discovery: Users can discover beautiful things shared by others.
@@ -41,10 +44,11 @@ Now, we're in the early stage of development. We're working on the basic feature
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the Apache License - see the [LICENSE](LICENSE) file for details.
 
 ## About Us
 
-We are a group of developers who love beautiful things. We want to create a platform for sharing and discovering beautiful things around the world. If you have any questions or suggestions, please feel free to contact us.
+We are a group of developers who love beautiful things. We want to create a platform for sharing and discovering beautiful things around the
+world. If you have any questions or suggestions, please feel free to contact us.
 
 Notice: This project is for educational purposes only. It is not intended for commercial use. Any PR or contribution is welcome.

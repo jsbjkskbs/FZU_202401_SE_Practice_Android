@@ -41,7 +41,7 @@
 
 ## 许可证
 
-这个项目是根据 MIT 许可证授权的 - 详情请参见 [LICENSE](LICENSE) 文件。
+这个项目是根据 Apache 许可证授权的 - 详情请参见 [LICENSE](LICENSE) 文件。
 
 ## 关于我们
 
