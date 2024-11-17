@@ -18,7 +18,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       createdAt: (json['created_at'] as num?)?.toInt(),
       updatedAt: (json['updated_at'] as num?)?.toInt(),
       deletedAt: (json['deleted_at'] as num?)?.toInt(),
-      isFollowed: json['isFollowed'] as bool?,
+      isFollowed: json['is_followed'] as bool?,
       accessToken: json['access_token'] as String?,
       refreshToken: json['refresh_token'] as String?,
     );
@@ -35,7 +35,7 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'created_at': instance.createdAt,
       'updated_at': instance.updatedAt,
       'deleted_at': instance.deletedAt,
-      'isFollowed': instance.isFollowed,
+      'is_followed': instance.isFollowed,
       'access_token': instance.accessToken,
       'refresh_token': instance.refreshToken,
     };

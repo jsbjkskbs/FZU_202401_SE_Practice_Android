@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fulifuli_app/widgets/index_page/friend/friend_item.dart';
 
 import '../../../global.dart';
+import '../../../model/user.dart';
 
 class FriendListView extends StatefulWidget {
   const FriendListView({super.key});
@@ -16,7 +17,7 @@ class FriendListView extends StatefulWidget {
 }
 
 class _FriendListViewState extends State<FriendListView> {
-  List<String> userList = [];
+  List<User> userList = [];
   final EasyRefreshController _controller = EasyRefreshController(
     controlFinishRefresh: true,
     controlFinishLoad: true,
@@ -28,10 +29,10 @@ class _FriendListViewState extends State<FriendListView> {
 
     bool isCached = Global.cachedMapUserList.containsKey(FriendListView.uniqueKey);
     if (!isCached) {
-      Global.cachedMapUserList.addEntries([MapEntry(FriendListView.uniqueKey, userList)]);
+      Global.cachedMapUserList.addEntries([const MapEntry(FriendListView.uniqueKey, MapEntry([], false))]);
       debugPrint('Added new user list with key: ${FriendListView.uniqueKey}');
     }
-    userList = Global.cachedMapUserList[FriendListView.uniqueKey]!;
+    userList = Global.cachedMapUserList[FriendListView.uniqueKey]!.key;
 
     if (isCached) {
       return;
@@ -57,15 +58,11 @@ class _FriendListViewState extends State<FriendListView> {
         footer: const MaterialFooter(),
         onRefresh: () async {
           await Future.delayed(const Duration(seconds: 2), () {
-            userList.addAll(['user1', 'user2', 'user3']);
-            setState(() {});
             _controller.finishRefresh();
           });
         },
         onLoad: () async {
           await Future.delayed(const Duration(seconds: 2), () {
-            userList.addAll(['user4', 'user5', 'user6']);
-            setState(() {});
             _controller.finishLoad();
           });
         },

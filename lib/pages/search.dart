@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/widgets/search_page/search_page_tabs_container.dart';
 import 'package:fulifuli_app/widgets/search_page/search_page_top_bar.dart';
+import 'package:tdesign_flutter/tdesign_flutter.dart';
+
+import '../global.dart';
+import '../widgets/search_page/search_page_user_tabs_view.dart';
+import '../widgets/search_page/search_page_video_tabs_view.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -18,19 +23,33 @@ class _SearchPageState extends State<SearchPage> {
   late Widget body = const Center();
 
   Future<void> _onSearch(String keyword) async {
-    debugPrint(keyword);
-    body = const Center(
-      child: CircularProgressIndicator(),
+    Global.cachedMapUserList.remove(SearchPageUserTabsView.uniqueKey);
+    Global.cachedMapVideoList.remove(SearchPageVideoTabsView.uniqueKey);
+    body = Center(
+      child: Center(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          TDImage(
+            assetUrl: 'assets/images/cute/konata_dancing.webp',
+            height: MediaQuery.of(context).size.height * 0.2,
+            width: MediaQuery.of(context).size.width * 0.6,
+          ),
+          const Text('数据加载中...'),
+        ],
+      )),
     );
     setState(() {});
-    Future.delayed(const Duration(seconds: 2), () {
-      body = _getTabsView();
+    Future.delayed(const Duration(milliseconds: 500), () {
+      body = _getTabsView(keyword);
       setState(() {});
     });
   }
 
-  Widget _getTabsView() {
-    return SearchPageTabsContainer(tabs: [AppLocalizations.of(context)!.search_video, AppLocalizations.of(context)!.search_user]);
+  Widget _getTabsView(String keyword) {
+    return SearchPageTabsContainer(
+        tabs: [AppLocalizations.of(context)!.search_video, AppLocalizations.of(context)!.search_user], keyword: keyword);
   }
 
   @override

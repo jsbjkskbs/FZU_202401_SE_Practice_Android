@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:fulifuli_app/test.dart';
+import 'package:fulifuli_app/global.dart';
+import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:fulifuli_app/widgets/search_page/search_page_video_item.dart';
 import 'package:fulifuli_app/widgets/video_page/video_profile_view.dart';
 
-class VideoIntroductionView extends StatefulWidget {
-  const VideoIntroductionView({super.key, required this.controller});
+import '../../model/video.dart';
 
-  final ScrollController controller;
+class VideoIntroductionView extends StatefulWidget {
+  const VideoIntroductionView({super.key, required this.vid});
+
+  final String vid;
+  static const String cachePrefix = "video_introduction_view";
 
   @override
   State<StatefulWidget> createState() {
@@ -19,8 +23,28 @@ class _VideoIntroductionViewState extends State<VideoIntroductionView> {
 
   @override
   Widget build(BuildContext context) {
+    if (!Global.cachedMapVideoList.containsKey(VideoIntroductionView.cachePrefix + widget.vid)) {
+      Global.dio.get('/api/v1/video/neighbour/feed', data: {
+        "video_id": widget.vid,
+        "offset": 0,
+        "n": 10,
+      }).then((data) {
+        Global.cachedMapVideoList[VideoIntroductionView.cachePrefix + widget.vid] = const MapEntry([], true);
+        if (data.data["code"] != Global.successCode) {
+          if (context.mounted) {
+            ToastificationUtils.showSimpleToastification(context, data.data["msg"]);
+          }
+          return;
+        }
+        var list = <Video>[];
+        for (var item in data.data["data"]["items"]) {
+          list.add(Video.fromJson(item));
+        }
+        Global.cachedMapVideoList[VideoIntroductionView.cachePrefix + widget.vid] = MapEntry(list, true);
+        setState(() {});
+      });
+    }
     return ListView.separated(
-      controller: widget.controller,
       separatorBuilder: (BuildContext context, int index) {
         return Divider(
           height: 8,
@@ -29,11 +53,23 @@ class _VideoIntroductionViewState extends State<VideoIntroductionView> {
       },
       itemBuilder: (BuildContext context, int index) {
         return [
-          const VideoProfileView(),
-          for (var i = 0; i < 10; i++) SearchPageVideoItem(onTap: () {}, data: videoListForTest[0]),
+          VideoProfileView(
+            vid: widget.vid,
+          ),
+          if (Global.cachedMapVideoList.containsKey(VideoIntroductionView.cachePrefix + widget.vid))
+            for (var item in Global.cachedMapVideoList[VideoIntroductionView.cachePrefix + widget.vid]!.key)
+              SearchPageVideoItem(
+                data: item,
+                onTap: () {},
+              ),
+          if (!Global.cachedMapVideoList.containsKey(VideoIntroductionView.cachePrefix + widget.vid))
+            const Padding(padding: EdgeInsets.all(16), child: Text('没有更多了哦~')),
         ][index];
       },
-      itemCount: 1 + 10,
+      itemCount: 1 +
+          (Global.cachedMapVideoList.containsKey(VideoIntroductionView.cachePrefix + widget.vid)
+              ? Global.cachedMapVideoList[VideoIntroductionView.cachePrefix + widget.vid]!.key.length
+              : 0),
     );
   }
 }

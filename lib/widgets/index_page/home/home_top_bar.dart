@@ -81,16 +81,18 @@ class _HomeTopBarState extends State<HomeTopBar> {
                     dotSecondaryColor: Theme.of(context).secondaryHeaderColor,
                   ),
                   onTap: (b) {
-                    ToastificationUtils.showFlatToastification(
-                      context,
-                      '哇袄!',
-                      '哈利路大旋风!',
-                      icon: Icon(
-                        DisplayIcons.angry_text_deco,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      duration: const Duration(milliseconds: 3000),
-                    );
+                    if (!b) {
+                      ToastificationUtils.showFlatToastification(
+                        context,
+                        '哇袄!',
+                        '???????!',
+                        icon: Icon(
+                          DisplayIcons.angry_text_deco,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                        duration: const Duration(milliseconds: 3000),
+                      );
+                    }
                     return Future.value(!b);
                   },
                   likeBuilder: (bool isLiked) {

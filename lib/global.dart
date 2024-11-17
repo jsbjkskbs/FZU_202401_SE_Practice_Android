@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
@@ -61,6 +62,55 @@ class Global {
     receiveTimeout: const Duration(seconds: 5),
   ));
 
+  static Future<bool> accessTokenRefresh() async {
+    if (self.isValidUser()) {
+      Response response;
+      response = await dio.get("/api/v1/tool/token/refresh");
+      debugPrint("Global.startAsyncTask[Access-Token]: ${response.data}");
+      if (response.data["code"] == successCode) {
+        self.accessToken = response.data["data"]["access_token"];
+        Storage.storePersistentData(appPersistentData.copyWith(user: self));
+        updateDioToken(accessToken: self.accessToken, refreshToken: self.refreshToken);
+        return true;
+      }
+      return false;
+    }
+    return false;
+  }
+
+  static Future<bool> refreshTokenRefresh() async {
+    if (self.isValidUser()) {
+      Response response;
+      response = await dio.get("/api/v1/tool/refresh_token/refresh");
+      debugPrint("Global.startAsyncTask[Refresh-Token]: ${response.data}");
+      if (response.data["code"] == successCode) {
+        self.refreshToken = response.data["data"]["refresh_token"];
+        Storage.storePersistentData(appPersistentData.copyWith(user: self));
+        updateDioToken(accessToken: self.accessToken, refreshToken: self.refreshToken);
+        return true;
+      }
+      return false;
+    }
+    return false;
+  }
+
+  static List<Timer> tasks = [];
+
+  static startAsyncTask() {
+    for (final task in tasks) {
+      task.cancel();
+    }
+    tasks.clear();
+
+    tasks.add(Timer.periodic(const Duration(hours: 1), (timer) async {
+      await accessTokenRefresh();
+    }));
+
+    tasks.add(Timer.periodic(const Duration(days: 1), (timer) async {
+      await refreshTokenRefresh();
+    }));
+  }
+
   static updateDioToken({String? accessToken, String? refreshToken}) {
     if (accessToken != null) {
       dio.options.headers["Access-Token"] = accessToken;
@@ -75,13 +125,16 @@ class Global {
     return self.isValidUser();
   }
 
+  static Map<String, dynamic> cachedMap = {};
+
   static Map<String, MapEntry<List<Video>, bool>> cachedVideoList = {};
   static Map<String, User> cachedMapUser = {};
+  static Map<String, Video> cachedMapVideo = {};
 
   static Map<String, MapEntry<List<Video>, bool>> cachedMapVideoList = {};
 
   static Map<String, List<String>> cachedMapDynamicList = {};
-  static Map<String, List<String>> cachedMapUserList = {};
+  static Map<String, MapEntry<List<User>, bool>> cachedMapUserList = {};
   static List<Video> cachedSearchVideoList = [];
 
   static const List<String> categoryList = ["游戏", "知识", "生活", "军事", "影音", "新闻"];

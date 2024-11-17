@@ -1,6 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_popup/flutter_popup.dart';
+import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/model/video.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:fulifuli_app/widgets/icons/def.dart';
@@ -70,10 +72,23 @@ class _VideoCardState extends State<VideoCard> {
               ],
             )),
         child: GestureDetector(
-          onTap: () {
-            Navigator.of(context).pushNamed('/video', arguments: {
-              'vid': video.id,
+          onTap: () async {
+            Global.cachedMapVideo[video.id!] = video;
+            Response response = await Global.dio.get("/api/v1/user/follower_count", data: {
+              "user_id": video.user?.id,
             });
+            debugPrint("VideoCard: ${response.data}");
+            if (response.data["code"] == Global.successCode) {
+              video.user!.followerCount = response.data["data"]["follower_count"];
+              Global.cachedMapVideo[video.id!] = video;
+              if (context.mounted) {
+                Navigator.of(context).pushNamed('/video', arguments: {
+                  'vid': video.id,
+                });
+              }
+            } else {
+              video.user!.followerCount = -1;
+            }
           },
           child: Padding(
             padding: const EdgeInsets.only(bottom: 0),

@@ -6,9 +6,10 @@ import 'package:fulifuli_app/widgets/search_page/search_page_video_tabs_view.dar
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 class SearchPageTabsContainer extends StatefulWidget {
-  const SearchPageTabsContainer({super.key, required this.tabs});
+  const SearchPageTabsContainer({super.key, required this.tabs, required this.keyword});
 
   final List<String> tabs;
+  final String keyword;
 
   @override
   State<StatefulWidget> createState() {
@@ -78,10 +79,12 @@ class _SearchPageTabsContainerState extends State<SearchPageTabsContainer> with 
               SearchPageVideoTabsView(
                 currentIndex: _currentIndex,
                 assignedIndex: 0,
+                keyword: widget.keyword,
               ),
               SearchPageUserTabsView(
                 currentIndex: _currentIndex,
                 assignedIndex: 1,
+                keyword: widget.keyword,
               ),
             ],
           ),

@@ -1,13 +1,19 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/utils/number_converter.dart';
+import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
+import '../../model/user.dart';
+
 class SearchPageUserItem extends StatefulWidget {
-  const SearchPageUserItem({super.key, required this.onTap});
+  const SearchPageUserItem({super.key, required this.onTap, required this.user, required this.isFollowed});
 
   final Function onTap;
-  final bool isFollowed = false;
+  final bool isFollowed;
+  final User user;
 
   @override
   State<StatefulWidget> createState() {
@@ -36,8 +42,19 @@ class _SearchPageUserItemState extends State<SearchPageUserItem> {
         child: SizedBox(
           height: Theme.of(context).textTheme.bodySmall!.fontSize! * 2.5,
           child: ElevatedButton(
-              onPressed: () {
-                isFollowed = !isFollowed;
+              onPressed: () async {
+                Response response;
+                response = await Global.dio
+                    .post("/api/v1/relation/follow/action", data: {"to_user_id": widget.user.id, "action_type": isFollowed ? 0 : 1});
+                if (response.data["code"] == Global.successCode) {
+                  isFollowed = !isFollowed;
+                  setState(() {});
+                } else {
+                  if (context.mounted) {
+                    ToastificationUtils.showSimpleToastification(context, response.data["msg"]);
+                  }
+                }
+                widget.user.followerCount = isFollowed ? widget.user.followerCount! + 1 : widget.user.followerCount! - 1;
                 setState(() {});
               },
               style: elStyle,
@@ -85,7 +102,7 @@ class _SearchPageUserItemState extends State<SearchPageUserItem> {
                           TDImage(
                               height: Theme.of(context).textTheme.bodyMedium!.fontSize! * 5 + 4,
                               type: TDImageType.circle,
-                              assetUrl: 'assets/images/default_avatar.gif')
+                              imgUrl: widget.user.avatarUrl)
                         ],
                       ),
                       const SizedBox(
@@ -96,7 +113,7 @@ class _SearchPageUserItemState extends State<SearchPageUserItem> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '用户名',
+                            widget.user.name!,
                             style: TextStyle(
                               color: Theme.of(context).primaryColor,
                               fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
@@ -104,7 +121,7 @@ class _SearchPageUserItemState extends State<SearchPageUserItem> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            '${NumberConverter.convertNumber(173881931737)}${AppLocalizations.of(context)!.search_follower}',
+                            '${NumberConverter.convertNumber(widget.user.followerCount!)}${AppLocalizations.of(context)!.search_follower}',
                             style: TextStyle(
                               color: Theme.of(context).hintColor,
                               fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,

@@ -21,6 +21,7 @@ class User {
   int? updatedAt;
   @JsonKey(name: 'deleted_at')
   int? deletedAt;
+  @JsonKey(name: 'is_followed')
   bool? isFollowed;
   @JsonKey(name: 'access_token')
   String? accessToken;

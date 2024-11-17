@@ -20,6 +20,7 @@ import 'package:fulifuli_app/pages/space.dart';
 import 'package:fulifuli_app/pages/submission_manage.dart';
 import 'package:fulifuli_app/pages/video.dart';
 import 'package:fulifuli_app/utils/scheme_reflect.dart';
+import 'package:fulifuli_app/utils/toastification.dart';
 
 import 'model/user.dart';
 
@@ -32,6 +33,19 @@ Future<void> main() async {
   Global.appPersistentData = await Storage.getPersistentData();
   Global.self = Global.appPersistentData.user ?? User();
   Global.updateDioToken(accessToken: Global.self.accessToken, refreshToken: Global.self.refreshToken);
+  var valid = Global.refreshTokenRefresh();
+  if (await valid) {
+    Global.accessTokenRefresh();
+    Global.startAsyncTask();
+  } else {
+    if (Global.self.accessToken != null && Global.self.accessToken!.isNotEmpty) {
+      Global.cachedMap["delayed-notification/not-valid"] = true;
+      Global.self = User();
+      Global.appPersistentData.user = User();
+      Global.updateDioToken(accessToken: null, refreshToken: null);
+      Storage.storePersistentData(Global.appPersistentData);
+    }
+  }
   runApp(const MyApp());
 }
 
@@ -62,6 +76,10 @@ class MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    if (Global.cachedMap["delayed-notification/not-valid"] != null) {
+      Global.cachedMap.remove("delayed-notification/not-valid");
+      ToastificationUtils.showSimpleToastification(context, '登录状态已失效，请重新登录');
+    }
     return AdaptiveTheme(
         initial: Global.appPersistentData.themeMode == 0 ? AdaptiveThemeMode.light : AdaptiveThemeMode.dark,
         light: FlexThemeData.light(

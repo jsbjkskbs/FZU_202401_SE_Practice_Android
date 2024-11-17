@@ -66,7 +66,7 @@ class SearchPageVideoItem extends StatelessWidget {
                                 SizedBox(
                                   width: MediaQuery.of(context).size.width / 3,
                                   child: Text(
-                                    data.user!.id!,
+                                    data.user!.name!,
                                     style: TextStyle(
                                       fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
                                       color: Theme.of(context).hintColor,
@@ -101,7 +101,7 @@ class SearchPageVideoItem extends StatelessWidget {
                                 ),
                                 Row(children: [
                                   Text(
-                                    DateTime.fromMillisecondsSinceEpoch(data.createdAt!, isUtc: true).toString().substring(0, 10),
+                                    DateTime.fromMillisecondsSinceEpoch(data.createdAt! * 1000).toString().substring(0, 10),
                                     style: TextStyle(
                                       fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
                                       color: Theme.of(context).hintColor,

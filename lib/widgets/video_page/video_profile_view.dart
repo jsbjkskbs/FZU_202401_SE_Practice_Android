@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:fulifuli_app/global.dart';
 import 'package:like_button/like_button.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
+import '../../model/video.dart';
 import '../../utils/number_converter.dart';
 import '../expand_shrink_text.dart';
 import '../icons/def.dart';
 
 class VideoProfileView extends StatefulWidget {
-  const VideoProfileView({super.key});
+  const VideoProfileView({super.key, required this.vid});
+
+  final String vid;
 
   @override
   State<VideoProfileView> createState() => _VideoProfileViewState();
@@ -15,19 +19,25 @@ class VideoProfileView extends StatefulWidget {
 
 class _VideoProfileViewState extends State<VideoProfileView> {
   bool expanded = false;
+  Video? video;
 
   @override
   Widget build(BuildContext context) {
+    video = Global.cachedMapVideo[widget.vid];
+    debugPrint('video: ${video!.toJson()}');
+    if (video == null) {
+      return Container();
+    }
     return Column(
       children: [
         Row(
           children: [
             Row(
               children: [
-                const Padding(
-                    padding: EdgeInsets.all(12.0),
+                Padding(
+                    padding: const EdgeInsets.all(12.0),
                     child: TDImage(
-                      assetUrl: 'assets/images/default_avatar.gif',
+                      assetUrl: video!.user!.avatarUrl,
                       width: 36,
                       height: 36,
                       type: TDImageType.circle,
@@ -38,15 +48,15 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                   children: [
                     ConstrainedBox(
                       constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 2),
-                      child: const Text(
-                        '作者名字七个1231sa12313d23字',
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, overflow: TextOverflow.ellipsis),
+                      child: Text(
+                        video!.user!.name!,
+                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal, overflow: TextOverflow.ellipsis),
                       ),
                     ),
                     ConstrainedBox(
                         constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 2),
                         child: Text(
-                          'xxxx万粉丝',
+                          '${NumberConverter.convertNumber(video!.user!.followerCount!)}粉丝',
                           style: TextStyle(fontSize: 10, color: Theme.of(context).hintColor),
                         ))
                   ],
@@ -109,8 +119,7 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                                 expanded = !expanded;
                               });
                             },
-                            child: ExpandShrinkText(
-                                '这是一个很长很长很长很长很长很长很长很长很长很长的标题这是一个很长很长很长很长很长很长很长很长很长很长的标题这是一个很长很长很长很长很长很长很长很长很长很长的标题这是一个很长很长很长很长很长很长很长很长很长很长的标题这是一个很长很长很长很长很长很长很长很长很长很长的标题',
+                            child: ExpandShrinkText(video!.title!,
                                 maxShrinkLine: 1,
                                 isExpanded: expanded,
                                 style: TextStyle(
@@ -124,18 +133,17 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                           children: [
                             Icon(DisplayIcons.video_player, size: 16, color: Theme.of(context).hintColor),
                             const SizedBox(width: 4),
-                            Text(NumberConverter.convertNumber(9999),
+                            Text(NumberConverter.convertNumber(video!.visitCount!),
                                 style: TextStyle(fontSize: 12, color: Theme.of(context).hintColor, overflow: TextOverflow.ellipsis)),
                             const SizedBox(width: 8),
-                            Text('2021-09-09',
+                            Text(DateTime.fromMillisecondsSinceEpoch(video!.createdAt! * 1000).toLocal().toString().substring(0, 16),
                                 style: TextStyle(fontSize: 12, color: Theme.of(context).hintColor, overflow: TextOverflow.ellipsis)),
                           ],
                         ),
                         AnimatedSize(
                           duration: const Duration(milliseconds: 400),
                           curve: Curves.easeInOutCubicEmphasized,
-                          child: ExpandShrinkText(
-                              '这是一个很长很长很长很长很长很长很长很长很长很长的简介这是一个很长很长很长很长很长很长很长很长很长很长的标题这是一个很长很长很长很长很长很长很长很长很长很长的标题这是一个很长很长很长很长很长很长很长很长很长很长的标题这是一个很长很长很长很长很长很长很长很长很长很长的标题这是一个很长很长很长很长很长很长很长很长很长很长的简介这是一个很长很长很长很长很长很长很长很长很长很长的标题这是一个很长很长很长很长很长很长很长很长很长很长的标题这是一个很长很长很长很长很长很长很长很长很长很长的标题这是一个很长很长很长很长很长很长很长很长很长很长的标题这是一个很长很长很长很长很长很长很长很长很长很长的简介这是一个很长很长很长很长很长很长很长很长很长很长的标题这是一个很长很长很长很长很长很长很长很长很长很长的标题这是一个很长很长很长很长很长很长很长很长很长很长的标题这是一个很长很长很长很长很长很长很长很长很长很长的标题',
+                          child: ExpandShrinkText(video!.description!,
                               maxShrinkLine: 0,
                               isExpanded: expanded,
                               style: TextStyle(
@@ -148,7 +156,7 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                                 padding: const EdgeInsets.only(top: 8),
                                 child: Wrap(
                                   children: [
-                                    for (var tag in ['标签1', '标签2', '标签3', '标签4', '标签5', '标签6', '标签7', '标签8', '标签9', '标签10'])
+                                    for (var tag in video!.labels!)
                                       Padding(
                                         padding: const EdgeInsets.only(right: 8, bottom: 8),
                                         child: TDTag(
@@ -181,7 +189,7 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                                     size: 28,
                                   );
                                 },
-                                likeCount: 9999,
+                                likeCount: video!.likeCount,
                                 countPostion: CountPostion.bottom,
                                 countBuilder: (int? count, bool isLiked, String text) {
                                   var color = isLiked ? Theme.of(context).primaryColor : Theme.of(context).unselectedWidgetColor;

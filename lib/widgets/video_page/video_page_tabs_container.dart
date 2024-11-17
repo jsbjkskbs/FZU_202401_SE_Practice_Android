@@ -10,10 +10,10 @@ import '../comment_list.dart';
 import '../comment_reply_fake_container.dart';
 
 class VideoPageTabsContainer extends StatefulWidget {
-  const VideoPageTabsContainer({super.key, required this.tabs, required this.controller});
+  const VideoPageTabsContainer({super.key, required this.tabs, required this.vid});
 
-  final ScrollController controller;
   final List<String> tabs;
+  final String vid;
 
   @override
   State<StatefulWidget> createState() {
@@ -22,7 +22,6 @@ class VideoPageTabsContainer extends StatefulWidget {
 }
 
 class _VideoPageTabsContainer extends State<VideoPageTabsContainer> with TickerProviderStateMixin {
-  static const _uniqueKeyPrefix = 'VideoPageTabsContainer';
   late TabController _tabController;
   int _currentIndex = 0;
   int _currentRollingIndex = 0;
@@ -34,7 +33,7 @@ class _VideoPageTabsContainer extends State<VideoPageTabsContainer> with TickerP
       for (var i = 0; i < widget.tabs.length; i++)
         TDTab(
           text: widget.tabs[i],
-          size: TDTabSize.large,
+          size: TDTabSize.small,
         )
     ];
     return tabs;
@@ -73,23 +72,23 @@ class _VideoPageTabsContainer extends State<VideoPageTabsContainer> with TickerP
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Padding(
-                padding: const EdgeInsets.only(left: 16),
+                padding: const EdgeInsets.only(left: 8),
                 child: TDTabBar(
                   height: 38,
-                  width: MediaQuery.of(context).size.width / 3,
+                  width: MediaQuery.of(context).size.width * 0.42,
                   tabs: tabs,
                   controller: _tabController,
                   showIndicator: true,
                   isScrollable: false,
-                  labelStyle: const TextStyle(fontWeight: FontWeight.normal, fontSize: 16),
-                  unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal, fontSize: 16),
+                  labelStyle: const TextStyle(fontWeight: FontWeight.normal, fontSize: 12),
+                  unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal, fontSize: 12),
                   labelColor: Theme.of(context).primaryColor,
                   unselectedLabelColor: Theme.of(context).unselectedWidgetColor,
                   indicatorColor: Theme.of(context).primaryColor,
                   dividerColor: Colors.transparent,
                 )),
             Padding(
-                padding: const EdgeInsets.only(right: 16),
+                padding: const EdgeInsets.only(right: 8),
                 child: AnimatedToggleSwitch<int>.rolling(
                   current: _currentRollingIndex,
                   height: 34,
@@ -125,7 +124,7 @@ class _VideoPageTabsContainer extends State<VideoPageTabsContainer> with TickerP
           child: TabBarView(
             controller: _tabController,
             children: [
-              VideoIntroductionView(controller: widget.controller),
+              VideoIntroductionView(vid: widget.vid),
               Column(
                 children: [
                   const Expanded(child: CommentListView()),

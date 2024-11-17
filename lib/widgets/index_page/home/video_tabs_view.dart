@@ -102,6 +102,13 @@ class _VideoTabsViewState extends State<VideoTabsView> {
               "n": _n,
               if (widget.category != null) "category": widget.category,
             }).then((data) {
+              if (data.data["code"] != Global.successCode) {
+                if (context.mounted) {
+                  ToastificationUtils.showSimpleToastification(context, data.data["msg"]);
+                }
+                return;
+              }
+
               List<Video> list = [];
               for (var item in data.data["data"]["items"]) {
                 list.add(Video.fromJson(item));
@@ -124,6 +131,13 @@ class _VideoTabsViewState extends State<VideoTabsView> {
               "n": _n,
               if (widget.category != null) "category": widget.category,
             }).then((data) {
+              if (data.data["code"] != Global.successCode) {
+                if (context.mounted) {
+                  ToastificationUtils.showSimpleToastification(context, data.data["msg"]);
+                }
+                return;
+              }
+
               List<Video> list = [];
               for (var item in data.data["data"]["items"]) {
                 list.add(Video.fromJson(item));
@@ -164,6 +178,13 @@ class _VideoTabsViewState extends State<VideoTabsView> {
               "n": _n,
               if (widget.category != null) "category": widget.category,
             }).then((data) {
+              if (data.data["code"] != Global.successCode) {
+                if (context.mounted) {
+                  ToastificationUtils.showSimpleToastification(context, data.data["msg"]);
+                }
+                return;
+              }
+
               List<Video> list = [];
               for (var item in data.data["data"]["items"]) {
                 list.add(Video.fromJson(item));
@@ -186,6 +207,13 @@ class _VideoTabsViewState extends State<VideoTabsView> {
               "n": _n,
               if (widget.category != null) "category": widget.category,
             }).then((data) {
+              if (data.data["code"] != Global.successCode) {
+                if (context.mounted) {
+                  ToastificationUtils.showSimpleToastification(context, data.data["msg"]);
+                }
+                return;
+              }
+
               List<Video> list = [];
               for (var item in data.data["data"]["items"]) {
                 list.add(Video.fromJson(item));
