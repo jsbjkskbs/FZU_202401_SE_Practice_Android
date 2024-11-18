@@ -22,7 +22,7 @@ class SearchPageVideoItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               TDImage(
-                assetUrl: data.coverUrl,
+                imgUrl: data.coverUrl,
                 width: MediaQuery.of(context).size.width / 2 - 8,
                 height: MediaQuery.of(context).size.width * 9 / 32 - 8,
               ),

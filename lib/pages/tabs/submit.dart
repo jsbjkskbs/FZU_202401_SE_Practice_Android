@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:dio/dio.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:drop_down_list/drop_down_list.dart';
 import 'package:drop_down_list/model/selected_list_item.dart';
@@ -278,11 +279,71 @@ class _SubmitPageState extends State<SubmitPage> {
                       ? () {
                           ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.submit_video_not_selected);
                         }
-                      : () {
+                      : () async {
                           _onUploading = true;
                           setState(() {});
-                          _progressTest(context);
-                          ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.submit_video_uploading_hint);
+                          if (!_checkMessageFilled()) {
+                            _onUploading = false;
+                            setState(() {});
+                            return;
+                          }
+                          List<String> labels = [];
+                          for (var tag in tags) {
+                            labels.add(tag.text);
+                          }
+                          Response response;
+                          response = await Global.dio.post('/api/v1/video/publish', data: {
+                            'title': _titleController.text,
+                            'description': _descriptionController.text,
+                            'category': _selectedCategoryInner,
+                            'labels': labels,
+                          });
+                          debugPrint(response.data.toString());
+                          if (response.data['code'] == Global.successCode) {
+                            if (context.mounted) {
+                              ToastificationUtils.showSimpleToastification(
+                                  context, AppLocalizations.of(context)!.submit_video_uploading_hint);
+                            }
+                            var uploadUrl = response.data['data']['upload_url'];
+                            var uploadKey = response.data['data']['upload_key'];
+                            var uptoken = response.data['data']['uptoken'];
+                            var uFile = await MultipartFile.fromFile(video!.path);
+                            FormData formData = FormData.fromMap({
+                              "file": uFile,
+                              "key": uploadKey,
+                              "token": uptoken,
+                            });
+                            response = await Global.dio.post(
+                              uploadUrl,
+                              data: formData,
+                              onSendProgress: (int sent, int total) {
+                                _uploadingPercent = 1.0 * sent / total;
+                                debugPrint('sent: $sent, total: $total');
+                                setState(() {});
+                              },
+                            );
+                            if (response.statusCode == 200) {
+                              if (context.mounted) {
+                                ToastificationUtils.showSimpleToastification(
+                                    context, AppLocalizations.of(context)!.submit_video_uploading_success);
+                              }
+                              reset();
+                            } else {
+                              if (context.mounted) {
+                                ToastificationUtils.showSimpleToastification(context, '上传失败');
+                              }
+                              setState(() {
+                                _onUploading = false;
+                              });
+                            }
+                          } else {
+                            if (context.mounted) {
+                              ToastificationUtils.showSimpleToastification(context, response.data['msg']);
+                            }
+                            setState(() {
+                              _onUploading = false;
+                            });
+                          }
                         },
                   child: Text(AppLocalizations.of(context)!.submit_submit_button,
                       style: TextStyle(color: video == null ? Theme.of(context).unselectedWidgetColor : Theme.of(context).primaryColor)),
@@ -765,5 +826,25 @@ class _SubmitPageState extends State<SubmitPage> {
         }
       }
     });
+  }
+
+  bool _checkMessageFilled() {
+    if (_titleController.text.isEmpty) {
+      ToastificationUtils.showSimpleToastification(context, '标题不能为空');
+      return false;
+    }
+    if (_descriptionController.text.isEmpty) {
+      ToastificationUtils.showSimpleToastification(context, '简介不能为空');
+      return false;
+    }
+    if (_selectedCategory.isEmpty) {
+      ToastificationUtils.showSimpleToastification(context, '请选择分区');
+      return false;
+    }
+    if (tags.isEmpty) {
+      ToastificationUtils.showSimpleToastification(context, '请添加至少一个标签');
+      return false;
+    }
+    return true;
   }
 }

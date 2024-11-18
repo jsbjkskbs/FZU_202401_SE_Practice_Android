@@ -37,7 +37,7 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                 Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: TDImage(
-                      assetUrl: video!.user!.avatarUrl,
+                      imgUrl: video!.user!.avatarUrl,
                       width: 36,
                       height: 36,
                       type: TDImageType.circle,

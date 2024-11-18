@@ -17,6 +17,7 @@ class SubmissionManageTabsContainer extends StatefulWidget {
 
 class _SubmissionManageTabsContainer extends State<SubmissionManageTabsContainer> with TickerProviderStateMixin {
   static const _uniqueKeyPrefix = 'SubmissionManageTabsContainer';
+  static const _querySuffix = ['all', 'passed', 'review', 'locked'];
   late TabController _tabController;
   int _currentIndex = 0;
   List<TDTab> tabs = [];
@@ -47,6 +48,11 @@ class _SubmissionManageTabsContainer extends State<SubmissionManageTabsContainer
     _getTabs();
     _initTabController();
     super.initState();
+    for (var i = 0; i < tabs.length; i++) {
+      if (!Global.cachedMapVideoList.containsKey('$_uniqueKeyPrefix-$i')) {
+        Global.cachedMapVideoList['$_uniqueKeyPrefix-$i'] = const MapEntry([], false);
+      }
+    }
   }
 
   @override
@@ -76,7 +82,11 @@ class _SubmissionManageTabsContainer extends State<SubmissionManageTabsContainer
             controller: _tabController,
             children: [
               for (var i = 0; i < tabs.length; i++)
-                SubmissionManageVideoTabsView(currentIndex: _currentIndex, assignedIndex: i, uniqueKey: '$_uniqueKeyPrefix-$i'),
+                SubmissionManageVideoTabsView(
+                    currentIndex: _currentIndex,
+                    assignedIndex: i,
+                    uniqueKey: '$_uniqueKeyPrefix-$i',
+                    querySuffix: _SubmissionManageTabsContainer._querySuffix[i]),
             ],
           ),
         )

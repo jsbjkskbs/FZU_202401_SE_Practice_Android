@@ -69,6 +69,13 @@ class Global {
       debugPrint("Global.startAsyncTask[Access-Token]: ${response.data}");
       if (response.data["code"] == successCode) {
         self.accessToken = response.data["data"]["access_token"];
+        Response r;
+        r = await dio.get('/api/v1/user/info', data: {
+          "user_id": self.id,
+        });
+        if (r.data["code"] == successCode) {
+          self = User.fromJson(r.data["data"]);
+        }
         Storage.storePersistentData(appPersistentData.copyWith(user: self));
         updateDioToken(accessToken: self.accessToken, refreshToken: self.refreshToken);
         return true;

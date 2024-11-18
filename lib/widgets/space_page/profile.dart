@@ -1,9 +1,15 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
+import '../../utils/file_type_judge.dart';
 import '../../utils/number_converter.dart';
+import '../../utils/toastification.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key, required this.userId});
@@ -110,7 +116,70 @@ class _ProfileState extends State<Profile> {
         ),
         const SizedBox(height: 16.0),
         TextButton(
-          onPressed: () {},
+          onPressed: () async {
+            Response response;
+            if (Global.self.id == widget.userId) {
+              response = await Global.dio.get('/api/v1/user/avatar/upload');
+              if (response.data["code"] == Global.successCode) {
+                debugPrint(response.data.toString());
+                var uploadUrl = response.data["data"]["upload_url"];
+                var uptoken = response.data["data"]["uptoken"];
+                var uploadKey = response.data["data"]["upload_key"];
+                if (uploadUrl != null && uptoken != null && uploadKey != null) {
+                  File? file = await _pickFile();
+                  if (file != null) {
+                    var uFile = await MultipartFile.fromFile(file.path);
+                    FormData formData = FormData.fromMap({
+                      "file": uFile,
+                      "key": uploadKey,
+                      "token": uptoken,
+                    });
+                    response = await Global.dio.post(uploadUrl, data: formData);
+                    if (response.statusCode == 200) {
+                      Response rr;
+                      rr = await Global.dio.get('/api/v1/user/info', data: {
+                        "user_id": Global.self.id,
+                      });
+                      if (rr.data["code"] == Global.successCode) {
+                        setState(() {
+                          Global.self.avatarUrl = rr.data["data"]["avatar_url"];
+                          Global.cachedMapUser[Global.self.id!] = Global.self;
+                          debugPrint(Global.self.avatarUrl);
+                        });
+                      } else {
+                        if (context.mounted) {
+                          ToastificationUtils.showSimpleToastification(context, rr.data["msg"]);
+                        }
+                      }
+                    } else {
+                      if (context.mounted) {
+                        ToastificationUtils.showSimpleToastification(context, '上传失败');
+                      }
+                    }
+                  } else {
+                    if (context.mounted) {
+                      ToastificationUtils.showSimpleToastification(context, '请选择图片');
+                    }
+                  }
+                }
+              } else {
+                if (context.mounted) {
+                  ToastificationUtils.showSimpleToastification(context, response.data["msg"]);
+                }
+              }
+            } else {
+              response = await Global.dio.post("/api/v1/relation/follow/action",
+                  data: {"to_user_id": widget.userId, "action_type": Global.cachedMapUser[widget.userId]?.isFollowed == true ? 0 : 1});
+              if (response.data["code"] == Global.successCode) {
+                Global.cachedMapUser[widget.userId]?.isFollowed = !(Global.cachedMapUser[widget.userId]?.isFollowed ?? false);
+                setState(() {});
+              } else {
+                if (context.mounted) {
+                  ToastificationUtils.showSimpleToastification(context, response.data["msg"]);
+                }
+              }
+            }
+          },
           style: ButtonStyle(
             overlayColor: WidgetStateProperty.all(Theme.of(context).scaffoldBackgroundColor.withOpacity(0.5)),
             backgroundColor: WidgetStateProperty.all(Theme.of(context).primaryColor),
@@ -127,5 +196,19 @@ class _ProfileState extends State<Profile> {
         const SizedBox(height: 16.0),
       ],
     );
+  }
+
+  Future<File?> _pickFile() async {
+    var result = await FilePicker.platform.pickFiles(
+      allowMultiple: false,
+      type: FileType.image,
+    );
+    if (result != null) {
+      File file = File(result.files.single.path!);
+      if (FileTypeJudge.isImage(file)) {
+        return file;
+      }
+    }
+    return null;
   }
 }

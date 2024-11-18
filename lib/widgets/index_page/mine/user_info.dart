@@ -1,6 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fulifuli_app/global.dart';
+import 'package:fulifuli_app/utils/number_converter.dart';
 
 class UserInfoView extends StatefulWidget {
   const UserInfoView({super.key});
@@ -12,6 +15,38 @@ class UserInfoView extends StatefulWidget {
 }
 
 class _UserInfoViewState extends State<UserInfoView> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding widgetsBinding = WidgetsBinding.instance;
+    widgetsBinding.addPostFrameCallback((_) {
+      if (Global.self.isValidUser()) {
+        Global.dio.get('/api/v1/user/follower_count', data: {
+          'user_id': Global.self.id,
+        }).then((Response response) {
+          if (response.data['code'] == Global.successCode) {
+            Global.self.followerCount = response.data['data']['follower_count'];
+            Global.dio.get('/api/v1/user/following_count', data: {
+              'user_id': Global.self.id,
+            }).then((Response response) {
+              if (response.data['code'] == Global.successCode) {
+                Global.self.followingCount = response.data['data']['following_count'];
+                Global.dio.get('/api/v1/user/like_count', data: {
+                  'user_id': Global.self.id,
+                }).then((Response response) {
+                  if (response.data['code'] == Global.successCode) {
+                    Global.self.likeCount = response.data['data']['like_count'];
+                    setState(() {});
+                  }
+                });
+              }
+            });
+          }
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Flex(
@@ -25,7 +60,7 @@ class _UserInfoViewState extends State<UserInfoView> {
             onPressed: () {},
             child: Column(
               children: [
-                Text("0", style: TextStyle(color: Theme.of(context).primaryColor)),
+                Text(NumberConverter.convertNumber(Global.self.likeCount!), style: TextStyle(color: Theme.of(context).primaryColor)),
                 Text(AppLocalizations.of(context)!.mine_user_info_like, style: TextStyle(color: Theme.of(context).primaryColor)),
               ],
             ),
@@ -38,7 +73,7 @@ class _UserInfoViewState extends State<UserInfoView> {
               onPressed: () {},
               child: Column(
                 children: [
-                  Text("0", style: TextStyle(color: Theme.of(context).primaryColor)),
+                  Text(NumberConverter.convertNumber(Global.self.followingCount!), style: TextStyle(color: Theme.of(context).primaryColor)),
                   Text(AppLocalizations.of(context)!.mine_user_info_subscribe, style: TextStyle(color: Theme.of(context).primaryColor)),
                 ],
               ),
@@ -50,7 +85,7 @@ class _UserInfoViewState extends State<UserInfoView> {
               onPressed: () {},
               child: Column(
                 children: [
-                  Text("0", style: TextStyle(color: Theme.of(context).primaryColor)),
+                  Text(NumberConverter.convertNumber(Global.self.followerCount!), style: TextStyle(color: Theme.of(context).primaryColor)),
                   Text(AppLocalizations.of(context)!.mine_user_info_follower, style: TextStyle(color: Theme.of(context).primaryColor)),
                 ],
               ),

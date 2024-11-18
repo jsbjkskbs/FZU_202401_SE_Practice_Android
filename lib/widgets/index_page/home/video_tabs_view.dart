@@ -82,11 +82,10 @@ class _VideoTabsViewState extends State<VideoTabsView> {
         onRefresh: () async {
           if (offset == -1) {
             if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, '没有更多了');
+              ToastificationUtils.showSimpleToastification(context, '尝试重新请求');
             }
-            _easyRefreshController.finishRefresh();
-            _easyRefreshController.resetHeader();
-            return;
+            offset = 0;
+            Global.cachedVideoList[widget.assignedIndex.toString()] = MapEntry([], offset);
           }
           var oldLength = Global.cachedVideoList[widget.assignedIndex.toString()]!.key.length;
           await _fetchVideoFeedAndAddFront();
