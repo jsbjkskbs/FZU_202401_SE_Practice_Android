@@ -3,7 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
+import 'package:fulifuli_app/pages/followers.dart';
+import 'package:fulifuli_app/pages/following.dart';
+import 'package:fulifuli_app/pages/login.dart';
 import 'package:fulifuli_app/utils/number_converter.dart';
+import 'package:fulifuli_app/utils/toastification.dart';
 
 class UserInfoView extends StatefulWidget {
   const UserInfoView({super.key});
@@ -71,7 +75,14 @@ class _UserInfoViewState extends State<UserInfoView> {
         SizedBox(
             width: MediaQuery.of(context).size.width * 3 / 10,
             child: CupertinoButton(
-              onPressed: () {},
+              onPressed: () {
+                if (Global.self.isValidUser()) {
+                  Navigator.of(context).pushNamed(FollowingPage.routeName, arguments: {'user_id': Global.self.id});
+                } else {
+                  ToastificationUtils.showSimpleToastification(context, '请先登录');
+                  Navigator.of(context).pushNamed(LoginScreen.routeName);
+                }
+              },
               child: Column(
                 children: [
                   Text(!Global.self.isValidUser() ? "0" : NumberConverter.convertNumber(Global.self.followingCount!),
@@ -84,7 +95,14 @@ class _UserInfoViewState extends State<UserInfoView> {
         SizedBox(
             width: MediaQuery.of(context).size.width * 3 / 10,
             child: CupertinoButton(
-              onPressed: () {},
+              onPressed: () {
+                if (Global.self.isValidUser()) {
+                  Navigator.of(context).pushNamed(FollowerPage.routeName, arguments: {'user_id': Global.self.id});
+                } else {
+                  ToastificationUtils.showSimpleToastification(context, '请先登录');
+                  Navigator.of(context).pushNamed(LoginScreen.routeName);
+                }
+              },
               child: Column(
                 children: [
                   Text(!Global.self.isValidUser() ? "0" : NumberConverter.convertNumber(Global.self.followerCount!),

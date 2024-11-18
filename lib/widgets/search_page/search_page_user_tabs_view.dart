@@ -67,7 +67,6 @@ class _SearchPageUserTabsViewState extends State<SearchPageUserTabsView> {
                   Navigator.of(context).pushNamed(SpacePage.routeName, arguments: {"user_id": userList[index].id});
                 },
                 user: userList[index],
-                isFollowed: userList[index].isFollowed!,
               );
             },
             separatorBuilder: (context, index) => const Divider(),

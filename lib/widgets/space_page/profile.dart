@@ -7,6 +7,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
+import '../../pages/followers.dart';
+import '../../pages/following.dart';
 import '../../utils/file_type_judge.dart';
 import '../../utils/number_converter.dart';
 import '../../utils/toastification.dart';
@@ -69,38 +71,48 @@ class _ProfileState extends State<Profile> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             const SizedBox(),
-            SizedBox(
-                width: MediaQuery.of(context).size.width / 4,
-                child: Column(
-                  children: [
-                    Text(
-                        Global.cachedMapUser[widget.userId] != null
-                            ? NumberConverter.convertNumber(Global.cachedMapUser[widget.userId]!.followerCount ?? 0)
-                            : "NaN",
-                        style:
-                            _labelStyle.copyWith(fontWeight: FontWeight.bold, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize)),
-                    Text(
-                      AppLocalizations.of(context)!.space_follower,
-                      style: _labelStyle,
-                    ),
-                  ],
-                )),
-            SizedBox(
-                width: MediaQuery.of(context).size.width / 4,
-                child: Column(
-                  children: [
-                    Text(
-                        Global.cachedMapUser[widget.userId] != null
-                            ? NumberConverter.convertNumber(Global.cachedMapUser[widget.userId]!.followingCount ?? 0)
-                            : "NaN",
-                        style:
-                            _labelStyle.copyWith(fontWeight: FontWeight.bold, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize)),
-                    Text(
-                      AppLocalizations.of(context)!.space_following,
-                      style: _labelStyle,
-                    ),
-                  ],
-                )),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed(FollowerPage.routeName, arguments: {"user_id": widget.userId});
+              },
+              child: SizedBox(
+                  width: MediaQuery.of(context).size.width / 4,
+                  child: Column(
+                    children: [
+                      Text(
+                          Global.cachedMapUser[widget.userId] != null
+                              ? NumberConverter.convertNumber(Global.cachedMapUser[widget.userId]!.followerCount ?? 0)
+                              : "NaN",
+                          style:
+                              _labelStyle.copyWith(fontWeight: FontWeight.bold, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize)),
+                      Text(
+                        AppLocalizations.of(context)!.space_follower,
+                        style: _labelStyle,
+                      ),
+                    ],
+                  )),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed(FollowingPage.routeName, arguments: {"user_id": widget.userId});
+              },
+              child: SizedBox(
+                  width: MediaQuery.of(context).size.width / 4,
+                  child: Column(
+                    children: [
+                      Text(
+                          Global.cachedMapUser[widget.userId] != null
+                              ? NumberConverter.convertNumber(Global.cachedMapUser[widget.userId]!.followingCount ?? 0)
+                              : "NaN",
+                          style:
+                              _labelStyle.copyWith(fontWeight: FontWeight.bold, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize)),
+                      Text(
+                        AppLocalizations.of(context)!.space_following,
+                        style: _labelStyle,
+                      ),
+                    ],
+                  )),
+            ),
             SizedBox(
                 width: MediaQuery.of(context).size.width / 4,
                 child: Column(

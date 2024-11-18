@@ -9,10 +9,9 @@ import 'package:tdesign_flutter/tdesign_flutter.dart';
 import '../../model/user.dart';
 
 class SearchPageUserItem extends StatefulWidget {
-  const SearchPageUserItem({super.key, required this.onTap, required this.user, required this.isFollowed});
+  const SearchPageUserItem({super.key, required this.onTap, required this.user});
 
   final Function onTap;
-  final bool isFollowed;
   final User user;
 
   @override
@@ -22,20 +21,18 @@ class SearchPageUserItem extends StatefulWidget {
 }
 
 class _SearchPageUserItemState extends State<SearchPageUserItem> {
-  late bool isFollowed = widget.isFollowed;
-
   Widget _getFollowButton(BuildContext context) {
     var elStyle = ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        backgroundColor: isFollowed ? Theme.of(context).disabledColor : Theme.of(context).primaryColor,
+        backgroundColor: widget.user.isFollowed! ? Theme.of(context).disabledColor : Theme.of(context).primaryColor,
         padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
-        overlayColor: isFollowed ? Theme.of(context).disabledColor : Theme.of(context).primaryColor);
-    var icon = isFollowed ? Icons.check : Icons.add;
-    var text = isFollowed ? AppLocalizations.of(context)!.search_followed : AppLocalizations.of(context)!.search_follow;
-    var iconColor = isFollowed ? Theme.of(context).hintColor : Theme.of(context).scaffoldBackgroundColor;
+        overlayColor: widget.user.isFollowed! ? Theme.of(context).disabledColor : Theme.of(context).primaryColor);
+    var icon = widget.user.isFollowed! ? Icons.check : Icons.add;
+    var text = widget.user.isFollowed! ? AppLocalizations.of(context)!.search_followed : AppLocalizations.of(context)!.search_follow;
+    var iconColor = widget.user.isFollowed! ? Theme.of(context).hintColor : Theme.of(context).scaffoldBackgroundColor;
     var iconSize = Theme.of(context).textTheme.bodySmall!.fontSize;
     var textStyle = TextStyle(
-        color: isFollowed ? Theme.of(context).hintColor : Theme.of(context).scaffoldBackgroundColor,
+        color: widget.user.isFollowed! ? Theme.of(context).hintColor : Theme.of(context).scaffoldBackgroundColor,
         fontSize: Theme.of(context).textTheme.bodySmall!.fontSize);
     return Padding(
         padding: const EdgeInsets.only(right: 16),
@@ -44,17 +41,17 @@ class _SearchPageUserItemState extends State<SearchPageUserItem> {
           child: ElevatedButton(
               onPressed: () async {
                 Response response;
-                response = await Global.dio
-                    .post("/api/v1/relation/follow/action", data: {"to_user_id": widget.user.id, "action_type": isFollowed ? 0 : 1});
+                response = await Global.dio.post("/api/v1/relation/follow/action",
+                    data: {"to_user_id": widget.user.id, "action_type": widget.user.isFollowed! ? 0 : 1});
                 if (response.data["code"] == Global.successCode) {
-                  isFollowed = !isFollowed;
+                  widget.user.followerCount = !widget.user.isFollowed! ? widget.user.followerCount! + 1 : widget.user.followerCount! - 1;
+                  widget.user.isFollowed = !widget.user.isFollowed!;
                   setState(() {});
                 } else {
                   if (context.mounted) {
                     ToastificationUtils.showSimpleToastification(context, response.data["msg"]);
                   }
                 }
-                widget.user.followerCount = isFollowed ? widget.user.followerCount! + 1 : widget.user.followerCount! - 1;
                 setState(() {});
               },
               style: elStyle,
@@ -100,9 +97,15 @@ class _SearchPageUserItemState extends State<SearchPageUserItem> {
                       Column(
                         children: [
                           TDImage(
-                              height: Theme.of(context).textTheme.bodyMedium!.fontSize! * 5 + 4,
+                            height: Theme.of(context).textTheme.bodyMedium!.fontSize! * 5 + 4,
+                            type: TDImageType.circle,
+                            imgUrl: widget.user.avatarUrl,
+                            errorWidget: TDImage(
+                              assetUrl: "assets/images/default_avatar.avif",
                               type: TDImageType.circle,
-                              imgUrl: widget.user.avatarUrl)
+                              height: Theme.of(context).textTheme.bodyMedium!.fontSize! * 5 + 4,
+                            ),
+                          )
                         ],
                       ),
                       const SizedBox(
