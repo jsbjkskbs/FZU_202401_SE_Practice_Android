@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:fulifuli_app/global.dart';
@@ -30,9 +31,9 @@ class VideoTabsView extends StatefulWidget {
 
 class _VideoTabsViewState extends State<VideoTabsView> {
   static const int _n = 10;
-  late List<Video> videoList;
   int offset = 0;
-  bool isEnd = false;
+  List<Video> videoList = [];
+  UniqueKey _gridViewKey = UniqueKey();
   final EasyRefreshController _easyRefreshController = EasyRefreshController(
     controlFinishLoad: true,
     controlFinishRefresh: true,
@@ -41,11 +42,10 @@ class _VideoTabsViewState extends State<VideoTabsView> {
   @override
   void initState() {
     super.initState();
-    videoList = Global.cachedVideoList[widget.assignedIndex.toString()]!.key;
-    isEnd = Global.cachedVideoList[widget.assignedIndex.toString()]!.value;
+    offset = Global.cachedVideoList[widget.assignedIndex.toString()]!.value;
     WidgetsBinding widgetsBinding = WidgetsBinding.instance;
     widgetsBinding.addPostFrameCallback((_) {
-      if (videoList.isEmpty && widget.currentIndex == widget.assignedIndex) {
+      if (Global.cachedVideoList[widget.assignedIndex.toString()]!.key.isEmpty && widget.currentIndex == widget.assignedIndex) {
         _easyRefreshController.callRefresh();
       }
     });
@@ -55,7 +55,7 @@ class _VideoTabsViewState extends State<VideoTabsView> {
   void didUpdateWidget(covariant VideoTabsView oldWidget) {
     super.didUpdateWidget(oldWidget);
     setState(() {
-      if (videoList.isEmpty && widget.currentIndex == widget.assignedIndex) {
+      if (Global.cachedVideoList[widget.assignedIndex.toString()]!.key.isEmpty && widget.currentIndex == widget.assignedIndex) {
         _easyRefreshController.callRefresh();
       }
     });
@@ -64,11 +64,7 @@ class _VideoTabsViewState extends State<VideoTabsView> {
   @override
   Widget build(BuildContext context) {
     return EasyRefresh.builder(
-        header: BezierCircleHeader(
-          backgroundColor: Theme.of(context).primaryColor,
-          foregroundColor: Theme.of(context).scaffoldBackgroundColor,
-          springRebound: true,
-        ),
+        header: const MaterialHeader(),
         footer: BezierFooter(
           foregroundColor: Theme.of(context).scaffoldBackgroundColor,
           backgroundColor: Theme.of(context).primaryColor,
@@ -84,8 +80,7 @@ class _VideoTabsViewState extends State<VideoTabsView> {
         ),
         controller: _easyRefreshController,
         onRefresh: () async {
-          await Future<void>.delayed(const Duration(milliseconds: 500));
-          if (isEnd) {
+          if (offset == -1) {
             if (context.mounted) {
               ToastificationUtils.showSimpleToastification(context, '没有更多了');
             }
@@ -93,161 +88,157 @@ class _VideoTabsViewState extends State<VideoTabsView> {
             _easyRefreshController.resetHeader();
             return;
           }
-          if (!mounted) {
-            return;
-          }
-          if (Global.self.accessToken != null && Global.self.accessToken!.isNotEmpty) {
-            Global.dio.get('/api/v1/video/custom/feed', data: {
-              "offset": offset,
-              "n": _n,
-              if (widget.category != null) "category": widget.category,
-            }).then((data) {
-              if (data.data["code"] != Global.successCode) {
-                if (context.mounted) {
-                  ToastificationUtils.showSimpleToastification(context, data.data["msg"]);
-                }
-                return;
-              }
-
-              List<Video> list = [];
-              for (var item in data.data["data"]["items"]) {
-                list.add(Video.fromJson(item));
-              }
-              if (list.isEmpty) {
-                isEnd = true;
-                if (context.mounted) {
-                  ToastificationUtils.showSimpleToastification(context, '没有更多了');
-                }
-              } else {
-                offset += _n;
-              }
-              videoList = [...list, ...videoList];
-              Global.cachedVideoList[widget.assignedIndex.toString()] = MapEntry(videoList, isEnd);
-              setState(() {});
-            });
+          var oldLength = Global.cachedVideoList[widget.assignedIndex.toString()]!.key.length;
+          await _fetchVideoFeedAndAddFront();
+          setState(() {
+            videoList = Global.cachedVideoList[widget.assignedIndex.toString()]!.key;
+            _gridViewKey = UniqueKey();
+            // force rebuild, otherwise the gridview will not be refreshed
+          });
+          if (offset == -1) {
+            if (context.mounted) {
+              ToastificationUtils.showSimpleToastification(context, '没有更多了');
+            }
           } else {
-            Global.dio.get('/api/v1/video/feed', data: {
-              "offset": offset,
-              "n": _n,
-              if (widget.category != null) "category": widget.category,
-            }).then((data) {
-              if (data.data["code"] != Global.successCode) {
-                if (context.mounted) {
-                  ToastificationUtils.showSimpleToastification(context, data.data["msg"]);
-                }
-                return;
-              }
-
-              List<Video> list = [];
-              for (var item in data.data["data"]["items"]) {
-                list.add(Video.fromJson(item));
-              }
-              if (list.isEmpty) {
-                isEnd = true;
-                if (context.mounted) {
-                  ToastificationUtils.showSimpleToastification(context, '没有更多了');
-                }
-              } else {
-                offset += _n;
-              }
-              videoList = [...list, ...videoList];
-              Global.cachedVideoList[widget.assignedIndex.toString()] = MapEntry(videoList, isEnd);
-              setState(() {});
-            });
+            if (context.mounted) {
+              ToastificationUtils.showSimpleToastification(
+                  context, '更新了${Global.cachedVideoList[widget.assignedIndex.toString()]!.key.length - oldLength}条数据');
+            }
           }
           _easyRefreshController.finishRefresh();
           _easyRefreshController.resetHeader();
-          setState(() {});
         },
         onLoad: () async {
-          await Future<void>.delayed(const Duration(milliseconds: 500));
-          if (isEnd) {
+          if (offset == -1) {
             if (context.mounted) {
               ToastificationUtils.showSimpleToastification(context, '没有更多了');
             }
             _easyRefreshController.finishLoad();
             _easyRefreshController.resetFooter();
-            return IndicatorResult.noMore;
           }
-          if (!mounted) {
-            return IndicatorResult.noMore;
-          }
-          if (Global.self.accessToken != null && Global.self.accessToken!.isNotEmpty) {
-            Global.dio.get('/api/v1/video/custom/feed', data: {
-              "offset": offset,
-              "n": _n,
-              if (widget.category != null) "category": widget.category,
-            }).then((data) {
-              if (data.data["code"] != Global.successCode) {
-                if (context.mounted) {
-                  ToastificationUtils.showSimpleToastification(context, data.data["msg"]);
-                }
-                return;
-              }
-
-              List<Video> list = [];
-              for (var item in data.data["data"]["items"]) {
-                list.add(Video.fromJson(item));
-              }
-              if (list.isEmpty) {
-                isEnd = true;
-                if (context.mounted) {
-                  ToastificationUtils.showSimpleToastification(context, '没有更多了');
-                }
-              } else {
-                offset += _n;
-              }
-              videoList = [...videoList, ...list];
-              Global.cachedVideoList[widget.assignedIndex.toString()] = MapEntry(videoList, isEnd);
-              setState(() {});
-            });
+          var oldLength = Global.cachedVideoList[widget.assignedIndex.toString()]!.key.length;
+          await _fetchVideoFeedAndAddBack();
+          setState(() {
+            videoList = Global.cachedVideoList[widget.assignedIndex.toString()]!.key;
+            // _gridViewKey = UniqueKey();
+            // force rebuilding would reset the scroll position, so we just update the list
+          });
+          if (offset == -1) {
+            if (context.mounted) {
+              ToastificationUtils.showSimpleToastification(context, '没有更多了');
+            }
           } else {
-            Global.dio.get('/api/v1/video/feed', data: {
-              "offset": offset,
-              "n": _n,
-              if (widget.category != null) "category": widget.category,
-            }).then((data) {
-              if (data.data["code"] != Global.successCode) {
-                if (context.mounted) {
-                  ToastificationUtils.showSimpleToastification(context, data.data["msg"]);
-                }
-                return;
-              }
-
-              List<Video> list = [];
-              for (var item in data.data["data"]["items"]) {
-                list.add(Video.fromJson(item));
-              }
-              if (list.isEmpty) {
-                isEnd = true;
-                if (context.mounted) {
-                  ToastificationUtils.showSimpleToastification(context, '没有更多了');
-                }
-              } else {
-                offset += _n;
-              }
-              videoList = [...videoList, ...list];
-              Global.cachedVideoList[widget.assignedIndex.toString()] = MapEntry(videoList, isEnd);
-              setState(() {});
-            });
+            if (context.mounted) {
+              ToastificationUtils.showSimpleToastification(
+                  context, '加载了${Global.cachedVideoList[widget.assignedIndex.toString()]!.key.length - oldLength}条数据');
+            }
           }
           _easyRefreshController.finishLoad();
           _easyRefreshController.resetFooter();
-          if (isEnd) {
-            return IndicatorResult.noMore;
-          }
-          return IndicatorResult.success;
         },
         childBuilder: (BuildContext context, ScrollPhysics physics) {
           return OptionGridView(
+            key: _gridViewKey,
             physics: physics,
-            itemCount: videoList.length,
+            itemCount: Global.cachedVideoList[widget.assignedIndex.toString()]!.key.length,
             rowCount: 2,
             controller: widget.controller,
             itemBuilder: (context, index) {
-              return VideoCard(video: videoList[index]);
+              return VideoCard(video: Global.cachedVideoList[widget.assignedIndex.toString()]!.key[index]);
             },
           );
         });
+  }
+
+  Future<void> _fetchVideoFeedAndAddFront() async {
+    Response response;
+    if (Global.self.accessToken != null && Global.self.accessToken!.isNotEmpty) {
+      response = await Global.dio.get('/api/v1/video/custom/feed', data: {
+        "offset": offset,
+        "n": _n,
+        if (widget.category != null) "category": widget.category,
+      });
+
+      if (response.data["code"] != Global.successCode) {
+        return;
+      }
+      List<Video> list = [];
+      for (var item in response.data["data"]["items"]) {
+        list.add(Video.fromJson(item));
+      }
+      if (list.isEmpty) {
+        offset = -1;
+      } else {
+        offset += _n;
+      }
+      Global.cachedVideoList[widget.assignedIndex.toString()] =
+          MapEntry([...list, ...Global.cachedVideoList[widget.assignedIndex.toString()]!.key], offset);
+    } else {
+      response = await Global.dio.get('/api/v1/video/feed', data: {
+        "offset": offset,
+        "n": _n,
+        if (widget.category != null) "category": widget.category,
+      });
+      if (response.data["code"] != Global.successCode) {
+        return;
+      }
+      List<Video> list = [];
+      for (var item in response.data["data"]["items"]) {
+        list.add(Video.fromJson(item));
+      }
+      if (list.isEmpty) {
+        offset = -1;
+      } else {
+        offset += _n;
+      }
+      Global.cachedVideoList[widget.assignedIndex.toString()] =
+          MapEntry([...list, ...Global.cachedVideoList[widget.assignedIndex.toString()]!.key], offset);
+    }
+  }
+
+  Future<void> _fetchVideoFeedAndAddBack() async {
+    Response response;
+    if (Global.self.accessToken != null && Global.self.accessToken!.isNotEmpty) {
+      response = await Global.dio.get('/api/v1/video/custom/feed', data: {
+        "offset": offset,
+        "n": _n,
+        if (widget.category != null) "category": widget.category,
+      });
+      if (response.data["code"] != Global.successCode) {
+        return;
+      }
+      List<Video> list = [];
+      for (var item in response.data["data"]["items"]) {
+        list.add(Video.fromJson(item));
+      }
+      if (list.isEmpty) {
+        offset = -1;
+      } else {
+        offset += _n;
+      }
+      Global.cachedVideoList[widget.assignedIndex.toString()] =
+          MapEntry([...Global.cachedVideoList[widget.assignedIndex.toString()]!.key, ...list], offset);
+    } else {
+      response = await Global.dio.get('/api/v1/video/feed', data: {
+        "offset": offset,
+        "n": _n,
+        if (widget.category != null) "category": widget.category,
+      });
+      if (response.data["code"] != Global.successCode) {
+        return;
+      }
+      List<Video> list = [];
+      for (var item in response.data["data"]["items"]) {
+        list.add(Video.fromJson(item));
+      }
+      if (list.isEmpty) {
+        offset = -1;
+      } else {
+        offset += _n;
+      }
+      Global.cachedVideoList[widget.assignedIndex.toString()] =
+          MapEntry([...Global.cachedVideoList[widget.assignedIndex.toString()]!.key, ...list], offset);
+      setState(() {});
+    }
   }
 }

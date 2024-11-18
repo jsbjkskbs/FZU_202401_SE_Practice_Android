@@ -127,7 +127,7 @@ class Global {
 
   static Map<String, dynamic> cachedMap = {};
 
-  static Map<String, MapEntry<List<Video>, bool>> cachedVideoList = {};
+  static Map<String, MapEntry<List<Video>, int>> cachedVideoList = {};
   static Map<String, User> cachedMapUser = {};
   static Map<String, Video> cachedMapVideo = {};
 

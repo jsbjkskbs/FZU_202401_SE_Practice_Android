@@ -35,7 +35,7 @@ class _VideoTabsContainerState extends State<VideoTabsContainer> with TickerProv
   void _initTabView() {
     for (var i = 0; i < tabs.length; i++) {
       if (!Global.cachedVideoList.containsKey(i.toString())) {
-        Global.cachedVideoList[i.toString()] = const MapEntry([], false);
+        Global.cachedVideoList[i.toString()] = const MapEntry([], 0);
       }
     }
   }
