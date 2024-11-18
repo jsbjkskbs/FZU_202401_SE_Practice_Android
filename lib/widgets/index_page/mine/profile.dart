@@ -45,7 +45,7 @@ class _ProfileViewState extends State<ProfileView> {
                   child: TDAvatar(
                     size: TDAvatarSize.large,
                     avatarUrl: Global.self.avatarUrl == "" ? null : Global.self.avatarUrl,
-                    defaultUrl: "assets/images/default_avatar.gif",
+                    defaultUrl: "assets/images/default_avatar.avif",
                   ),
                 ),
                 Padding(

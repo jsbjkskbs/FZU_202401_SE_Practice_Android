@@ -45,7 +45,8 @@ class _HomeTopBarState extends State<HomeTopBar> {
                   ),
                   child: TDAvatar(
                     size: TDAvatarSize.small,
-                    defaultUrl: "assets/images/default_avatar.gif",
+                    defaultUrl: "assets/images/default_avatar.avif",
+                    avatarUrl: Global.self.avatarUrl == "" ? null : Global.self.avatarUrl,
                     onTap: () {
                       if (Global.isLogin()) {
                         Navigator.of(context).pushNamed('/space', arguments: {'user_id': Global.self.id});

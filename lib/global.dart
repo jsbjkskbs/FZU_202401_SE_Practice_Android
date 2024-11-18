@@ -50,7 +50,7 @@ class Global {
 
   static User self = User();
 
-  static const defaultAvatarUrl = "assets/images/default_avatar.gif";
+  static const defaultAvatarUrl = "assets/images/default_avatar.avif";
 
   static const baseUrl = "http://1.94.121.141";
 

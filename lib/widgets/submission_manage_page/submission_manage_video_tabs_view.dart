@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/pages/video.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
+import 'package:fulifuli_app/widgets/empty_placeholder.dart';
 import 'package:fulifuli_app/widgets/submission_manage_page/submission_manage_video_item.dart';
 
 import '../../model/video.dart';
@@ -106,35 +107,39 @@ class _SubmissionManageVideoTabsViewState extends State<SubmissionManageVideoTab
           _controller.finishLoad();
         },
         child: ListView.separated(
-            itemBuilder: (context, index) => ListBody(
-                  children: [
-                    SubmissionManageVideoItem(
-                      onTap: () {
-                        Global.cachedMapVideo[Global.cachedMapVideoList[widget.uniqueKey]!.key[index].id!] =
-                            Global.cachedMapVideoList[widget.uniqueKey]!.key[index];
-                        Global.dio.get('/api/v1/user/follower_count', data: {
-                          "user_id": Global.cachedMapVideoList[widget.uniqueKey]!.key[index].user!.id,
-                        }).then((data) {
-                          if (data.data["code"] != Global.successCode) {
-                            if (context.mounted) {
-                              ToastificationUtils.showSimpleToastification(context, data.data["msg"]);
+            itemBuilder: (context, index) => Global.cachedMapVideoList[widget.uniqueKey]!.key.isEmpty
+                ? const EmptyPlaceHolder()
+                : ListBody(
+                    children: [
+                      SubmissionManageVideoItem(
+                        onTap: () {
+                          Global.cachedMapVideo[Global.cachedMapVideoList[widget.uniqueKey]!.key[index].id!] =
+                              Global.cachedMapVideoList[widget.uniqueKey]!.key[index];
+                          Global.dio.get('/api/v1/user/follower_count', data: {
+                            "user_id": Global.cachedMapVideoList[widget.uniqueKey]!.key[index].user!.id,
+                          }).then((data) {
+                            if (data.data["code"] != Global.successCode) {
+                              if (context.mounted) {
+                                ToastificationUtils.showSimpleToastification(context, data.data["msg"]);
+                              }
+                              return;
                             }
-                            return;
-                          }
-                          Global.cachedMapVideoList[widget.uniqueKey]!.key[index].user!.followerCount = data.data["data"]["follower_count"];
-                          if (context.mounted) {
-                            Navigator.of(context).pushNamed(VideoPage.routeName, arguments: {
-                              "vid": Global.cachedMapVideoList[widget.uniqueKey]!.key[index].id,
-                            });
-                          }
-                        });
-                      },
-                      data: Global.cachedMapVideoList[widget.uniqueKey]!.key[index],
-                      badge: Global.cachedMapVideoList[widget.uniqueKey]!.key[index].status!.substring(0, 1).toUpperCase(),
-                    )
-                  ],
-                ),
+                            Global.cachedMapVideoList[widget.uniqueKey]!.key[index].user!.followerCount =
+                                data.data["data"]["follower_count"];
+                            if (context.mounted) {
+                              Navigator.of(context).pushNamed(VideoPage.routeName, arguments: {
+                                "vid": Global.cachedMapVideoList[widget.uniqueKey]!.key[index].id,
+                              });
+                            }
+                          });
+                        },
+                        data: Global.cachedMapVideoList[widget.uniqueKey]!.key[index],
+                        badge: Global.cachedMapVideoList[widget.uniqueKey]!.key[index].status!.substring(0, 1).toUpperCase(),
+                      )
+                    ],
+                  ),
             separatorBuilder: (context, index) => const Divider(),
-            itemCount: Global.cachedMapVideoList[widget.uniqueKey]!.key.length));
+            itemCount:
+                Global.cachedMapVideoList[widget.uniqueKey]!.key.isEmpty ? 1 : Global.cachedMapVideoList[widget.uniqueKey]!.key.length));
   }
 }

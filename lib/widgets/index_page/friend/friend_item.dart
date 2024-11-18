@@ -1,13 +1,22 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/utils/number_converter.dart';
+import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
+import '../../../model/user.dart';
+
 class FriendItem extends StatefulWidget {
-  const FriendItem({super.key, required this.onTap});
+  const FriendItem({
+    super.key,
+    required this.onTap,
+    required this.userId,
+  });
 
   final Function onTap;
-  final bool isFollowed = false;
+  final String userId;
 
   @override
   State<StatefulWidget> createState() {
@@ -16,28 +25,40 @@ class FriendItem extends StatefulWidget {
 }
 
 class _FriendItemState extends State<FriendItem> {
-  late bool isFollowed = widget.isFollowed;
+  late User user;
 
   Widget _getFollowButton(BuildContext context) {
     var elStyle = ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        backgroundColor: isFollowed ? Theme.of(context).disabledColor : Theme.of(context).primaryColor,
+        backgroundColor: user.isFollowed! ? Theme.of(context).disabledColor : Theme.of(context).primaryColor,
         padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
-        overlayColor: isFollowed ? Theme.of(context).disabledColor : Theme.of(context).primaryColor);
-    var icon = isFollowed ? Icons.check : Icons.add;
-    var text = isFollowed ? AppLocalizations.of(context)!.search_followed : AppLocalizations.of(context)!.search_follow;
-    var iconColor = isFollowed ? Theme.of(context).hintColor : Theme.of(context).scaffoldBackgroundColor;
+        overlayColor: user.isFollowed! ? Theme.of(context).disabledColor : Theme.of(context).primaryColor);
+    var icon = user.isFollowed! ? Icons.check : Icons.add;
+    var text = user.isFollowed! ? AppLocalizations.of(context)!.search_followed : AppLocalizations.of(context)!.search_follow;
+    var iconColor = user.isFollowed! ? Theme.of(context).hintColor : Theme.of(context).scaffoldBackgroundColor;
     var iconSize = Theme.of(context).textTheme.bodySmall!.fontSize;
     var textStyle = TextStyle(
-        color: isFollowed ? Theme.of(context).hintColor : Theme.of(context).scaffoldBackgroundColor,
+        color: user.isFollowed! ? Theme.of(context).hintColor : Theme.of(context).scaffoldBackgroundColor,
         fontSize: Theme.of(context).textTheme.bodySmall!.fontSize);
     return Padding(
         padding: const EdgeInsets.only(right: 16),
         child: SizedBox(
           height: Theme.of(context).textTheme.bodySmall!.fontSize! * 2.5,
           child: ElevatedButton(
-              onPressed: () {
-                isFollowed = !isFollowed;
+              onPressed: () async {
+                Response response;
+                response = await Global.dio.post('/api/v1/relation/follow/action', data: {
+                  'to_user_id': user.id,
+                  'action_type': user.isFollowed! ? 0 : 1,
+                });
+                if (response.data['code'] == Global.successCode) {
+                  user.followerCount = !user.isFollowed! ? user.followerCount! + 1 : user.followerCount! - 1;
+                  user.isFollowed = !user.isFollowed!;
+                } else {
+                  if (context.mounted) {
+                    ToastificationUtils.showSimpleToastification(context, response.data['msg']);
+                  }
+                }
                 setState(() {});
               },
               style: elStyle,
@@ -67,6 +88,7 @@ class _FriendItemState extends State<FriendItem> {
 
   @override
   Widget build(BuildContext context) {
+    user = Global.cachedMapUser[widget.userId]!;
     return GestureDetector(
       onTap: () {
         widget.onTap();
@@ -85,7 +107,7 @@ class _FriendItemState extends State<FriendItem> {
                           TDImage(
                               height: Theme.of(context).textTheme.bodyMedium!.fontSize! * 5 + 4,
                               type: TDImageType.circle,
-                              assetUrl: 'assets/images/default_avatar.gif')
+                              imgUrl: user.avatarUrl)
                         ],
                       ),
                       const SizedBox(
@@ -96,7 +118,7 @@ class _FriendItemState extends State<FriendItem> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '用户名',
+                            user.name!,
                             style: TextStyle(
                               color: Theme.of(context).primaryColor,
                               fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
@@ -104,7 +126,7 @@ class _FriendItemState extends State<FriendItem> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            '${NumberConverter.convertNumber(173881931737)}${AppLocalizations.of(context)!.search_follower}',
+                            '${NumberConverter.convertNumber(user.followerCount!)}${AppLocalizations.of(context)!.search_follower}',
                             style: TextStyle(
                               color: Theme.of(context).hintColor,
                               fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,

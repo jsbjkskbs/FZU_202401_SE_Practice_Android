@@ -41,7 +41,9 @@ class _ProfileState extends State<Profile> {
                   TDImageViewer.showImageViewer(
                       context: context,
                       images: [
-                        Global.cachedMapUser[widget.userId]?.avatarUrl ?? Global.defaultAvatarUrl,
+                        Global.cachedMapUser[widget.userId]?.avatarUrl != ""
+                            ? Global.cachedMapUser[widget.userId]?.avatarUrl
+                            : Global.defaultAvatarUrl,
                         "assets/images/dot.png",
                       ],
                       onIndexChange: (index) {
@@ -51,8 +53,13 @@ class _ProfileState extends State<Profile> {
                       });
                 },
                 child: TDImage(
-                  imgUrl: Global.cachedMapUser[widget.userId]?.avatarUrl ?? Global.defaultAvatarUrl,
-                  errorWidget: const Icon(Icons.error),
+                  imgUrl: Global.cachedMapUser[widget.userId]?.avatarUrl,
+                  errorWidget: TDImage(
+                    assetUrl: "assets/images/default_avatar.avif",
+                    type: TDImageType.circle,
+                    height: MediaQuery.of(context).size.width / 4,
+                    width: MediaQuery.of(context).size.width / 4,
+                  ),
                   loadingWidget: const CircularProgressIndicator(),
                   height: MediaQuery.of(context).size.width / 4,
                   width: MediaQuery.of(context).size.width / 4,

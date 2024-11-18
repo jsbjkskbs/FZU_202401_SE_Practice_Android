@@ -60,7 +60,8 @@ class _UserInfoViewState extends State<UserInfoView> {
             onPressed: () {},
             child: Column(
               children: [
-                Text(NumberConverter.convertNumber(Global.self.likeCount!), style: TextStyle(color: Theme.of(context).primaryColor)),
+                Text(!Global.self.isValidUser() ? "0" : NumberConverter.convertNumber(Global.self.likeCount!),
+                    style: TextStyle(color: Theme.of(context).primaryColor)),
                 Text(AppLocalizations.of(context)!.mine_user_info_like, style: TextStyle(color: Theme.of(context).primaryColor)),
               ],
             ),
@@ -73,7 +74,8 @@ class _UserInfoViewState extends State<UserInfoView> {
               onPressed: () {},
               child: Column(
                 children: [
-                  Text(NumberConverter.convertNumber(Global.self.followingCount!), style: TextStyle(color: Theme.of(context).primaryColor)),
+                  Text(!Global.self.isValidUser() ? "0" : NumberConverter.convertNumber(Global.self.followingCount!),
+                      style: TextStyle(color: Theme.of(context).primaryColor)),
                   Text(AppLocalizations.of(context)!.mine_user_info_subscribe, style: TextStyle(color: Theme.of(context).primaryColor)),
                 ],
               ),
@@ -85,7 +87,8 @@ class _UserInfoViewState extends State<UserInfoView> {
               onPressed: () {},
               child: Column(
                 children: [
-                  Text(NumberConverter.convertNumber(Global.self.followerCount!), style: TextStyle(color: Theme.of(context).primaryColor)),
+                  Text(!Global.self.isValidUser() ? "0" : NumberConverter.convertNumber(Global.self.followerCount!),
+                      style: TextStyle(color: Theme.of(context).primaryColor)),
                   Text(AppLocalizations.of(context)!.mine_user_info_follower, style: TextStyle(color: Theme.of(context).primaryColor)),
                 ],
               ),
