@@ -21,7 +21,7 @@ class VideoCard extends StatefulWidget {
 }
 
 class _VideoCardState extends State<VideoCard> {
-  late final Video video = widget.video;
+  late Video video = widget.video;
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +73,19 @@ class _VideoCardState extends State<VideoCard> {
             )),
         child: GestureDetector(
           onTap: () async {
+            Response r1;
+            r1 = await Global.dio.get("/api/v1/video/info", data: {
+              "video_id": video.id,
+            });
+            debugPrint(Global.dio.options.headers.toString());
+            debugPrint(r1.data.toString());
+            if (r1.data["code"] != Global.successCode) {
+              if (context.mounted) {
+                ToastificationUtils.showSimpleToastification(context, r1.data["msg"]);
+              }
+              return;
+            }
+            video = Video.fromJson(r1.data["data"]);
             Global.cachedMapVideo[video.id!] = video;
             Response response = await Global.dio.get("/api/v1/user/follower_count", data: {
               "user_id": video.user?.id,
@@ -87,7 +100,9 @@ class _VideoCardState extends State<VideoCard> {
                 });
               }
             } else {
-              video.user!.followerCount = -1;
+              if (context.mounted) {
+                ToastificationUtils.showSimpleToastification(context, response.data["msg"]);
+              }
             }
           },
           child: Padding(

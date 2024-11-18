@@ -207,22 +207,23 @@ class _SettingsList {
                       ));
                 }));
           }),
-      SettingsItem(
-        label: '退出登录',
-        kind: 'security',
-        labelIndex: 0,
-        kindIndex: 1,
-        onTap: (BuildContext context) {
-          Global.self = User();
-          Storage.storePersistentData(Global.appPersistentData.copyWith(user: Global.self));
-          Navigator.of(context).pushNamedAndRemoveUntil(IndexPage.routeName, (route) => false);
-          ToastificationUtils.showSimpleToastification(context, '退出登录成功');
-        },
-        icon: const Icon(
-          Icons.exit_to_app,
-          size: 24,
-        ),
-      )
+      if (Global.self.isValidUser())
+        SettingsItem(
+          label: '退出登录',
+          kind: 'security',
+          labelIndex: 0,
+          kindIndex: 1,
+          onTap: (BuildContext context) {
+            Global.self = User();
+            Storage.storePersistentData(Global.appPersistentData.copyWith(user: Global.self));
+            Navigator.of(context).pushNamedAndRemoveUntil(IndexPage.routeName, (route) => false);
+            ToastificationUtils.showSimpleToastification(context, '退出登录成功');
+          },
+          icon: const Icon(
+            Icons.exit_to_app,
+            size: 24,
+          ),
+        )
     ];
   }
 }

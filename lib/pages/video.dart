@@ -162,7 +162,7 @@ class _VideoPageState extends State<VideoPage> {
                 backgroundColor: Colors.transparent,
                 bufferedColor: Colors.transparent,
               ),
-        customControls: const CustomControls(withTitle: '很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长的标题'),
+        customControls: CustomControls(withTitle: video!.title!),
         deviceOrientationsOnEnterFullScreen: [
           DeviceOrientation.landscapeLeft,
           DeviceOrientation.landscapeRight,

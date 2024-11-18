@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:like_button/like_button.dart';
@@ -5,6 +6,7 @@ import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 import '../../model/video.dart';
 import '../../utils/number_converter.dart';
+import '../../utils/toastification.dart';
 import '../expand_shrink_text.dart';
 import '../icons/def.dart';
 
@@ -71,24 +73,50 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                     child: SizedBox(
                       height: 30,
                       child: ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                              overlayColor: Colors.transparent,
-                              backgroundColor: Theme.of(context).primaryColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              )),
+                          onPressed: () async {
+                            Response response;
+                            response = await Global.dio.post('/api/v1/relation/follow/action',
+                                data: {"to_user_id": video!.user!.id, "action_type": video!.user!.isFollowed! ? 0 : 1});
+                            if (response.data["code"] == Global.successCode) {
+                              video!.user!.followerCount =
+                                  video!.user!.isFollowed! ? video!.user!.followerCount! - 1 : video!.user!.followerCount! + 1;
+                              video!.user!.isFollowed = !video!.user!.isFollowed!;
+                              setState(() {});
+                            } else {
+                              if (context.mounted) {
+                                ToastificationUtils.showSimpleToastification(context, response.data["msg"]);
+                              }
+                            }
+                          },
+                          style: !video!.user!.isFollowed!
+                              ? ElevatedButton.styleFrom(
+                                  overlayColor: Colors.transparent,
+                                  backgroundColor: Theme.of(context).primaryColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ))
+                              : ElevatedButton.styleFrom(
+                                  overlayColor: Colors.transparent,
+                                  backgroundColor: Theme.of(context).disabledColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  )),
                           child: IntrinsicWidth(
                             child: Row(
                               children: [
                                 Icon(
                                   Icons.add,
                                   size: 14,
-                                  color: Theme.of(context).scaffoldBackgroundColor,
+                                  color:
+                                      !video!.user!.isFollowed! ? Theme.of(context).scaffoldBackgroundColor : Theme.of(context).hintColor,
                                 ),
                                 Text(
-                                  '关注',
-                                  style: TextStyle(fontSize: 14, color: Theme.of(context).scaffoldBackgroundColor),
+                                  !video!.user!.isFollowed! ? '关注' : "已关注",
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: !video!.user!.isFollowed!
+                                          ? Theme.of(context).scaffoldBackgroundColor
+                                          : Theme.of(context).hintColor),
                                 )
                               ],
                             ),
@@ -175,6 +203,22 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.25,
                               child: LikeButton(
+                                isLiked: video!.isLiked,
+                                onTap: (isLike) async {
+                                  Response response;
+                                  response = await Global.dio.post('/api/v1/interact/like/video/action',
+                                      data: {"video_id": video!.id, "action_type": video!.isLiked! ? 0 : 1});
+                                  if (response.data["code"] == Global.successCode) {
+                                    video!.likeCount = video!.isLiked! ? video!.likeCount! - 1 : video!.likeCount! + 1;
+                                    video!.isLiked = !video!.isLiked!;
+                                    setState(() {});
+                                  } else {
+                                    if (context.mounted) {
+                                      ToastificationUtils.showSimpleToastification(context, response.data["msg"]);
+                                    }
+                                  }
+                                  return video!.isLiked!;
+                                },
                                 size: 28,
                                 circleColor:
                                     CircleColor(start: Theme.of(context).primaryColor, end: Theme.of(context).secondaryHeaderColor),
@@ -201,7 +245,7 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                                     );
                                   } else {
                                     result = Text(
-                                      text,
+                                      NumberConverter.convertNumber(video!.likeCount!),
                                       style: TextStyle(color: color, fontSize: 12),
                                     );
                                   }
