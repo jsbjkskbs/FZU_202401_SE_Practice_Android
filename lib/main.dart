@@ -13,6 +13,7 @@ import 'package:fulifuli_app/pages/dynamic_post.dart';
 import 'package:fulifuli_app/pages/followers.dart';
 import 'package:fulifuli_app/pages/following.dart';
 import 'package:fulifuli_app/pages/index.dart';
+import 'package:fulifuli_app/pages/liked_videos.dart';
 import 'package:fulifuli_app/pages/loading.dart';
 import 'package:fulifuli_app/pages/login.dart';
 import 'package:fulifuli_app/pages/mfa_verification.dart';
@@ -147,6 +148,7 @@ class MyAppState extends State<MyApp> {
                 VideoPage.routeName: (context) => const VideoPage(),
                 FollowerPage.routeName: (context) => const FollowerPage(),
                 FollowingPage.routeName: (context) => const FollowingPage(),
+                LikedVideosPage.routeName: (context) => const LikedVideosPage(),
               },
             ));
   }

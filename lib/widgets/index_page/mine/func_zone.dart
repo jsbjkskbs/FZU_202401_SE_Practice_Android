@@ -28,7 +28,7 @@ class _FuncZoneState extends State<FuncZone> {
             Icons.favorite,
             color: Theme.of(context).primaryColor,
           ),
-          "/favorite"),
+          "/liked_videos"),
       FuncItem(
           AppLocalizations.of(context)!.mine_func_zone_submission_management,
           Icon(
