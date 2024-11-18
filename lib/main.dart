@@ -10,6 +10,8 @@ import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/model/locale.dart';
 import 'package:fulifuli_app/model/scheme.dart';
 import 'package:fulifuli_app/pages/dynamic_post.dart';
+import 'package:fulifuli_app/pages/followers.dart';
+import 'package:fulifuli_app/pages/following.dart';
 import 'package:fulifuli_app/pages/index.dart';
 import 'package:fulifuli_app/pages/loading.dart';
 import 'package:fulifuli_app/pages/login.dart';
@@ -143,6 +145,8 @@ class MyAppState extends State<MyApp> {
                 SubmissionManagePage.routeName: (context) => const SubmissionManagePage(),
                 DynamicPostPage.routeName: (context) => const DynamicPostPage(),
                 VideoPage.routeName: (context) => const VideoPage(),
+                FollowerPage.routeName: (context) => const FollowerPage(),
+                FollowingPage.routeName: (context) => const FollowingPage(),
               },
             ));
   }
