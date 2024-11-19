@@ -65,7 +65,8 @@ class _DynamicCardState extends State<DynamicCard> {
           const SizedBox(height: 16),
           GestureDetector(
               onTap: () {
-                CommentPopup.show(context, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.8);
+                CommentPopup.show(context, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.8,
+                    oType: '', commentId: '', oId: '');
               },
               child: Padding(
                   padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
@@ -119,7 +120,8 @@ class _DynamicCardState extends State<DynamicCard> {
               ),
               GestureDetector(
                 onTap: () {
-                  CommentPopup.show(context, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.8);
+                  CommentPopup.show(context, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.8,
+                      oType: '', commentId: '', oId: '');
                 },
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width * 0.3,

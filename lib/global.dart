@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/foundation.dart';
+import 'package:fulifuli_app/model/comment.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -133,16 +134,16 @@ class Global {
   }
 
   static Map<String, dynamic> cachedMap = {};
-
-  static Map<String, MapEntry<List<Video>, int>> cachedVideoList = {};
   static Map<String, User> cachedMapUser = {};
   static Map<String, Video> cachedMapVideo = {};
+  static List<Video> cachedSearchVideoList = [];
 
+  static Map<String, MapEntry<List<Video>, int>> cachedVideoList = {};
+  static Map<String, MapEntry<List<User>, bool>> cachedMapUserList = {};
   static Map<String, MapEntry<List<Video>, bool>> cachedMapVideoList = {};
+  static Map<String, MapEntry<List<Comment>, bool>> cachedMapCommentList = {};
 
   static Map<String, List<String>> cachedMapDynamicList = {};
-  static Map<String, MapEntry<List<User>, bool>> cachedMapUserList = {};
-  static List<Video> cachedSearchVideoList = [];
 
   static const List<String> categoryList = ["游戏", "知识", "生活", "军事", "影音", "新闻"];
 }

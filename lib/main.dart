@@ -38,13 +38,21 @@ Future<void> main() async {
   Global.updateDioToken(accessToken: Global.self.accessToken, refreshToken: Global.self.refreshToken);
   var valid = Global.refreshTokenRefresh();
   if (await valid) {
-    Global.accessTokenRefresh();
-    Global.startAsyncTask();
+    var valid = await Global.accessTokenRefresh();
+    if (!valid) {
+      Global.self = User();
+      Global.appPersistentData.user = Global.self;
+      Global.updateDioToken(accessToken: null, refreshToken: null);
+      Storage.storePersistentData(Global.appPersistentData);
+    } else {
+      debugPrint("Global.main.startAsyncTask, with user: ${Global.self}");
+      Global.startAsyncTask();
+    }
   } else {
     if (Global.self.accessToken != null && Global.self.accessToken!.isNotEmpty) {
       Global.cachedMap["delayed-notification/not-valid"] = true;
       Global.self = User();
-      Global.appPersistentData.user = User();
+      Global.appPersistentData.user = Global.self;
       Global.updateDioToken(accessToken: null, refreshToken: null);
       Storage.storePersistentData(Global.appPersistentData);
     }
@@ -79,7 +87,7 @@ class MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    if (Global.cachedMap["delayed-notification/not-valid"] != null) {
+    if (Global.cachedMap["delayed-notification/not-valid"] == true) {
       Global.cachedMap.remove("delayed-notification/not-valid");
       ToastificationUtils.showSimpleToastification(context, '登录状态已失效，请重新登录');
     }

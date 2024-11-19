@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fulifuli_app/pkg/chewie/chewie.dart';
-import 'package:fulifuli_app/utils/number_converter.dart';
 import 'package:fulifuli_app/widgets/video_page/video_page_tabs_container.dart';
 import 'package:rect_getter/rect_getter.dart';
 import 'package:sensors_plus/sensors_plus.dart';
@@ -123,9 +122,9 @@ class _VideoPageState extends State<VideoPage> {
                 child: Material(
               child: VideoPageTabsContainer(
                 vid: video!.id!,
-                tabs: [
+                tabs: const [
                   '简介',
-                  '评论(${NumberConverter.convertNumber(video!.commentCount!)})',
+                  '评论',
                 ],
               ),
             ))

@@ -1,4 +1,5 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:fulifuli_app/widgets/comment_popup.dart';
@@ -27,6 +28,10 @@ class _VideoPageTabsContainer extends State<VideoPageTabsContainer> with TickerP
   int _currentRollingIndex = 0;
   List<TDTab> tabs = [];
   List<VideoTabsView> tabViews = [];
+  final EasyRefreshController _easyRefreshController = EasyRefreshController(
+    controlFinishRefresh: true,
+    controlFinishLoad: true,
+  );
 
   List<TDTab> _getTabs() {
     tabs = [
@@ -127,10 +132,17 @@ class _VideoPageTabsContainer extends State<VideoPageTabsContainer> with TickerP
               VideoIntroductionView(vid: widget.vid),
               Column(
                 children: [
-                  const Expanded(child: CommentListView()),
+                  Expanded(
+                      child: CommentListView(
+                    oType: 'video',
+                    oId: widget.vid,
+                    easyRefreshController: _easyRefreshController,
+                  )),
                   GestureDetector(
                     onTap: () {
-                      CommentPopup.showReplyPanel(context);
+                      CommentPopup.showReplyPanel(context, oType: 'video', oId: widget.vid, onSend: () {
+                        _easyRefreshController.callRefresh();
+                      });
                     },
                     child: const CommentReplyPopupFakeContainer(),
                   ),
