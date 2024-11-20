@@ -11,6 +11,8 @@ class Activity {
   User? user;
   @JsonKey(name: 'content')
   String? content;
+  @JsonKey(name: 'image')
+  List<String>? images;
   @JsonKey(name: 'ref_video')
   String? refVideo;
   @JsonKey(name: 'ref_activity')

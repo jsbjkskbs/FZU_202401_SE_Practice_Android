@@ -14,7 +14,7 @@ class ToastificationUtils {
 
   static showFlatToastification(
     BuildContext context,
-    String text,
+    String? text,
     String description, {
     Duration duration = const Duration(milliseconds: 1500),
     Widget? icon,
@@ -24,15 +24,17 @@ class ToastificationUtils {
       autoCloseDuration: duration,
       style: ToastificationStyle.flat,
       icon: icon,
-      title: Padding(
-          padding: const EdgeInsets.only(left: 8),
-          child: Text(
-            text,
-            style: TextStyle(
-                color: Theme.of(context).primaryColor,
-                fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
-                fontWeight: FontWeight.bold),
-          )),
+      title: text != null
+          ? Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: Text(
+                text,
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                    fontWeight: FontWeight.bold),
+              ))
+          : null,
       description: Padding(
           padding: const EdgeInsets.only(left: 8),
           child: Text(
@@ -43,6 +45,31 @@ class ToastificationUtils {
             ),
           )),
       alignment: const Alignment(4, -0.8),
+    );
+  }
+
+  static showDownloadSuccess(BuildContext context, {required String path}) {
+    toastification.show(
+      context: context,
+      type: ToastificationType.success,
+      style: ToastificationStyle.flat,
+      title: const Text('下载成功'),
+      description: Text('文件已保存至$path'),
+      alignment: Alignment.center,
+      autoCloseDuration: const Duration(seconds: 3),
+      animationBuilder: (
+        context,
+        animation,
+        alignment,
+        child,
+      ) {
+        return ScaleTransition(
+          scale: animation,
+          child: child,
+        );
+      },
+      borderRadius: BorderRadius.circular(12.0),
+      boxShadow: highModeShadow,
     );
   }
 }

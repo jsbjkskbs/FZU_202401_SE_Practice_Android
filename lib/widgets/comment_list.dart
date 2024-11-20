@@ -37,15 +37,15 @@ class CommentListView extends StatefulWidget {
 }
 
 class _CommentListViewState extends State<CommentListView> {
+  bool isEnd = false;
   int pageNum = 0;
+  static const pageSize = 10;
   late ScrollController controller = widget.controller ?? ScrollController();
   late ListObserverController listObserverController = ListObserverController(
     controller: controller,
   );
   String observerCommentId = '';
   Timer observerTimer = Timer(const Duration(), () {});
-
-  static const pageSize = 10;
 
   @override
   void initState() {
@@ -62,10 +62,27 @@ class _CommentListViewState extends State<CommentListView> {
       key = '${CommentListView.uniqueKey}/${widget.oType}/${widget.oId}';
     }
 
+    if (!Global.cachedMapCommentList.containsKey(key)) {
+      Global.cachedMapCommentList[key] = const MapEntry([], false);
+    }
+
     WidgetsBinding widgetsBinding = WidgetsBinding.instance;
-    widgetsBinding.addPostFrameCallback((_) {
-      _controller.callRefresh();
+    widgetsBinding.addPostFrameCallback((_) async {
+      // _controller.callRefresh();
+      if (widget.isComment) {
+        await _fetchDataOfChildComment();
+      } else {
+        await _fetchData();
+      }
+      setState(() {});
     });
+  }
+
+  @override
+  dispose() {
+    super.dispose();
+    _controller.dispose();
+    Global.cachedMapCommentList.remove(key);
   }
 
   late final EasyRefreshController _controller;
@@ -90,30 +107,43 @@ class _CommentListViewState extends State<CommentListView> {
       ),
       controller: _controller,
       onRefresh: () async {
+        isEnd = false;
+        pageNum = 0;
         Global.cachedMapCommentList.remove(key);
+        String? result;
         if (widget.isComment) {
-          await _fetchDataOfChildComment();
+          result = await _fetchDataOfChildComment();
         } else {
-          await _fetchData();
+          result = await _fetchData();
+        }
+        if (result != null) {
+          if (context.mounted) {
+            ToastificationUtils.showSimpleToastification(context, result);
+          }
+          _controller.finishRefresh();
+          return;
         }
         setState(() {});
-        if (Global.cachedMapCommentList[key]!.key.isEmpty) {
-          if (context.mounted) {
-            ToastificationUtils.showSimpleToastification(context, '暂无评论');
-          }
-        }
         _controller.finishRefresh();
       },
       onLoad: () async {
-        if (Global.cachedMapCommentList['${CommentListView.uniqueKey}/${widget.oType}/${widget.oId}']!.value) {
+        if (Global.cachedMapCommentList[key]!.value) {
           ToastificationUtils.showSimpleToastification(context, '没有更多了');
           _controller.finishLoad();
           return;
         }
+        String? result;
         if (widget.isComment) {
-          await _fetchDataOfChildComment();
+          result = await _fetchDataOfChildComment();
         } else {
-          await _fetchData();
+          result = await _fetchData();
+        }
+        if (result != null) {
+          if (context.mounted) {
+            ToastificationUtils.showSimpleToastification(context, result);
+          }
+          _controller.finishLoad();
+          return;
         }
         setState(() {});
         _controller.finishLoad();
@@ -160,7 +190,7 @@ class _CommentListViewState extends State<CommentListView> {
     );
   }
 
-  Future<void> _fetchData() async {
+  Future<String?> _fetchData() async {
     if (!Global.cachedMapCommentList.containsKey(key)) {
       Global.cachedMapCommentList[key] = const MapEntry([], false);
     }
@@ -176,15 +206,19 @@ class _CommentListViewState extends State<CommentListView> {
       for (var item in response.data["data"]["items"]) {
         list.add(Comment.fromJson(item));
       }
-      var isEnd = response.data["data"]["is_end"];
-      if (!isEnd) {
+      if (response.data["data"]["is_end"]) {
+        isEnd = true;
+      } else {
         pageNum++;
       }
       Global.cachedMapCommentList[key] = MapEntry([...Global.cachedMapCommentList[key]!.key, ...list], isEnd);
+    } else {
+      return response.data["msg"];
     }
+    return null;
   }
 
-  Future<void> _fetchDataOfChildComment() async {
+  Future<String?> _fetchDataOfChildComment() async {
     if (!Global.cachedMapCommentList.containsKey(key)) {
       Global.cachedMapCommentList[key] = const MapEntry([], false);
     }
@@ -201,12 +235,16 @@ class _CommentListViewState extends State<CommentListView> {
       for (var item in response.data["data"]["items"]) {
         list.add(Comment.fromJson(item));
       }
-      var isEnd = response.data["data"]["is_end"];
-      if (!isEnd) {
+      if (response.data["data"]["is_end"]) {
+        isEnd = true;
+      } else {
         pageNum++;
       }
       Global.cachedMapCommentList[key] = MapEntry([...Global.cachedMapCommentList[key]!.key, ...list], isEnd);
+    } else {
+      return response.data["msg"];
     }
+    return null;
   }
 
   void _scrollToComment(String commentId) {

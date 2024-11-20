@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/model/activity.dart';
 import 'package:fulifuli_app/pages/space.dart';
+import 'package:fulifuli_app/utils/download_file.dart';
 import 'package:fulifuli_app/widgets/comment_popup.dart';
 import 'package:fulifuli_app/widgets/report_popup.dart';
 import 'package:like_button/like_button.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 import '../utils/number_converter.dart';
+import '../utils/toastification.dart';
 import 'icons/def.dart';
 
 class DynamicCard extends StatefulWidget {
@@ -109,6 +111,7 @@ class _DynamicCardState extends State<DynamicCard> {
                           ],
                         )),
                   ))),
+          if (widget.data.images != null && widget.data.images!.isNotEmpty) _getImageWidget(),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -218,6 +221,77 @@ class _DynamicCardState extends State<DynamicCard> {
           const SizedBox(height: 16),
         ],
       ),
+    );
+  }
+
+  Widget _getImageWidget() {
+    return Container(
+      height: 144,
+      padding: const EdgeInsets.only(top: 16, bottom: 16, left: 4, right: 4),
+      child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (context, index) => GestureDetector(
+                onTap: () {
+                  TDImageViewer.showImageViewer(
+                      context: context,
+                      images: widget.data.images!,
+                      defaultIndex: index,
+                      showIndex: true,
+                      onLongPress: (index) {
+                        Navigator.of(context).push(TDSlidePopupRoute(
+                          builder: (context) => Container(
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).scaffoldBackgroundColor,
+                            ),
+                            child: TextButton(
+                                onPressed: () async {
+                                  String? filepath = await Download.downloadAndSaveImage(
+                                      widget.data.images![index], widget.data.images![index].split('/').last.split('?').first);
+                                  if (context.mounted) {
+                                    if (filepath != null) {
+                                      ToastificationUtils.showDownloadSuccess(context, path: filepath);
+                                    } else {
+                                      ToastificationUtils.showSimpleToastification(context, '图片保存失败');
+                                    }
+                                    Navigator.of(context).pop();
+                                  }
+                                },
+                                style: ButtonStyle(
+                                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+                                  ),
+                                  padding: WidgetStateProperty.all(const EdgeInsets.only(top: 16, bottom: 16)),
+                                ),
+                                child: Text(
+                                  '保存图片',
+                                  style: TextStyle(
+                                      fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize, color: Theme.of(context).primaryColor),
+                                )),
+                          ),
+                        ));
+                      });
+                },
+                child: SizedBox(
+                  height: 120,
+                  child: TDImage(
+                    imgUrl: widget.data.images![index],
+                    errorWidget: const SizedBox(
+                        height: 120,
+                        child: Column(
+                          children: [
+                            Icon(Icons.not_interested_outlined, size: 48),
+                            Text('图片加载失败'),
+                          ],
+                        )),
+                    height: 120,
+                    width: 120,
+                    type: TDImageType.roundedSquare,
+                  ),
+                ),
+              ),
+          separatorBuilder: (context, index) => const SizedBox(width: 16),
+          itemCount: widget.data.images!.length),
     );
   }
 }

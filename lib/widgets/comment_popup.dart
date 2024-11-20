@@ -16,7 +16,7 @@ class CommentPopup {
       String? parentId,
       required String commentId,
       bool isComment = true}) {
-    EasyRefreshController controller = EasyRefreshController(
+    final EasyRefreshController controller = EasyRefreshController(
       controlFinishLoad: true,
       controlFinishRefresh: true,
     );
