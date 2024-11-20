@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
+import 'package:fulifuli_app/utils/language_reflect.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 import '../utils/toastification.dart';
@@ -84,12 +85,12 @@ class _ReportPopupContainerState extends State<ReportPopupContainer> {
                     _selected = value;
                   });
                 },
-                child: Text(_reportSelections[i]),
+                child: Text(LanguageReflect.reportReflect(context, _reportSelections[i])),
               ),
             const Divider(),
             TDTextarea(
               controller: _controller,
-              hintText: '请输入举报原因',
+              hintText: AppLocalizations.of(context)!.report_report_reason_hint,
               minLines: 3,
               maxLength: 256,
               textStyle: TextStyle(
@@ -102,7 +103,7 @@ class _ReportPopupContainerState extends State<ReportPopupContainer> {
               indicator: true,
             ),
             Padding(
-                padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.05),
+                padding: const EdgeInsets.only(top: 16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -117,14 +118,14 @@ class _ReportPopupContainerState extends State<ReportPopupContainer> {
                             overlayColor: Colors.redAccent,
                             backgroundColor: Colors.red,
                             elevation: 4,
-                            fixedSize: Size(MediaQuery.of(context).size.width / 3, 40),
+                            fixedSize: Size(MediaQuery.of(context).size.width * 0.4, 40),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
                         child: Row(
                           children: [
                             const Icon(DisplayIcons.clear, color: Colors.white),
                             const SizedBox(width: 4),
                             Text(
-                              '清空',
+                              AppLocalizations.of(context)!.function_default_clear,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
@@ -142,7 +143,7 @@ class _ReportPopupContainerState extends State<ReportPopupContainer> {
                           } else {
                             if (context.mounted) {
                               _controller.clear();
-                              ToastificationUtils.showSimpleToastification(context, '举报成功');
+                              ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.report_submit_success);
                               Navigator.pop(context, true);
                             }
                           }
@@ -151,14 +152,14 @@ class _ReportPopupContainerState extends State<ReportPopupContainer> {
                             overlayColor: Theme.of(context).dialogBackgroundColor,
                             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                             elevation: 4,
-                            fixedSize: Size(MediaQuery.of(context).size.width / 3, 40),
+                            fixedSize: Size(MediaQuery.of(context).size.width * 0.4, 40),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
                         child: Row(
                           children: [
                             Icon(DisplayIcons.post, color: Theme.of(context).primaryColor),
                             const SizedBox(width: 4),
                             Text(
-                              '提交',
+                              AppLocalizations.of(context)!.function_default_submit,
                               style: TextStyle(
                                 color: Theme.of(context).primaryColor,
                                 fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
@@ -177,10 +178,10 @@ class _ReportPopupContainerState extends State<ReportPopupContainer> {
 
   Future<String?> _sendReport() async {
     if (_selected == null) {
-      return '请选择举报原因';
+      return AppLocalizations.of(context)!.report_not_select_report_type;
     }
     if (_controller.text.isEmpty) {
-      return '请输入举报原因';
+      return AppLocalizations.of(context)!.report_not_type_report_reason;
     }
     debugPrint('sendReport: ${widget.oType}, ${widget.oId}, ${_reportSelections[_selected!]}, ${_controller.text}');
     debugPrint('sendReport: ${widget.commentType}, ${widget.fromMediaId}');

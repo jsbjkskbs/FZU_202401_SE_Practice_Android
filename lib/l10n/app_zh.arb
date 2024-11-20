@@ -299,5 +299,13 @@
   "video_introduction_title": "简介",
   "video_comments_title": "评论",
   "video_author_follow": "关注",
-  "video_author_followed": "已关注"
+  "video_author_followed": "已关注",
+  "report_spamming": "垃圾信息",
+  "report_abuse": "侮辱性语言",
+  "report_infringement": "侵权行为",
+  "report_other": "其他",
+  "report_submit_success": "举报成功",
+  "report_not_select_report_type": "请选择举报类型",
+  "report_not_type_report_reason": "请输入举报原因",
+  "report_report_reason_hint": "请输入举报原因"
 }

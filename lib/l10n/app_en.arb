@@ -299,5 +299,13 @@
   "video_introduction_title": "Intro",
   "video_comments_title": "CMT",
   "video_author_follow": "Follow",
-  "video_author_followed": "Followed"
+  "video_author_followed": "Followed",
+  "report_spamming": "Spam",
+  "report_abuse": "Abuse",
+  "report_infringement": "Infringement",
+  "report_other": "Other",
+  "report_submit_success": "Report successful",
+  "report_not_select_report_type": "Please select a report type",
+  "report_not_type_report_reason": "Please enter the reason for the report",
+  "report_report_reason_hint": "Enter the reason for the report"
 }

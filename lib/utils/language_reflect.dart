@@ -19,4 +19,18 @@ class LanguageReflect {
     }
     return category;
   }
+
+  static String reportReflect(BuildContext context, String report) {
+    switch (report) {
+      case '垃圾信息':
+        return AppLocalizations.of(context)!.report_spamming;
+      case '侮辱性语言':
+        return AppLocalizations.of(context)!.report_abuse;
+      case '侵权行为':
+        return AppLocalizations.of(context)!.report_infringement;
+      case '其他':
+        return AppLocalizations.of(context)!.report_other;
+    }
+    return report;
+  }
 }
