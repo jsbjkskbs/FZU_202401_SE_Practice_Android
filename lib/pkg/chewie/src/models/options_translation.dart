@@ -15,8 +15,7 @@ class OptionsTranslation {
     String? cancelButtonText,
   }) {
     return OptionsTranslation(
-      playbackSpeedButtonText:
-          playbackSpeedButtonText ?? this.playbackSpeedButtonText,
+      playbackSpeedButtonText: playbackSpeedButtonText ?? this.playbackSpeedButtonText,
       subtitlesButtonText: subtitlesButtonText ?? this.subtitlesButtonText,
       cancelButtonText: cancelButtonText ?? this.cancelButtonText,
     );
@@ -37,8 +36,5 @@ class OptionsTranslation {
   }
 
   @override
-  int get hashCode =>
-      playbackSpeedButtonText.hashCode ^
-      subtitlesButtonText.hashCode ^
-      cancelButtonText.hashCode;
+  int get hashCode => playbackSpeedButtonText.hashCode ^ subtitlesButtonText.hashCode ^ cancelButtonText.hashCode;
 }

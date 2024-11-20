@@ -8,9 +8,7 @@ part of 'activity.dart';
 
 Activity _$ActivityFromJson(Map<String, dynamic> json) => Activity(
       id: json['id'] as String?,
-      user: json['user'] == null
-          ? null
-          : User.fromJson(json['user'] as Map<String, dynamic>),
+      user: json['user'] == null ? null : User.fromJson(json['user'] as Map<String, dynamic>),
       content: json['content'] as String?,
       refVideo: json['ref_video'] as String?,
       refActivity: json['ref_activity'] as String?,
@@ -20,8 +18,7 @@ Activity _$ActivityFromJson(Map<String, dynamic> json) => Activity(
       updatedAt: (json['updated_at'] as num?)?.toInt(),
       deletedAt: (json['deleted_at'] as num?)?.toInt(),
       isLiked: json['is_liked'] as bool?,
-    )..images =
-        (json['image'] as List<dynamic>?)?.map((e) => e as String).toList();
+    )..images = (json['image'] as List<dynamic>?)?.map((e) => e as String).toList();
 
 Map<String, dynamic> _$ActivityToJson(Activity instance) => <String, dynamic>{
       'id': instance.id,

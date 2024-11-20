@@ -8,9 +8,7 @@ part of 'video.dart';
 
 Video _$VideoFromJson(Map<String, dynamic> json) => Video(
       id: json['id'] as String?,
-      user: json['user'] == null
-          ? null
-          : User.fromJson(json['user'] as Map<String, dynamic>),
+      user: json['user'] == null ? null : User.fromJson(json['user'] as Map<String, dynamic>),
       videoUrl: json['video_url'] as String?,
       coverUrl: json['cover_url'] as String?,
       title: json['title'] as String?,
@@ -19,8 +17,7 @@ Video _$VideoFromJson(Map<String, dynamic> json) => Video(
       likeCount: (json['like_count'] as num?)?.toInt(),
       commentCount: (json['comment_count'] as num?)?.toInt(),
       category: json['category'] as String?,
-      labels:
-          (json['labels'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      labels: (json['labels'] as List<dynamic>?)?.map((e) => e as String).toList(),
       createdAt: (json['created_at'] as num?)?.toInt(),
       updatedAt: (json['updated_at'] as num?)?.toInt(),
       deletedAt: (json['deleted_at'] as num?)?.toInt(),

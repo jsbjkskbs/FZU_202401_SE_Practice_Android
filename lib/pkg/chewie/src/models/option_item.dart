@@ -28,21 +28,15 @@ class OptionItem {
   }
 
   @override
-  String toString() =>
-      'OptionItem(onTap: $onTap, iconData: $iconData, title: $title, subtitle: $subtitle)';
+  String toString() => 'OptionItem(onTap: $onTap, iconData: $iconData, title: $title, subtitle: $subtitle)';
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is OptionItem &&
-        other.onTap == onTap &&
-        other.iconData == iconData &&
-        other.title == title &&
-        other.subtitle == subtitle;
+    return other is OptionItem && other.onTap == onTap && other.iconData == iconData && other.title == title && other.subtitle == subtitle;
   }
 
   @override
-  int get hashCode =>
-      onTap.hashCode ^ iconData.hashCode ^ title.hashCode ^ subtitle.hashCode;
+  int get hashCode => onTap.hashCode ^ iconData.hashCode ^ title.hashCode ^ subtitle.hashCode;
 }
