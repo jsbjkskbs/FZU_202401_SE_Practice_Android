@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:fulifuli_app/pages/space.dart';
+import 'package:fulifuli_app/widgets/empty_placeholder.dart';
 import 'package:fulifuli_app/widgets/index_page/friend/friend_item.dart';
 
 import '../../../global.dart';
@@ -82,20 +83,27 @@ class _FriendListViewState extends State<FriendListView> {
             _controller.finishLoad();
             return;
           }
+          setState(() {});
           _controller.finishLoad();
         },
         child: ListView.separated(
             itemBuilder: (context, index) {
-              return FriendItem(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                      return SpacePage(userId: Global.cachedMapUserList[FriendListView.uniqueKey]!.key[index].id!);
-                    }));
-                  },
-                  userId: Global.cachedMapUserList[FriendListView.uniqueKey]!.key[index].id!);
+              return Global.cachedMapUserList.containsKey(FriendListView.uniqueKey) &&
+                      Global.cachedMapUserList[FriendListView.uniqueKey]!.key.isNotEmpty
+                  ? FriendItem(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                          return SpacePage(userId: Global.cachedMapUserList[FriendListView.uniqueKey]!.key[index].id!);
+                        }));
+                      },
+                      userId: Global.cachedMapUserList[FriendListView.uniqueKey]!.key[index].id!)
+                  : const EmptyPlaceHolder();
             },
             separatorBuilder: (context, index) => const Divider(),
-            itemCount: Global.cachedMapUserList[FriendListView.uniqueKey]!.key.length));
+            itemCount: Global.cachedMapUserList.containsKey(FriendListView.uniqueKey) &&
+                    Global.cachedMapUserList[FriendListView.uniqueKey]!.key.isNotEmpty
+                ? Global.cachedMapUserList[FriendListView.uniqueKey]!.key.length
+                : 1));
   }
 
   Future<String?> _fetchData() async {

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:fulifuli_app/pages/video.dart';
+import 'package:fulifuli_app/widgets/empty_placeholder.dart';
 
 import '../global.dart';
 import '../model/video.dart';
@@ -12,6 +13,7 @@ class LikedVideosPage extends StatefulWidget {
   const LikedVideosPage({super.key});
 
   static const String routeName = '/liked_videos';
+  static const String uniqueKey = "likedVideos";
 
   @override
   State<StatefulWidget> createState() {
@@ -20,10 +22,9 @@ class LikedVideosPage extends StatefulWidget {
 }
 
 class _LikedVideosPageState extends State<LikedVideosPage> {
-  static const String uniqueKey = "liked-videos";
-
+  late String key = LikedVideosPage.uniqueKey;
   int pageNum = 0;
-  late List<Video> videoList = [];
+  bool isEnd = false;
   final EasyRefreshController _controller = EasyRefreshController(
     controlFinishRefresh: true,
     controlFinishLoad: true,
@@ -34,6 +35,9 @@ class _LikedVideosPageState extends State<LikedVideosPage> {
     super.initState();
     var widgetsBinding = WidgetsBinding.instance;
     widgetsBinding.addPostFrameCallback((callback) {
+      if (!Global.cachedMapVideoList.containsKey(key)) {
+        Global.cachedMapVideoList[key] = const MapEntry([], false);
+      }
       _controller.callRefresh();
     });
   }
@@ -42,6 +46,7 @@ class _LikedVideosPageState extends State<LikedVideosPage> {
   void dispose() {
     super.dispose();
     _controller.dispose();
+    Global.cachedMapVideoList.remove(key);
   }
 
   @override
@@ -52,96 +57,93 @@ class _LikedVideosPageState extends State<LikedVideosPage> {
         centerTitle: true,
       ),
       body: EasyRefresh(
-          header: const MaterialHeader(),
-          footer: const MaterialFooter(),
-          controller: _controller,
-          onRefresh: () async {
-            pageNum = 0;
-            videoList = [];
-            Global.cachedMapVideoList[uniqueKey] = const MapEntry([], false);
-            Response response;
-            response = await Global.dio.get('/api/v1/interact/like/video/list', data: {
-              "user_id": Global.self.id,
-              "page_size": 10,
-              "page_num": pageNum,
-            });
-            if (response.data["code"] != Global.successCode) {
-              if (context.mounted) {
-                ToastificationUtils.showSimpleToastification(context, response.data["msg"]);
-              }
-              return;
+        header: const MaterialHeader(),
+        footer: const MaterialFooter(),
+        controller: _controller,
+        onRefresh: () async {
+          pageNum = 0;
+          isEnd = false;
+          Global.cachedMapVideoList[key] = const MapEntry([], false);
+
+          String? result = await _fetchData();
+          if (result != null) {
+            if (context.mounted) {
+              ToastificationUtils.showSimpleToastification(context, result);
             }
-            var list = <Video>[];
-            for (var item in response.data["data"]["items"]) {
-              list.add(Video.fromJson(item));
-            }
-            videoList = [...videoList, ...list];
-            Global.cachedMapVideoList[uniqueKey] = MapEntry(list, response.data["data"]["is_end"]);
-            pageNum++;
-            if (response.data["data"]["is_end"]) {
-              if (context.mounted) {
-                ToastificationUtils.showSimpleToastification(context, "没有更多了");
-              }
-            }
-            setState(() {});
             _controller.finishRefresh();
-          },
-          onLoad: () async {
-            if (Global.cachedMapVideoList.containsKey(uniqueKey)) {
-              videoList = Global.cachedMapVideoList[uniqueKey]!.key;
-              var isEnd = Global.cachedMapVideoList[uniqueKey]!.value;
-              if (isEnd) {
-                ToastificationUtils.showSimpleToastification(context, "没有更多了");
-                _controller.finishLoad();
-                return;
-              }
-            }
-            Response response;
-            response = await Global.dio.get('/api/v1/interact/like/video/list', data: {
-              "user_id": Global.self.id,
-              "page_size": 10,
-              "page_num": pageNum,
-            });
-            if (response.data["code"] != Global.successCode) {
-              if (context.mounted) {
-                ToastificationUtils.showSimpleToastification(context, response.data["msg"]);
-              }
-              return;
-            }
-            var list = <Video>[];
-            for (var item in response.data["data"]["items"]) {
-              list.add(Video.fromJson(item));
-            }
-            videoList = [...videoList, ...list];
-            Global.cachedMapVideoList[uniqueKey] = MapEntry(list, response.data["data"]["is_end"]);
-            pageNum++;
-            if (response.data["data"]["is_end"]) {
-              if (context.mounted) {
-                ToastificationUtils.showSimpleToastification(context, "没有更多了");
-              }
-            }
-            setState(() {});
+            return;
+          }
+          setState(() {});
+          _controller.finishRefresh();
+        },
+        onLoad: () async {
+          if (isEnd) {
             _controller.finishLoad();
-          },
-          child: ListView.separated(
-              itemBuilder: (context, index) => ListBody(
-                    children: [
-                      SearchPageVideoItem(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) {
-                              return VideoPage(
-                                videoId: videoList[index].id!,
+            ToastificationUtils.showSimpleToastification(context, "没有更多了");
+            return;
+          }
+          String? result = await _fetchData();
+          if (result != null) {
+            if (context.mounted) {
+              ToastificationUtils.showSimpleToastification(context, result);
+            }
+            _controller.finishLoad();
+            return;
+          }
+          setState(() {});
+          _controller.finishLoad();
+        },
+        child: ListView.separated(
+            itemBuilder: (context, index) => ListBody(
+                  children: [
+                    Global.cachedMapVideoList.containsKey(key) && Global.cachedMapVideoList[key]!.key.isNotEmpty
+                        ? SearchPageVideoItem(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(builder: (context) {
+                                  return VideoPage(
+                                    videoId: Global.cachedMapVideoList[key]!.key[index].id!,
+                                  );
+                                }),
                               );
-                            }),
-                          );
-                        },
-                        data: videoList[index],
-                      )
-                    ],
-                  ),
-              separatorBuilder: (context, index) => const Divider(),
-              itemCount: videoList.length)),
+                            },
+                            data: Global.cachedMapVideoList[key]!.key[index],
+                          )
+                        : const EmptyPlaceHolder(),
+                  ],
+                ),
+            separatorBuilder: (context, index) => const Divider(),
+            itemCount: Global.cachedMapVideoList.containsKey(key) && Global.cachedMapVideoList[key]!.key.isNotEmpty
+                ? Global.cachedMapVideoList[key]!.key.length
+                : 1),
+      ),
     );
+  }
+
+  Future<String?> _fetchData() async {
+    if (!Global.cachedMapVideoList.containsKey(key)) {
+      Global.cachedMapVideoList[key] = const MapEntry([], false);
+    }
+
+    Response response;
+    response = await Global.dio.get('/api/v1/interact/like/video/list', data: {
+      "user_id": Global.self.id,
+      "page_size": 10,
+      "page_num": pageNum,
+    });
+    if (response.data["code"] != Global.successCode) {
+      return response.data["msg"];
+    }
+    List<Video> list = [];
+    for (var item in response.data["data"]["items"]) {
+      list.add(Video.fromJson(item));
+    }
+    if (response.data["data"]["is_end"]) {
+      isEnd = true;
+    } else {
+      pageNum++;
+    }
+    Global.cachedMapVideoList[key] = MapEntry([...Global.cachedMapVideoList[key]!.key, ...list], isEnd);
+    return null;
   }
 }

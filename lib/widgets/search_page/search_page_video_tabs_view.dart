@@ -3,6 +3,7 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/pages/video.dart';
+import 'package:fulifuli_app/widgets/empty_placeholder.dart';
 import 'package:fulifuli_app/widgets/search_page/search_page_video_item.dart';
 
 import '../../model/video.dart';
@@ -23,8 +24,9 @@ class SearchPageVideoTabsView extends StatefulWidget {
 }
 
 class _SearchPageVideoTabsViewState extends State<SearchPageVideoTabsView> {
+  late String key = SearchPageVideoTabsView.uniqueKey;
   int pageNum = 0;
-  late List<Video> videoList = [];
+  bool isEnd = false;
   final EasyRefreshController _controller = EasyRefreshController(
     controlFinishRefresh: true,
     controlFinishLoad: true,
@@ -35,6 +37,9 @@ class _SearchPageVideoTabsViewState extends State<SearchPageVideoTabsView> {
     super.initState();
     var widgetsBinding = WidgetsBinding.instance;
     widgetsBinding.addPostFrameCallback((callback) {
+      if (!Global.cachedMapVideoList.containsKey(key)) {
+        Global.cachedMapVideoList[key] = const MapEntry([], false);
+      }
       _controller.callRefresh();
     });
   }
@@ -43,6 +48,7 @@ class _SearchPageVideoTabsViewState extends State<SearchPageVideoTabsView> {
   void dispose() {
     super.dispose();
     _controller.dispose();
+    Global.cachedMapVideoList.remove(key);
   }
 
   @override
@@ -53,68 +59,33 @@ class _SearchPageVideoTabsViewState extends State<SearchPageVideoTabsView> {
         controller: _controller,
         onRefresh: () async {
           pageNum = 0;
-          videoList = [];
-          Global.cachedMapVideoList[SearchPageVideoTabsView.uniqueKey] = const MapEntry([], false);
-          Response response;
-          response = await Global.dio.get('/api/v1/video/search', data: {
-            "keyword": widget.keyword,
-            "page_size": 10,
-            "page_num": pageNum,
-          });
-          if (response.data["code"] != Global.successCode) {
+          isEnd = false;
+          Global.cachedMapVideoList[key] = const MapEntry([], false);
+
+          String? result = await _fetchData();
+          if (result != null) {
             if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, response.data["msg"]);
+              ToastificationUtils.showSimpleToastification(context, result);
             }
+            _controller.finishRefresh();
             return;
-          }
-          var list = <Video>[];
-          for (var item in response.data["data"]["items"]) {
-            list.add(Video.fromJson(item));
-          }
-          videoList = [...videoList, ...list];
-          Global.cachedMapVideoList[SearchPageVideoTabsView.uniqueKey] = MapEntry(list, response.data["data"]["is_end"]);
-          pageNum++;
-          if (response.data["data"]["is_end"]) {
-            if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, "没有更多了");
-            }
           }
           setState(() {});
           _controller.finishRefresh();
         },
         onLoad: () async {
-          if (Global.cachedMapVideoList.containsKey(SearchPageVideoTabsView.uniqueKey)) {
-            videoList = Global.cachedMapVideoList[SearchPageVideoTabsView.uniqueKey]!.key;
-            var isEnd = Global.cachedMapVideoList[SearchPageVideoTabsView.uniqueKey]!.value;
-            if (isEnd) {
-              ToastificationUtils.showSimpleToastification(context, "没有更多了");
-              _controller.finishLoad();
-              return;
-            }
-          }
-          Response response;
-          response = await Global.dio.get('/api/v1/video/search', data: {
-            "keyword": widget.keyword,
-            "page_size": 10,
-            "page_num": pageNum,
-          });
-          if (response.data["code"] != Global.successCode) {
-            if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, response.data["msg"]);
-            }
+          if (isEnd) {
+            _controller.finishLoad();
+            ToastificationUtils.showSimpleToastification(context, '没有更多了');
             return;
           }
-          var list = <Video>[];
-          for (var item in response.data["data"]["items"]) {
-            list.add(Video.fromJson(item));
-          }
-          videoList = [...videoList, ...list];
-          Global.cachedMapVideoList[SearchPageVideoTabsView.uniqueKey] = MapEntry(list, response.data["data"]["is_end"]);
-          pageNum++;
-          if (response.data["data"]["is_end"]) {
+          String? result = await _fetchData();
+          if (result != null) {
             if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, "没有更多了");
+              ToastificationUtils.showSimpleToastification(context, result);
             }
+            _controller.finishLoad();
+            return;
           }
           setState(() {});
           _controller.finishLoad();
@@ -122,17 +93,48 @@ class _SearchPageVideoTabsViewState extends State<SearchPageVideoTabsView> {
         child: ListView.separated(
             itemBuilder: (context, index) => ListBody(
                   children: [
-                    SearchPageVideoItem(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                          return VideoPage(videoId: videoList[index].id!);
-                        }));
-                      },
-                      data: videoList[index],
-                    )
+                    Global.cachedMapVideoList.containsKey(key) && Global.cachedMapVideoList[key]!.key.isNotEmpty
+                        ? SearchPageVideoItem(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                                return VideoPage(videoId: Global.cachedMapVideoList[key]!.key[index].id!);
+                              }));
+                            },
+                            data: Global.cachedMapVideoList[key]!.key[index],
+                          )
+                        : const EmptyPlaceHolder()
                   ],
                 ),
             separatorBuilder: (context, index) => const Divider(),
-            itemCount: videoList.length));
+            itemCount: Global.cachedMapVideoList.containsKey(key) && Global.cachedMapVideoList[key]!.key.isNotEmpty
+                ? Global.cachedMapVideoList[key]!.key.length
+                : 1));
+  }
+
+  Future<String?> _fetchData() async {
+    if (!Global.cachedMapVideoList.containsKey(key)) {
+      Global.cachedMapVideoList[key] = const MapEntry([], false);
+    }
+
+    Response response;
+    response = await Global.dio.get('/api/v1/video/search', data: {
+      "keyword": widget.keyword,
+      "page_size": 10,
+      "page_num": pageNum,
+    });
+    if (response.data["code"] != Global.successCode) {
+      return response.data["msg"];
+    }
+    List<Video> list = [];
+    for (var item in response.data["data"]["items"]) {
+      list.add(Video.fromJson(item));
+    }
+    if (response.data["data"]["is_end"]) {
+      isEnd = true;
+    } else {
+      pageNum++;
+    }
+    Global.cachedMapVideoList[key] = MapEntry([...Global.cachedMapVideoList[key]!.key, ...list], isEnd);
+    return null;
   }
 }

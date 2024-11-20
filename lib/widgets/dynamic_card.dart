@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/model/activity.dart';
+import 'package:fulifuli_app/pages/space.dart';
 import 'package:fulifuli_app/widgets/comment_popup.dart';
 import 'package:fulifuli_app/widgets/report_popup.dart';
 import 'package:like_button/like_button.dart';
@@ -34,20 +35,30 @@ class _DynamicCardState extends State<DynamicCard> {
         children: [
           Row(
             children: [
-              Padding(
-                  padding: const EdgeInsets.only(left: 16, top: 8),
-                  child: TDImage(
-                    imgUrl: widget.data.user!.avatarUrl!,
-                    errorWidget: const TDImage(
-                      assetUrl: 'assets/images/default_avatar.avif',
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SpacePage(
+                                userId: widget.data.user!.id!,
+                              )));
+                },
+                child: Padding(
+                    padding: const EdgeInsets.only(left: 16, top: 8),
+                    child: TDImage(
+                      imgUrl: widget.data.user!.avatarUrl!,
+                      errorWidget: const TDImage(
+                        assetUrl: 'assets/images/default_avatar.avif',
+                        width: 56,
+                        height: 56,
+                        type: TDImageType.circle,
+                      ),
                       width: 56,
                       height: 56,
                       type: TDImageType.circle,
-                    ),
-                    width: 56,
-                    height: 56,
-                    type: TDImageType.circle,
-                  )),
+                    )),
+              ),
               const SizedBox(width: 8),
               Column(
                 children: [

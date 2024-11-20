@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/pages/space.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
+import 'package:fulifuli_app/widgets/empty_placeholder.dart';
 import 'package:fulifuli_app/widgets/search_page/search_page_user_item.dart';
 
 import '../../model/user.dart';
@@ -23,9 +24,8 @@ class SearchPageUserTabsView extends StatefulWidget {
 }
 
 class _SearchPageUserTabsViewState extends State<SearchPageUserTabsView> {
-  List<User> userList = [];
   int pageNum = 0;
-  bool? isEnd;
+  bool isEnd = false;
   final EasyRefreshController _controller = EasyRefreshController(
     controlFinishRefresh: true,
     controlFinishLoad: true,
@@ -36,6 +36,9 @@ class _SearchPageUserTabsViewState extends State<SearchPageUserTabsView> {
     super.initState();
     var widgetsBinding = WidgetsBinding.instance;
     widgetsBinding.addPostFrameCallback((callback) {
+      if (!Global.cachedMapUserList.containsKey(SearchPageUserTabsView.uniqueKey)) {
+        Global.cachedMapUserList[SearchPageUserTabsView.uniqueKey] = const MapEntry([], false);
+      }
       _controller.callRefresh();
     });
   }
@@ -44,6 +47,7 @@ class _SearchPageUserTabsViewState extends State<SearchPageUserTabsView> {
   void dispose() {
     super.dispose();
     _controller.dispose();
+    Global.cachedMapUserList.remove(SearchPageUserTabsView.uniqueKey);
   }
 
   @override
@@ -53,38 +57,67 @@ class _SearchPageUserTabsViewState extends State<SearchPageUserTabsView> {
         header: const MaterialHeader(),
         footer: const MaterialFooter(),
         onRefresh: () async {
-          _fetchData(context);
+          pageNum = 0;
+          isEnd = false;
+          Global.cachedMapUserList[SearchPageUserTabsView.uniqueKey] = const MapEntry([], false);
+          String? result = await _fetchData();
+          if (result != null) {
+            if (context.mounted) {
+              ToastificationUtils.showSimpleToastification(context, result);
+            }
+            _controller.finishRefresh();
+            return;
+          }
+          setState(() {});
           _controller.finishRefresh();
         },
         onLoad: () async {
-          _fetchData(context);
+          if (isEnd) {
+            _controller.finishLoad();
+            ToastificationUtils.showSimpleToastification(context, '没有更多了');
+            return;
+          }
+          String? result = await _fetchData();
+          if (result != null) {
+            if (context.mounted) {
+              ToastificationUtils.showSimpleToastification(context, result);
+            }
+            _controller.finishLoad();
+            return;
+          }
+          setState(() {});
           _controller.finishLoad();
         },
         child: ListView.separated(
             itemBuilder: (context, index) {
-              return SearchPageUserItem(
-                onTap: () {
-                  Navigator.of(context).pushNamed(SpacePage.routeName, arguments: {"user_id": userList[index].id});
-                },
-                user: userList[index],
-              );
+              return Global.cachedMapUserList.containsKey(SearchPageUserTabsView.uniqueKey) &&
+                      Global.cachedMapUserList[SearchPageUserTabsView.uniqueKey]!.key.isNotEmpty
+                  ? SearchPageUserItem(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return SpacePage(userId: Global.cachedMapUserList[SearchPageUserTabsView.uniqueKey]!.key[index].id!);
+                            },
+                          ),
+                        );
+                      },
+                      user: Global.cachedMapUserList[SearchPageUserTabsView.uniqueKey]!.key[index],
+                    )
+                  : const EmptyPlaceHolder();
             },
             separatorBuilder: (context, index) => const Divider(),
-            itemCount: userList.length));
+            itemCount: Global.cachedMapUserList.containsKey(SearchPageUserTabsView.uniqueKey) &&
+                    Global.cachedMapUserList[SearchPageUserTabsView.uniqueKey]!.key.isNotEmpty
+                ? Global.cachedMapUserList[SearchPageUserTabsView.uniqueKey]!.key.length
+                : 1));
   }
 
-  void _fetchData(BuildContext context) async {
-    if (Global.cachedMapUserList.containsKey(SearchPageUserTabsView.uniqueKey)) {
-      userList = Global.cachedMapUserList[SearchPageUserTabsView.uniqueKey]!.key;
-      isEnd = Global.cachedMapUserList[SearchPageUserTabsView.uniqueKey]!.value;
-      if (isEnd == null || isEnd!) {
-        if (context.mounted) {
-          ToastificationUtils.showSimpleToastification(context, "没有更多了");
-        }
-        setState(() {});
-        return;
-      }
+  Future<String?> _fetchData() async {
+    if (!Global.cachedMapUserList.containsKey(SearchPageUserTabsView.uniqueKey)) {
+      Global.cachedMapUserList[SearchPageUserTabsView.uniqueKey] = const MapEntry([], false);
     }
+
     Response response;
     response = await Global.dio.get("/api/v1/user/search", data: {
       "keyword": widget.keyword,
@@ -92,10 +125,7 @@ class _SearchPageUserTabsViewState extends State<SearchPageUserTabsView> {
       "page_size": 10,
     });
     if (response.data["code"] != Global.successCode) {
-      if (context.mounted) {
-        ToastificationUtils.showSimpleToastification(context, response.data["msg"]);
-        return;
-      }
+      return response.data["message"];
     }
     List<User> list = [];
     for (var item in response.data["data"]["items"]) {
@@ -108,15 +138,13 @@ class _SearchPageUserTabsViewState extends State<SearchPageUserTabsView> {
       user.followerCount = r.data["data"]["follower_count"];
       list.add(user);
     }
-    userList = [...userList, ...list];
-    Global.cachedMapUserList[SearchPageUserTabsView.uniqueKey] = MapEntry(userList, response.data["data"]["is_end"]);
-    pageNum++;
     if (response.data["data"]["is_end"]) {
       isEnd = true;
-      if (context.mounted) {
-        ToastificationUtils.showSimpleToastification(context, "没有更多了");
-      }
+    } else {
+      pageNum++;
     }
-    setState(() {});
+    Global.cachedMapUserList[SearchPageUserTabsView.uniqueKey] =
+        MapEntry([...Global.cachedMapUserList[SearchPageUserTabsView.uniqueKey]!.key, ...list], isEnd);
+    return null;
   }
 }

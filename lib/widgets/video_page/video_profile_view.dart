@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fulifuli_app/global.dart';
+import 'package:fulifuli_app/pages/space.dart';
 import 'package:fulifuli_app/widgets/report_popup.dart';
 import 'package:like_button/like_button.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
@@ -53,14 +54,27 @@ class _VideoProfileViewState extends State<VideoProfileView> {
           children: [
             Row(
               children: [
-                Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: TDImage(
-                      imgUrl: widget.video.user!.avatarUrl,
-                      width: 36,
-                      height: 36,
-                      type: TDImageType.circle,
-                    )),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => SpacePage(userId: widget.video.user!.id!)),
+                    );
+                  },
+                  child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: TDImage(
+                        imgUrl: widget.video.user!.avatarUrl,
+                        errorWidget: const TDImage(
+                          assetUrl: 'assets/images/default_avatar.avif',
+                          width: 36,
+                          height: 36,
+                          type: TDImageType.circle,
+                        ),
+                        width: 36,
+                        height: 36,
+                        type: TDImageType.circle,
+                      )),
+                ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,

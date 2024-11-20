@@ -8,6 +8,7 @@ import 'package:fulifuli_app/widgets/report_popup.dart';
 import 'package:like_button/like_button.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
+import '../pages/space.dart';
 import '../utils/toastification.dart';
 import 'comment_popup.dart';
 
@@ -53,17 +54,29 @@ class _CommentCardState extends State<CommentCard> {
             padding: const EdgeInsets.only(left: 16, top: 8, right: 16),
             child: Row(
               children: [
-                TDImage(
-                  imgUrl: widget.comment.user!.avatarUrl,
-                  errorWidget: const TDImage(
-                    assetUrl: 'assets/images/default_avatar.avif',
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SpacePage(
+                          userId: widget.comment.user!.id!,
+                        ),
+                      ),
+                    );
+                  },
+                  child: TDImage(
+                    imgUrl: widget.comment.user!.avatarUrl,
+                    errorWidget: const TDImage(
+                      assetUrl: 'assets/images/default_avatar.avif',
+                      width: 48,
+                      height: 48,
+                      type: TDImageType.circle,
+                    ),
                     width: 48,
                     height: 48,
                     type: TDImageType.circle,
                   ),
-                  width: 48,
-                  height: 48,
-                  type: TDImageType.circle,
                 ),
                 const SizedBox(width: 8),
                 Column(

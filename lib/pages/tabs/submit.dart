@@ -133,7 +133,7 @@ class _SubmitPageState extends State<SubmitPage> {
             ],
           ),
         ),
-        bottomSheet: _getBottomSheet(context));
+        bottomSheet: _onUploading ? _getBottomSheet(context) : _getBottomSheet(context));
   }
 
   Widget _getUnselectedWidget(BuildContext context) {
@@ -327,6 +327,9 @@ class _SubmitPageState extends State<SubmitPage> {
                                     context, AppLocalizations.of(context)!.submit_video_uploading_success);
                               }
                               reset();
+                              setState(() {
+                                _onUploading = false;
+                              });
                             } else {
                               if (context.mounted) {
                                 ToastificationUtils.showSimpleToastification(context, '上传失败');
