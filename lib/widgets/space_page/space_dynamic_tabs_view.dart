@@ -140,7 +140,7 @@ class _SpaceDynamicTabsViewState extends State<SpaceDynamicTabsView> {
       Global.cachedMapDynamicList[key] = MapEntry([...Global.cachedMapDynamicList[key]!.key, ...list], isEnd);
       return null;
     } else {
-      return response.data["message"];
+      return response.data["msg"];
     }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
@@ -15,7 +16,7 @@ class ReportPopup {
           modalBarrierColor: Theme.of(context).textTheme.headlineMedium!.color!.withOpacity(0.5),
           builder: (context) {
             return TDPopupBottomDisplayPanel(
-                title: '举报',
+                title: AppLocalizations.of(context)!.function_default_report,
                 titleColor: Theme.of(context).textTheme.headlineMedium!.color,
                 closeColor: Theme.of(context).textTheme.headlineMedium!.color,
                 closeClick: () {

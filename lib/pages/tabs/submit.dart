@@ -281,7 +281,7 @@ class _SubmitPageState extends State<SubmitPage> {
                       : () async {
                           _onUploading = true;
                           setState(() {});
-                          if (!_checkMessageFilled()) {
+                          if (!_checkMessageFilled(context)) {
                             _onUploading = false;
                             setState(() {});
                             return;
@@ -810,21 +810,21 @@ class _SubmitPageState extends State<SubmitPage> {
     );
   }
 
-  bool _checkMessageFilled() {
+  bool _checkMessageFilled(BuildContext context) {
     if (_titleController.text.isEmpty) {
-      ToastificationUtils.showSimpleToastification(context, '标题不能为空');
+      ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.submit_video_title_empty);
       return false;
     }
     if (_descriptionController.text.isEmpty) {
-      ToastificationUtils.showSimpleToastification(context, '简介不能为空');
+      ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.submit_video_description_empty);
       return false;
     }
     if (_selectedCategory.isEmpty) {
-      ToastificationUtils.showSimpleToastification(context, '请选择分区');
+      ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.submit_video_category_empty);
       return false;
     }
     if (tags.isEmpty) {
-      ToastificationUtils.showSimpleToastification(context, '请添加至少一个标签');
+      ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.submit_video_tag_empty);
       return false;
     }
     return true;

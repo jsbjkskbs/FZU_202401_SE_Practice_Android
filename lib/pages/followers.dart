@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/pages/space.dart';
+import 'package:fulifuli_app/widgets/load_footer.dart';
 
 import '../global.dart';
 import '../model/user.dart';
@@ -58,14 +60,14 @@ class _FollowerPageState extends State<FollowerPage> {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-        title: const Text("粉丝列表"),
+        title: Text(AppLocalizations.of(context)!.follower_title),
         centerTitle: true,
       ),
       body: Center(
           child: EasyRefresh(
               controller: _controller,
               header: const MaterialHeader(),
-              footer: const MaterialFooter(),
+              footer: LoadFooter.buildInformationFooter(context),
               onRefresh: () async {
                 pageNum = 0;
                 isEnd = false;
@@ -83,8 +85,7 @@ class _FollowerPageState extends State<FollowerPage> {
               },
               onLoad: () async {
                 if (isEnd) {
-                  ToastificationUtils.showSimpleToastification(context, "没有更多了");
-                  _controller.finishLoad();
+                  _controller.finishLoad(IndicatorResult.noMore, true);
                   return;
                 }
                 String? result = await _fetchData();

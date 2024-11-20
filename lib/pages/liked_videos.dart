@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/pages/video.dart';
 import 'package:fulifuli_app/widgets/empty_placeholder.dart';
+import 'package:fulifuli_app/widgets/load_footer.dart';
 
 import '../global.dart';
 import '../model/video.dart';
@@ -53,12 +55,12 @@ class _LikedVideosPageState extends State<LikedVideosPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('赞过的视频'),
+        title: Text(AppLocalizations.of(context)!.liked_video_title),
         centerTitle: true,
       ),
       body: EasyRefresh(
         header: const MaterialHeader(),
-        footer: const MaterialFooter(),
+        footer: LoadFooter.buildInformationFooter(context),
         controller: _controller,
         onRefresh: () async {
           pageNum = 0;
@@ -78,8 +80,7 @@ class _LikedVideosPageState extends State<LikedVideosPage> {
         },
         onLoad: () async {
           if (isEnd) {
-            _controller.finishLoad();
-            ToastificationUtils.showSimpleToastification(context, "没有更多了");
+            _controller.finishLoad(IndicatorResult.noMore, true);
             return;
           }
           String? result = await _fetchData();

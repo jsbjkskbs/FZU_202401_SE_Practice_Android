@@ -7,7 +7,7 @@ class ToastificationUtils {
       context: context,
       autoCloseDuration: duration,
       style: ToastificationStyle.simple,
-      title: Text(text),
+      title: Text(text, maxLines: 4),
       alignment: const Alignment(0, 0.8),
     );
   }

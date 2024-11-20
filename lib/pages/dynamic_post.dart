@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_popup/flutter_popup.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/utils/file_type_judge.dart';
@@ -69,7 +70,7 @@ class _DynamicPostPage extends State<DynamicPostPage> {
                     padding: EdgeInsets.zero),
                 child: Icon(Icons.arrow_back_ios_new,
                     size: Theme.of(context).textTheme.headlineSmall!.fontSize, color: Theme.of(context).textTheme.headlineSmall!.color)),
-            Text('发布动态', style: Theme.of(context).textTheme.headlineSmall),
+            Text(AppLocalizations.of(context)!.dynamic_post_title, style: Theme.of(context).textTheme.headlineSmall),
             CustomPopup(
                 contentPadding: const EdgeInsets.all(2),
                 content: IntrinsicWidth(
@@ -82,7 +83,8 @@ class _DynamicPostPage extends State<DynamicPostPage> {
                               if (context.mounted) {
                                 Navigator.pop(context);
                                 if (files == null) {
-                                  ToastificationUtils.showSimpleToastification(context, '请选择正确的图片');
+                                  ToastificationUtils.showSimpleToastification(
+                                      context, AppLocalizations.of(context)!.dynamic_post_not_select_right_image);
                                 } else {
                                   setState(() {
                                     _files = [..._files!, ...files];
@@ -95,7 +97,8 @@ class _DynamicPostPage extends State<DynamicPostPage> {
                               children: [
                                 const Icon(Icons.upload_file_outlined),
                                 const SizedBox(width: 4),
-                                Text('上传图片', style: TextStyle(color: Theme.of(context).primaryColor)),
+                                Text(AppLocalizations.of(context)!.dynamic_post_upload_image,
+                                    style: TextStyle(color: Theme.of(context).primaryColor)),
                               ],
                             )),
                       ],
@@ -119,11 +122,11 @@ class _DynamicPostPage extends State<DynamicPostPage> {
               return [
                 const SizedBox(height: 16),
                 TDTextarea(
-                    hintText: '这一刻的想法...',
+                    hintText: AppLocalizations.of(context)!.dynamic_post_textarea_hint,
                     autofocus: false,
                     minLines: 8,
                     maxLength: 256,
-                    additionInfo: '${_contentController.text.length} / 256 字',
+                    additionInfo: '${_contentController.text.length} / 256',
                     additionInfoColor: _contentController.text.length >= 256 ? Colors.red : Theme.of(context).hintColor,
                     controller: _contentController,
                     textStyle: TextStyle(
@@ -143,7 +146,7 @@ class _DynamicPostPage extends State<DynamicPostPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 16),
-                Text('已选择 ${_files!.length} 张图片',
+                Text(AppLocalizations.of(context)!.dynamic_post_image_count_hint(_files!.length),
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).primaryColor)),
                 const Divider(
                   height: 1,
@@ -165,16 +168,18 @@ class _DynamicPostPage extends State<DynamicPostPage> {
                                   _files!.removeAt(index);
                                   listViewKey = UniqueKey();
                                 });
-                                ToastificationUtils.showSimpleToastification(context, '删除成功');
+                                ToastificationUtils.showSimpleToastification(
+                                    context, AppLocalizations.of(context)!.dynamic_post_delete_image_success);
                                 Navigator.pop(context);
                               },
-                              child: const IntrinsicHeight(
+                              child: IntrinsicHeight(
                                 child: IntrinsicWidth(
                                   child: Row(
                                     children: [
-                                      Icon(Icons.delete_forever, color: Colors.red),
-                                      SizedBox(width: 4),
-                                      Text('删除', style: TextStyle(color: Colors.red)),
+                                      const Icon(Icons.delete_forever, color: Colors.red),
+                                      const SizedBox(width: 4),
+                                      Text(AppLocalizations.of(context)!.function_default_delete,
+                                          style: const TextStyle(color: Colors.red)),
                                     ],
                                   ),
                                 ),
@@ -227,11 +232,11 @@ class _DynamicPostPage extends State<DynamicPostPage> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(DisplayIcons.clear, color: Colors.white),
-                          Text('清空', style: TextStyle(color: Colors.white)),
+                          const Icon(DisplayIcons.clear, color: Colors.white),
+                          Text(AppLocalizations.of(context)!.function_default_delete, style: const TextStyle(color: Colors.white)),
                         ],
                       )),
                 ),
@@ -245,7 +250,8 @@ class _DynamicPostPage extends State<DynamicPostPage> {
                             ToastificationUtils.showSimpleToastification(context, result);
                           } else {
                             Navigator.pop(context);
-                            ToastificationUtils.showSimpleToastification(context, '发布成功');
+                            ToastificationUtils.showSimpleToastification(
+                                context, AppLocalizations.of(context)!.dynamic_post_submit_success);
                           }
                         }
                       },
@@ -262,7 +268,7 @@ class _DynamicPostPage extends State<DynamicPostPage> {
                         children: [
                           Icon(DisplayIcons.post, color: Theme.of(context).primaryColor),
                           Text(
-                            '发布',
+                            AppLocalizations.of(context)!.function_default_send,
                             style: TextStyle(color: Theme.of(context).primaryColor),
                           )
                         ],

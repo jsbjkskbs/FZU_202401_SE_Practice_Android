@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/model/activity.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
@@ -70,7 +71,7 @@ class _DynamicListViewState extends State<DynamicListView> {
             }
           } else {
             if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, '刷新成功');
+              ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.dynamic_refresh_success);
               setState(() {});
             }
           }
@@ -88,7 +89,7 @@ class _DynamicListViewState extends State<DynamicListView> {
             }
           } else {
             if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, '加载成功');
+              ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.dynamic_load_success);
               setState(() {});
             }
           }

@@ -1,5 +1,6 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/widgets/comment_reply_fake_container.dart';
 import 'package:fulifuli_app/widgets/comment_reply_popup.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
@@ -26,7 +27,7 @@ class CommentPopup {
           modalBarrierColor: Theme.of(context).textTheme.headlineMedium!.color!.withOpacity(0.5),
           builder: (context) {
             return TDPopupBottomDisplayPanel(
-                title: '评论详情',
+                title: AppLocalizations.of(context)!.comment_popup_title,
                 titleColor: Theme.of(context).textTheme.headlineMedium!.color,
                 closeColor: Theme.of(context).textTheme.headlineMedium!.color,
                 closeClick: () {
@@ -84,7 +85,7 @@ class CommentPopup {
                 onSend: onSend,
                 parentId: parentId,
                 rootId: rootId,
-                hintText: hintText ?? '可以来点评论吗~',
+                hintText: hintText ?? AppLocalizations.of(context)!.reply_comment_popup_hint,
               );
             }));
   }

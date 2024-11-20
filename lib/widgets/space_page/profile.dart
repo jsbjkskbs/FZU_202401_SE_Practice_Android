@@ -137,14 +137,14 @@ class _ProfileState extends State<Profile> {
         TextButton(
           onPressed: Global.self.id == Global.cachedMapUser[widget.keyInCachedMapUser]!.id
               ? () async {
-                  String? result = await _uploadAvatar();
+                  String? result = await _uploadAvatar(context);
                   if (result != null) {
                     if (context.mounted) {
                       ToastificationUtils.showSimpleToastification(context, result);
                     }
                   } else {
                     if (context.mounted) {
-                      ToastificationUtils.showSimpleToastification(context, '上传成功');
+                      ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.space_upload_avatar_success);
                     }
                   }
                 }
@@ -156,7 +156,7 @@ class _ProfileState extends State<Profile> {
                     }
                   } else {
                     if (context.mounted) {
-                      ToastificationUtils.showSimpleToastification(context, '操作成功');
+                      ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.space_follow_action_success);
                     }
                   }
                 },
@@ -175,8 +175,10 @@ class _ProfileState extends State<Profile> {
                 ),
           child: Text(
             Global.self.id == Global.cachedMapUser[widget.keyInCachedMapUser]!.id
-                ? "上传头像"
-                : (Global.cachedMapUser[widget.keyInCachedMapUser]?.isFollowed == true ? "取消关注" : "关注"),
+                ? AppLocalizations.of(context)!.space_upload_avatar
+                : (Global.cachedMapUser[widget.keyInCachedMapUser]?.isFollowed == true
+                    ? AppLocalizations.of(context)!.space_followed
+                    : AppLocalizations.of(context)!.space_follow),
             style: Global.self.id == Global.cachedMapUser[widget.keyInCachedMapUser]!.id
                 ? TextStyle(
                     color: Theme.of(context).scaffoldBackgroundColor,
@@ -215,7 +217,7 @@ class _ProfileState extends State<Profile> {
     return null;
   }
 
-  Future<String?> _uploadAvatar() async {
+  Future<String?> _uploadAvatar(BuildContext context) async {
     Response response;
     if (Global.self.id == Global.cachedMapUser[widget.keyInCachedMapUser]!.id) {
       response = await Global.dio.get('/api/v1/user/avatar/upload');
@@ -247,10 +249,10 @@ class _ProfileState extends State<Profile> {
                 return rr.data["msg"];
               }
             } else {
-              return '上传失败';
+              return AppLocalizations.of(context)!.space_upload_avatar_error;
             }
           } else {
-            return '请选择图片';
+            return AppLocalizations.of(context)!.space_upload_avatar_not_select;
           }
         }
       } else {

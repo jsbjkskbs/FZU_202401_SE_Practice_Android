@@ -66,7 +66,7 @@ class _SearchPageUserItemState extends State<SearchPageUserItem> {
                     width: 2,
                   ),
                   SizedBox(
-                    width: Theme.of(context).textTheme.bodySmall!.fontSize! * 4.2,
+                    width: Theme.of(context).textTheme.bodySmall!.fontSize! * 4.5,
                     child: Text(
                       text,
                       style: textStyle,

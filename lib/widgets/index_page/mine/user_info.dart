@@ -84,7 +84,7 @@ class _UserInfoViewState extends State<UserInfoView> {
                     return FollowingPage(userId: Global.self.id!);
                   }));
                 } else {
-                  ToastificationUtils.showSimpleToastification(context, '请先登录');
+                  ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.mine_need_login);
                   Navigator.of(context).pushNamed(LoginScreen.routeName);
                 }
               },
@@ -109,7 +109,7 @@ class _UserInfoViewState extends State<UserInfoView> {
                     return FollowerPage(userId: Global.self.id!);
                   }));
                 } else {
-                  ToastificationUtils.showSimpleToastification(context, '请先登录');
+                  ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.mine_need_login);
                   Navigator.of(context).pushNamed(LoginScreen.routeName);
                 }
               },

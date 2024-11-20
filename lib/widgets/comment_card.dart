@@ -285,7 +285,7 @@ class _CommentCardState extends State<CommentCard> {
 
   void showReplyPanel() {
     CommentPopup.showReplyPanel(context,
-        hintText: '回复@${widget.comment.user!.name}',
+        hintText: '@${widget.comment.user!.name}',
         oType: widget.comment.oType!,
         oId: widget.comment.oId!,
         rootId: widget.comment.rootId == '0' ? widget.comment.id : widget.comment.rootId,

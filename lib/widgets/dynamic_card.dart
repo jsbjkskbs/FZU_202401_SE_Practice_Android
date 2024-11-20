@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/model/activity.dart';
 import 'package:fulifuli_app/pages/space.dart';
@@ -161,7 +162,7 @@ class _DynamicCardState extends State<DynamicCard> {
                   countBuilder: (int? count, bool isLiked, String text) {
                     if (count == 0) {
                       return Text(
-                        '点个赞吧',
+                        AppLocalizations.of(context)!.function_default_like_on_zero,
                         style: TextStyle(
                           fontSize: Theme.of(context).textTheme.labelMedium!.fontSize,
                           fontWeight: FontWeight.bold,
@@ -215,7 +216,7 @@ class _DynamicCardState extends State<DynamicCard> {
                       Icon(DisplayIcons.report,
                           size: Theme.of(context).textTheme.headlineSmall!.fontSize, color: Theme.of(context).unselectedWidgetColor),
                       const SizedBox(width: 4),
-                      Text('举报',
+                      Text(AppLocalizations.of(context)!.function_default_report,
                           style: TextStyle(
                               fontSize: Theme.of(context).textTheme.labelMedium!.fontSize,
                               fontWeight: FontWeight.bold,
@@ -260,7 +261,8 @@ class _DynamicCardState extends State<DynamicCard> {
                                     if (filepath != null) {
                                       ToastificationUtils.showDownloadSuccess(context, path: filepath);
                                     } else {
-                                      ToastificationUtils.showSimpleToastification(context, '图片保存失败');
+                                      ToastificationUtils.showSimpleToastification(
+                                          context, AppLocalizations.of(context)!.dynamic_save_image_failed);
                                     }
                                     Navigator.of(context).pop();
                                   }
@@ -272,7 +274,7 @@ class _DynamicCardState extends State<DynamicCard> {
                                   padding: WidgetStateProperty.all(const EdgeInsets.only(top: 16, bottom: 16)),
                                 ),
                                 child: Text(
-                                  '保存图片',
+                                  AppLocalizations.of(context)!.dynamic_save_image,
                                   style: TextStyle(
                                       fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize, color: Theme.of(context).primaryColor),
                                 )),
@@ -284,12 +286,14 @@ class _DynamicCardState extends State<DynamicCard> {
                   height: 120,
                   child: TDImage(
                     imgUrl: widget.data.images![index],
-                    errorWidget: const SizedBox(
+                    errorWidget: SizedBox(
                         height: 120,
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Icon(Icons.not_interested_outlined, size: 48),
-                            Text('图片加载失败'),
+                            const Icon(Icons.not_interested_outlined, size: 48),
+                            Text(AppLocalizations.of(context)!.function_default_image_load_failed),
                           ],
                         )),
                     height: 120,

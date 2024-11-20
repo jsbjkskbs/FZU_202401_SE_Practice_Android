@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/pkg/chewie/chewie.dart';
 import 'package:fulifuli_app/widgets/comment_list.dart';
 import 'package:fulifuli_app/widgets/video_page/video_page_tabs_container.dart';
@@ -134,9 +135,9 @@ class _VideoPageState extends State<VideoPage> {
                       child: Material(
                     child: VideoPageTabsContainer(
                       video: video!,
-                      tabs: const [
-                        '简介',
-                        '评论',
+                      tabs: [
+                        AppLocalizations.of(context)!.video_introduction_title,
+                        AppLocalizations.of(context)!.video_comments_title,
                       ],
                     ),
                   ))
@@ -208,7 +209,7 @@ class _VideoPageState extends State<VideoPage> {
                 width: MediaQuery.of(context).size.width * 0.6,
               ),
               Text(
-                '啊哦!好像什么都没有?!',
+                AppLocalizations.of(context)!.empty_placeholder_hint,
                 style: TextStyle(fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize, color: Theme.of(context).primaryColor),
               ),
             ],

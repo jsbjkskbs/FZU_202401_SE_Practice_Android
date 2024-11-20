@@ -52,7 +52,7 @@ class _LoadingPageState extends State<LoadingPage> {
               child: GestureDetector(
                   onTap: () {
                     if (!_isLoaded) {
-                      ToastificationUtils.showSimpleToastification(context, '加载中，请稍后再试');
+                      ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.loading_not_completed);
                       return;
                     } else {
                       Navigator.of(context).pushReplacementNamed(IndexPage.routeName);
@@ -100,7 +100,7 @@ class _LoadingPageState extends State<LoadingPage> {
               child: ElevatedButton(
                   onPressed: () {
                     if (!_isLoaded) {
-                      ToastificationUtils.showSimpleToastification(context, '加载中，请稍后再试');
+                      ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.loading_not_completed);
                       return;
                     }
                     Navigator.of(context).pushReplacementNamed(IndexPage.routeName);

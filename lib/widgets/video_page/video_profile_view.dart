@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/pages/space.dart';
 import 'package:fulifuli_app/widgets/report_popup.dart';
@@ -146,7 +147,9 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                                       : Theme.of(context).hintColor,
                                 ),
                                 Text(
-                                  !widget.video.user!.isFollowed! ? '关注' : "取关",
+                                  !widget.video.user!.isFollowed!
+                                      ? AppLocalizations.of(context)!.video_author_follow
+                                      : AppLocalizations.of(context)!.video_author_followed,
                                   style: TextStyle(
                                       fontSize: 14,
                                       color: !widget.video.user!.isFollowed!
@@ -276,7 +279,7 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                                   Widget result;
                                   if (count == 0) {
                                     result = Text(
-                                      '点个赞吧',
+                                      AppLocalizations.of(context)!.function_default_like_on_zero,
                                       style: TextStyle(color: color, fontSize: 12),
                                     );
                                   } else {
@@ -314,7 +317,7 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                                   var color = isLiked ? Theme.of(context).primaryColor : Theme.of(context).unselectedWidgetColor;
                                   Widget result;
                                   result = Text(
-                                    '不喜欢',
+                                    AppLocalizations.of(context)!.function_default_dislike,
                                     style: TextStyle(color: color, fontSize: 12),
                                   );
                                   return result;
@@ -350,7 +353,7 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                                   var color = Theme.of(context).unselectedWidgetColor;
                                   Widget result;
                                   result = Text(
-                                    '举报',
+                                    AppLocalizations.of(context)!.function_default_report,
                                     style: TextStyle(color: color, fontSize: 12),
                                   );
                                   return result;

@@ -71,7 +71,7 @@ class _SettingsList {
             Icons.lightbulb_outline,
             size: 24,
           ),
-          label: '明暗模式',
+          label: AppLocalizations.of(context)!.settings_light_dark_switch,
           kind: 'additional',
           labelIndex: 0,
           kindIndex: 0,
@@ -209,7 +209,7 @@ class _SettingsList {
           }),
       if (Global.self.isValidUser())
         SettingsItem(
-          label: '退出登录',
+          label: AppLocalizations.of(context)!.settings_logout,
           kind: 'security',
           labelIndex: 0,
           kindIndex: 1,
@@ -217,7 +217,7 @@ class _SettingsList {
             Global.self = User();
             Storage.storePersistentData(Global.appPersistentData.copyWith(user: Global.self));
             Navigator.of(context).pushNamedAndRemoveUntil(IndexPage.routeName, (route) => false);
-            ToastificationUtils.showSimpleToastification(context, '退出登录成功');
+            ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.settings_logout_success);
           },
           icon: const Icon(
             Icons.exit_to_app,

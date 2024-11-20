@@ -43,7 +43,7 @@ class _SearchPageState extends State<SearchPage> {
             height: MediaQuery.of(context).size.height * 0.2,
             width: MediaQuery.of(context).size.width * 0.6,
           ),
-          const Text('数据加载中...'),
+          Text(AppLocalizations.of(context)!.search_loading_hint),
         ],
       )),
     );

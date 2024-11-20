@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
 
@@ -76,7 +77,7 @@ class _VideoTabsViewState extends State<VideoTabsView> {
         onRefresh: () async {
           if (offset == -1) {
             if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, '尝试重新请求');
+              ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.home_page_no_more);
             }
             offset = Random().nextInt(_n);
             Global.cachedVideoList[widget.assignedIndex.toString()] = MapEntry([], offset);
@@ -89,19 +90,21 @@ class _VideoTabsViewState extends State<VideoTabsView> {
           });
           if (offset == -1) {
             if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, '没有更多了');
+              ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.home_page_no_more);
             }
           } else {
             if (context.mounted) {
               ToastificationUtils.showSimpleToastification(
-                  context, '更新了${Global.cachedVideoList[widget.assignedIndex.toString()]!.key.length - oldLength}条数据');
+                  context,
+                  AppLocalizations.of(context)!
+                      .home_page_get_data_count(Global.cachedVideoList[widget.assignedIndex.toString()]!.key.length - oldLength));
             }
           }
           _easyRefreshController.finishRefresh();
         },
         onLoad: () async {
           if (offset == -1) {
-            ToastificationUtils.showSimpleToastification(context, '没有更多了');
+            ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.home_page_no_more);
             _easyRefreshController.finishLoad();
             return;
           }
@@ -113,12 +116,14 @@ class _VideoTabsViewState extends State<VideoTabsView> {
           });
           if (offset == -1) {
             if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, '没有更多了');
+              ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.home_page_no_more);
             }
           } else {
             if (context.mounted) {
               ToastificationUtils.showSimpleToastification(
-                  context, '加载了${Global.cachedVideoList[widget.assignedIndex.toString()]!.key.length - oldLength}条数据');
+                  context,
+                  AppLocalizations.of(context)!
+                      .home_page_get_data_count(Global.cachedVideoList[widget.assignedIndex.toString()]!.key.length - oldLength));
             }
           }
           _easyRefreshController.finishLoad();
