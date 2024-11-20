@@ -1,11 +1,12 @@
-import 'dart:math';
-
+import 'package:dio/dio.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fulifuli_app/model/activity.dart';
+import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:fulifuli_app/widgets/dynamic_card.dart';
+import 'package:fulifuli_app/widgets/empty_placeholder.dart';
 
-import '../../../utils/option_grid_view.dart';
 import '../../global.dart';
 
 class SpaceDynamicTabsView extends StatefulWidget {
@@ -31,60 +32,27 @@ class SpaceDynamicTabsView extends StatefulWidget {
 }
 
 class _SpaceDynamicTabsViewState extends State<SpaceDynamicTabsView> {
-  late List<String> dynamicList = [];
-  late EasyRefreshController _easyRefreshController;
+  final EasyRefreshController _easyRefreshController = EasyRefreshController(
+    controlFinishLoad: true,
+    controlFinishRefresh: true,
+  );
+
+  int pageNum = 0;
+  bool isEnd = false;
+  static const int pageSize = 10;
 
   @override
   void initState() {
     super.initState();
-    bool isCached = Global.cachedMapDynamicList.containsKey(widget.uniqueKey);
-    if (!isCached) {
-      Global.cachedMapDynamicList.addEntries([MapEntry(widget.uniqueKey, dynamicList)]);
-      debugPrint('Added new dynamic list with key: ${widget.uniqueKey}');
-    }
-    dynamicList = Global.cachedMapDynamicList[widget.uniqueKey]!;
-
-    if (isCached) {
-      return;
-    }
 
     var widgetsBinding = WidgetsBinding.instance;
     widgetsBinding.addPostFrameCallback((_) {
-      if (dynamicList.isEmpty && widget.currentIndex == widget.assignedIndex) {
-        debugPrint('Adding new dynamic item');
-        switch (Random().nextInt(3)) {
-          case 0:
-            dynamicList.add('Dynamic 1');
-            break;
-        }
-        setState(() {});
-      }
+      _easyRefreshController.callRefresh();
     });
   }
 
   @override
-  void didUpdateWidget(covariant SpaceDynamicTabsView oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.currentIndex == widget.assignedIndex) {
-      debugPrint('Adding new dynamic item');
-      dynamicList.add('Dynamic 1');
-    }
-    setState(() {});
-  }
-
-  @override
   Widget build(BuildContext context) {
-    _easyRefreshController = EasyRefreshController(
-      controlFinishRefresh: true,
-      controlFinishLoad: true,
-    );
-
-    TextStyle hintStyle = TextStyle(
-      fontSize: Theme.of(context).textTheme.headlineSmall!.fontSize,
-      fontWeight: FontWeight.bold,
-      color: Theme.of(context).primaryColor,
-    );
-
     return EasyRefresh.builder(
         header: MaterialHeader(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -115,63 +83,78 @@ class _SpaceDynamicTabsViewState extends State<SpaceDynamicTabsView> {
         ),
         controller: _easyRefreshController,
         onRefresh: () async {
-          await Future<void>.delayed(const Duration(milliseconds: 500));
-          if (!mounted) {
-            return;
+          pageNum = 0;
+          Global.cachedMapDynamicList[widget.uniqueKey] = const MapEntry([], false);
+          var result = await _fetchData();
+          if (result != null) {
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)));
+            }
           }
-          dynamicList.add('Dynamic ${dynamicList.length + 1}');
           _easyRefreshController.finishRefresh();
-          _easyRefreshController.resetHeader();
           setState(() {});
         },
         onLoad: () async {
-          await Future<void>.delayed(const Duration(milliseconds: 4000));
-          if (!mounted) {
-            return IndicatorResult.noMore;
+          if (isEnd) {
+            ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.home_page_refresher_no_more_text);
+            _easyRefreshController.finishLoad();
+            return;
+          }
+
+          var result = await _fetchData();
+          if (result != null) {
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)));
+            }
           }
           _easyRefreshController.finishLoad();
-          _easyRefreshController.resetFooter();
-          return IndicatorResult.noMore;
+          setState(() {});
         },
         scrollController: widget.controller,
         childBuilder: (BuildContext context, ScrollPhysics physics) {
-          return dynamicList.isEmpty
-              ? OptionGridView(
-                  itemCount: 1,
-                  rowCount: 1,
-                  itemBuilder: (_, __) {
-                    return SizedBox(
-                        height: MediaQuery.of(context).size.height,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Column(
-                              children: [
-                                Image.asset('assets/images/cute/konata_dancing.webp'),
-                                Text(
-                                  AppLocalizations.of(context)!.space_nothing_hint,
-                                  style: hintStyle,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(),
-                            Text(
-                              AppLocalizations.of(context)!.space_nothing_hint_bottom,
-                              style: hintStyle,
-                            ),
-                            const SizedBox()
-                          ],
-                        ));
-                  })
-              : OptionGridView(
-                  physics: physics,
-                  itemCount: dynamicList.length,
-                  rowCount: 1,
-                  itemBuilder: (context, index) {
-                    return const DynamicCard();
-                  },
-                );
+          return ListView.separated(
+            physics: physics,
+            itemCount:
+                Global.cachedMapDynamicList.containsKey(widget.uniqueKey) ? Global.cachedMapDynamicList[widget.uniqueKey]!.key.length : 1,
+            itemBuilder: (context, index) {
+              return Global.cachedMapDynamicList.containsKey(widget.uniqueKey)
+                  ? DynamicCard(
+                      data: Global.cachedMapDynamicList[widget.uniqueKey]!.key[index],
+                    )
+                  : const EmptyPlaceHolder();
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return const Divider();
+            },
+          );
         });
+  }
+
+  Future<String?> _fetchData() async {
+    if (!Global.cachedMapDynamicList.containsKey(widget.uniqueKey)) {
+      Global.cachedMapDynamicList[widget.uniqueKey] = const MapEntry([], false);
+    }
+
+    Response response;
+    response = await Global.dio.get('/api/v1/activity/list', data: {
+      "user_id": widget.uniqueKey,
+      "page_num": pageNum,
+      "page_size": pageSize,
+    });
+    if (response.data["code"] == Global.successCode) {
+      var list = <Activity>[];
+      for (var item in response.data["data"]["items"]) {
+        list.add(Activity.fromJson(item));
+      }
+      if (response.data["data"]["is_end"]) {
+        isEnd = true;
+      } else {
+        pageNum++;
+      }
+      Global.cachedMapDynamicList[widget.uniqueKey] = MapEntry([...Global.cachedMapDynamicList[widget.uniqueKey]!.key, ...list], isEnd);
+      return null;
+    } else {
+      return response.data["message"];
+    }
   }
 }

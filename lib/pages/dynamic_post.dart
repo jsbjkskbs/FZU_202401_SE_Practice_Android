@@ -1,4 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
@@ -16,12 +18,10 @@ class DynamicPostPage extends StatefulWidget {
 }
 
 class _DynamicPostPage extends State<DynamicPostPage> {
-  final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
 
   @override
   void dispose() {
-    _titleController.dispose();
     _contentController.dispose();
     super.dispose();
   }
@@ -75,22 +75,6 @@ class _DynamicPostPage extends State<DynamicPostPage> {
         itemBuilder: (context, index) {
           return [
             const SizedBox(height: 16),
-            TDInput(
-              hintText: '写个标题吧!',
-              maxLines: 1,
-              maxLength: 32,
-              autofocus: false,
-              controller: _titleController,
-              additionInfo: '${_titleController.text.length} / 32 字',
-              additionInfoColor: _titleController.text.length >= 32 ? Colors.red : Theme.of(context).hintColor,
-              onChanged: (value) {
-                setState(() {});
-              },
-              textStyle: TextStyle(
-                color: Theme.of(context).textTheme.bodyMedium!.color,
-                fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
-              ),
-            ),
             TDTextarea(
                 hintText: '这一刻的想法...',
                 autofocus: false,
@@ -109,7 +93,7 @@ class _DynamicPostPage extends State<DynamicPostPage> {
           ][index];
         },
         separatorBuilder: (context, index) => const SizedBox(height: 16),
-        itemCount: 3);
+        itemCount: 2);
   }
 
   Widget _getBottomSheet(BuildContext context) {
@@ -122,7 +106,6 @@ class _DynamicPostPage extends State<DynamicPostPage> {
             width: MediaQuery.of(context).size.width * 0.4,
             child: ElevatedButton(
                 onPressed: () {
-                  _titleController.clear();
                   _contentController.clear();
                 },
                 style: ElevatedButton.styleFrom(
@@ -144,7 +127,17 @@ class _DynamicPostPage extends State<DynamicPostPage> {
           SizedBox(
             width: MediaQuery.of(context).size.width * 0.4,
             child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () async {
+                  String? result = await _sendDynamic();
+                  if (context.mounted) {
+                    if (result != null) {
+                      ToastificationUtils.showSimpleToastification(context, result);
+                    } else {
+                      Navigator.pop(context);
+                      ToastificationUtils.showSimpleToastification(context, '发布成功');
+                    }
+                  }
+                },
                 style: ElevatedButton.styleFrom(
                   elevation: 4,
                   overlayColor: Theme.of(context).cardColor,
@@ -167,5 +160,17 @@ class _DynamicPostPage extends State<DynamicPostPage> {
         ],
       ),
     );
+  }
+
+  Future<String?> _sendDynamic() async {
+    Response response;
+    response = await Global.dio.post('/api/v1/activity/publish', data: {
+      "content": _contentController.text,
+    });
+    if (response.data["code"] == Global.successCode) {
+      return null;
+    } else {
+      return response.data["msg"];
+    }
   }
 }

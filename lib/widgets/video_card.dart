@@ -6,6 +6,7 @@ import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/model/video.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:fulifuli_app/widgets/icons/def.dart';
+import 'package:fulifuli_app/widgets/report_popup.dart';
 
 import '../utils/image_shader_mask.dart';
 
@@ -41,7 +42,15 @@ class _VideoCardState extends State<VideoCard> {
                           WidgetStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(0))),
                       minimumSize: WidgetStateProperty.all(const Size(140, 50)),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      ReportPopup.show(
+                        context,
+                        MediaQuery.of(context).size.width,
+                        MediaQuery.of(context).size.height * 0.6,
+                        oType: "video",
+                        oId: video.id!,
+                      );
+                    },
                     child: IntrinsicWidth(
                         child: Row(
                       children: [
@@ -57,9 +66,19 @@ class _VideoCardState extends State<VideoCard> {
                           WidgetStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(0))),
                       minimumSize: WidgetStateProperty.all(const Size(140, 50)),
                     ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.video_card_uninterested_success);
+                    onPressed: () async {
+                      String? result = await _uninterested();
+                      if (result != null) {
+                        if (context.mounted) {
+                          ToastificationUtils.showSimpleToastification(context, result);
+                        }
+                        return;
+                      }
+                      if (context.mounted) {
+                        Navigator.of(context).pop();
+                        ToastificationUtils.showSimpleToastification(
+                            context, AppLocalizations.of(context)!.video_card_uninterested_success);
+                      }
                     },
                     child: IntrinsicWidth(
                         child: Row(
@@ -195,5 +214,16 @@ class _VideoCardState extends State<VideoCard> {
             ),
           ),
         ));
+  }
+
+  Future<String?> _uninterested() async {
+    Response response = await Global.dio.post("/api/v1/interact/video/dislike", data: {
+      "video_id": video.id,
+    });
+    if (response.data["code"] == Global.successCode) {
+      return null;
+    } else {
+      return response.data["msg"];
+    }
   }
 }

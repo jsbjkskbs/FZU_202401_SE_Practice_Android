@@ -4,6 +4,7 @@ import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/model/comment.dart';
 import 'package:fulifuli_app/utils/number_converter.dart';
 import 'package:fulifuli_app/widgets/icons/def.dart';
+import 'package:fulifuli_app/widgets/report_popup.dart';
 import 'package:like_button/like_button.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
@@ -218,7 +219,10 @@ class _CommentCardState extends State<CommentCard> {
               ),
               IconButton(
                   style: ButtonStyle(overlayColor: WidgetStateProperty.all(Colors.transparent)),
-                  onPressed: () {},
+                  onPressed: () {
+                    ReportPopup.show(context, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.6,
+                        oType: 'comment', oId: widget.comment.id!, commentType: widget.comment.oType, fromMediaId: widget.comment.oId);
+                  },
                   icon: Icon(DisplayIcons.report_flag, color: Theme.of(context).unselectedWidgetColor, size: 18)),
             ],
           ),

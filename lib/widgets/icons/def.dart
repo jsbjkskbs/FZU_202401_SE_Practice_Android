@@ -156,4 +156,28 @@ class DisplayIcons {
     fontFamily: "icons",
     matchTextDirection: true,
   );
+
+  static const IconData spamming = IconData(
+    0xe91a,
+    fontFamily: "icons",
+    matchTextDirection: true,
+  );
+
+  static const IconData others = IconData(
+    0xe91b,
+    fontFamily: "icons",
+    matchTextDirection: true,
+  );
+
+  static const IconData infringement = IconData(
+    0xe91c,
+    fontFamily: "icons",
+    matchTextDirection: true,
+  );
+
+  static const IconData abuse = IconData(
+    0xe91d,
+    fontFamily: "icons",
+    matchTextDirection: true,
+  );
 }

@@ -1,14 +1,19 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fulifuli_app/global.dart';
+import 'package:fulifuli_app/model/activity.dart';
 import 'package:fulifuli_app/widgets/comment_popup.dart';
+import 'package:fulifuli_app/widgets/report_popup.dart';
 import 'package:like_button/like_button.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
-import '../test.dart';
 import '../utils/number_converter.dart';
 import 'icons/def.dart';
 
 class DynamicCard extends StatefulWidget {
-  const DynamicCard({super.key});
+  const DynamicCard({super.key, required this.data});
+
+  final Activity data;
 
   @override
   State<DynamicCard> createState() {
@@ -29,10 +34,16 @@ class _DynamicCardState extends State<DynamicCard> {
         children: [
           Row(
             children: [
-              const Padding(
-                  padding: EdgeInsets.only(left: 16, top: 8),
+              Padding(
+                  padding: const EdgeInsets.only(left: 16, top: 8),
                   child: TDImage(
-                    assetUrl: 'assets/images/default_avatar.gif',
+                    imgUrl: widget.data.user!.avatarUrl!,
+                    errorWidget: const TDImage(
+                      assetUrl: 'assets/images/default_avatar.avif',
+                      width: 56,
+                      height: 56,
+                      type: TDImageType.circle,
+                    ),
                     width: 56,
                     height: 56,
                     type: TDImageType.circle,
@@ -46,13 +57,13 @@ class _DynamicCardState extends State<DynamicCard> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('用户名',
+                        Text(widget.data.user!.name!,
                             style: TextStyle(
                                 fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
                                 fontWeight: FontWeight.bold,
                                 color: Theme.of(context).primaryColor)),
                         const SizedBox(height: 8),
-                        Text('2021-09-01',
+                        Text(DateTime.fromMillisecondsSinceEpoch(widget.data.createdAt! * 1000).toString().substring(0, 19),
                             style:
                                 TextStyle(fontSize: Theme.of(context).textTheme.bodySmall!.fontSize, color: Theme.of(context).hintColor)),
                       ],
@@ -66,7 +77,7 @@ class _DynamicCardState extends State<DynamicCard> {
           GestureDetector(
               onTap: () {
                 CommentPopup.show(context, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.8,
-                    oType: '', commentId: '', oId: '');
+                    oType: 'activity', commentId: widget.data.id!, oId: widget.data.id!, isComment: false);
               },
               child: Padding(
                   padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
@@ -79,7 +90,7 @@ class _DynamicCardState extends State<DynamicCard> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              longText,
+                              widget.data.content!,
                               style: TextStyle(
                                 fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
                               ),
@@ -105,8 +116,37 @@ class _DynamicCardState extends State<DynamicCard> {
                     dotPrimaryColor: Theme.of(context).primaryColor,
                     dotSecondaryColor: Theme.of(context).secondaryHeaderColor,
                   ),
-                  likeCount: 9999,
+                  likeCount: widget.data.likeCount,
+                  isLiked: widget.data.isLiked,
+                  onTap: (bool isLiked) async {
+                    Response response;
+                    response = await Global.dio.post('/api/v1/interact/like/activity/action', data: {
+                      "activity_id": widget.data.id,
+                      "action_type": isLiked ? 0 : 1,
+                    });
+                    if (response.data["code"] == Global.successCode) {
+                      setState(() {
+                        widget.data.isLiked = !isLiked;
+                        if (isLiked) {
+                          widget.data.likeCount = widget.data.likeCount! - 1;
+                        } else {
+                          widget.data.likeCount = widget.data.likeCount! + 1;
+                        }
+                      });
+                    }
+                    return !isLiked;
+                  },
                   countBuilder: (int? count, bool isLiked, String text) {
+                    if (count == 0) {
+                      return Text(
+                        '点个赞吧',
+                        style: TextStyle(
+                          fontSize: Theme.of(context).textTheme.labelMedium!.fontSize,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).unselectedWidgetColor,
+                        ),
+                      );
+                    }
                     return Text(
                       NumberConverter.convertNumber(count!),
                       style: TextStyle(
@@ -121,7 +161,7 @@ class _DynamicCardState extends State<DynamicCard> {
               GestureDetector(
                 onTap: () {
                   CommentPopup.show(context, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.8,
-                      oType: '', commentId: '', oId: '');
+                      oType: 'activity', commentId: widget.data.id!, oId: widget.data.id!, isComment: false);
                 },
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width * 0.3,
@@ -131,7 +171,7 @@ class _DynamicCardState extends State<DynamicCard> {
                       Icon(DisplayIcons.comment,
                           size: Theme.of(context).textTheme.headlineSmall!.fontSize, color: Theme.of(context).unselectedWidgetColor),
                       const SizedBox(width: 4),
-                      Text('9999',
+                      Text(NumberConverter.convertNumber(widget.data.commentCount!),
                           style: TextStyle(
                               fontSize: Theme.of(context).textTheme.labelMedium!.fontSize,
                               fontWeight: FontWeight.bold,
@@ -140,20 +180,26 @@ class _DynamicCardState extends State<DynamicCard> {
                   ),
                 ),
               ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.3,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(DisplayIcons.report,
-                        size: Theme.of(context).textTheme.headlineSmall!.fontSize, color: Theme.of(context).unselectedWidgetColor),
-                    const SizedBox(width: 4),
-                    Text('举报',
-                        style: TextStyle(
-                            fontSize: Theme.of(context).textTheme.labelMedium!.fontSize,
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).unselectedWidgetColor)),
-                  ],
+              GestureDetector(
+                onTap: () {
+                  ReportPopup.show(context, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.6,
+                      oType: 'activity', oId: widget.data.id!);
+                },
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.3,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(DisplayIcons.report,
+                          size: Theme.of(context).textTheme.headlineSmall!.fontSize, color: Theme.of(context).unselectedWidgetColor),
+                      const SizedBox(width: 4),
+                      Text('举报',
+                          style: TextStyle(
+                              fontSize: Theme.of(context).textTheme.labelMedium!.fontSize,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).unselectedWidgetColor)),
+                    ],
+                  ),
                 ),
               ),
             ],

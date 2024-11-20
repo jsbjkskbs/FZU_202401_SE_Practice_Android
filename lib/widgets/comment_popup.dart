@@ -1,3 +1,4 @@
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:fulifuli_app/widgets/comment_reply_fake_container.dart';
 import 'package:fulifuli_app/widgets/comment_reply_popup.dart';
@@ -13,7 +14,12 @@ class CommentPopup {
       required String oId,
       String? rootId,
       String? parentId,
-      required String commentId}) {
+      required String commentId,
+      bool isComment = true}) {
+    EasyRefreshController controller = EasyRefreshController(
+      controlFinishLoad: true,
+      controlFinishRefresh: true,
+    );
     final result = Navigator.push(
       context,
       TDSlidePopupRoute(
@@ -38,11 +44,14 @@ class CommentPopup {
                           oType: oType,
                           oId: commentId,
                           commentHead: commentHead,
-                          isComment: true,
+                          isComment: isComment,
+                          easyRefreshController: controller,
                         )),
                         GestureDetector(
                           onTap: () {
-                            showReplyPanel(context, oType: oType, oId: oId, rootId: rootId, parentId: parentId, onSend: () {});
+                            showReplyPanel(context, oType: oType, oId: oId, rootId: rootId, parentId: parentId, onSend: () {
+                              controller.callRefresh();
+                            });
                           },
                           child: const CommentReplyPopupFakeContainer(),
                         ),
