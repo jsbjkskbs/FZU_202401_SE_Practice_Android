@@ -28,6 +28,7 @@ class _DynamicPostPage extends State<DynamicPostPage> {
   final TextEditingController _contentController = TextEditingController();
   List<File>? _files = [];
   List<String?> _imageId = [];
+  UniqueKey listViewKey = UniqueKey();
   double _progress = 0;
   double _progressMax = 0;
   bool _isUploading = false;
@@ -152,6 +153,7 @@ class _DynamicPostPage extends State<DynamicPostPage> {
                   child: SizedBox(
                     height: 160,
                     child: ListView.separated(
+                      key: listViewKey,
                       scrollDirection: Axis.horizontal,
                       separatorBuilder: (context, index) => const SizedBox(width: 8),
                       itemBuilder: (context, index) => CustomPopup(
@@ -161,6 +163,7 @@ class _DynamicPostPage extends State<DynamicPostPage> {
                               onPressed: () {
                                 setState(() {
                                   _files!.removeAt(index);
+                                  listViewKey = UniqueKey();
                                 });
                                 ToastificationUtils.showSimpleToastification(context, '删除成功');
                                 Navigator.pop(context);

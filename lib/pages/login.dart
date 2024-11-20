@@ -47,6 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     Global.updateDioToken(accessToken: Global.self.accessToken, refreshToken: Global.self.refreshToken);
     Storage.storePersistentData(Global.appPersistentData.copyWith(user: Global.self));
+    Global.startAsyncTask();
     return null;
   }
 

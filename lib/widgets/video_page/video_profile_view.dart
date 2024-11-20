@@ -130,7 +130,7 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                                   padding: const EdgeInsets.only(left: 16, right: 16))
                               : ElevatedButton.styleFrom(
                                   overlayColor: Colors.transparent,
-                                  backgroundColor: Theme.of(context).disabledColor,
+                                  backgroundColor: Theme.of(context).dialogBackgroundColor,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
                                   ),
@@ -140,7 +140,7 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                               children: [
                                 Icon(
                                   Icons.add,
-                                  size: 14,
+                                  size: 16,
                                   color: !widget.video.user!.isFollowed!
                                       ? Theme.of(context).scaffoldBackgroundColor
                                       : Theme.of(context).hintColor,

@@ -71,16 +71,21 @@ class Global {
       debugPrint("Global.startAsyncTask[Access-Token]: ${response.data}");
       if (response.data["code"] == successCode) {
         self.accessToken = response.data["data"]["access_token"];
+        debugPrint("Global.startAsyncTask[self:Access-Token]: ${self.accessToken}");
         Response r;
         r = await dio.get('/api/v1/user/info', data: {
           "user_id": self.id,
         });
         if (r.data["code"] == successCode) {
-          self = User.fromJson(r.data["data"]);
+          var user = User.fromJson(r.data["data"]);
+          user = user.copyWith(accessToken: self.accessToken, refreshToken: self.refreshToken);
+          Global.self = user;
+          Storage.storePersistentData(appPersistentData.copyWith(user: user));
+          updateDioToken(accessToken: user.accessToken, refreshToken: user.refreshToken);
+          return true;
+        } else {
+          return false;
         }
-        Storage.storePersistentData(appPersistentData.copyWith(user: self));
-        updateDioToken(accessToken: self.accessToken, refreshToken: self.refreshToken);
-        return true;
       }
       return false;
     }
@@ -112,10 +117,12 @@ class Global {
     tasks.clear();
 
     tasks.add(Timer.periodic(const Duration(minutes: 45), (timer) async {
+      debugPrint("Global.startAsyncTask.accessTokenRefresh");
       await accessTokenRefresh();
     }));
 
     tasks.add(Timer.periodic(const Duration(days: 1), (timer) async {
+      debugPrint("Global.startAsyncTask.refreshTokenRefresh");
       await refreshTokenRefresh();
     }));
   }
@@ -156,7 +163,7 @@ class Storage {
         : AppPersistentData(
             themeMode: data.themeMode, languageCode: data.languageCode, themeSelection: data.themeSelection, user: Global.self);
     await prefs.setString("appPersistentData", jsonEncode(data));
-    debugPrint("Storage.storePersistentData: ${data.toJson()}");
+    debugPrint("Storage.storePersistentData: ${data.toJson()}, with user: ${data.user?.toJson()}");
   }
 
   static Future<AppPersistentData> getPersistentData() async {

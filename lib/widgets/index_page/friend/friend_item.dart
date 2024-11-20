@@ -30,9 +30,9 @@ class _FriendItemState extends State<FriendItem> {
   Widget _getFollowButton(BuildContext context) {
     var elStyle = ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        backgroundColor: user.isFollowed! ? Theme.of(context).disabledColor : Theme.of(context).primaryColor,
+        backgroundColor: user.isFollowed! ? Theme.of(context).dialogBackgroundColor : Theme.of(context).primaryColor,
         padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
-        overlayColor: user.isFollowed! ? Theme.of(context).disabledColor : Theme.of(context).primaryColor);
+        overlayColor: user.isFollowed! ? Theme.of(context).dialogBackgroundColor : Theme.of(context).primaryColor);
     var icon = user.isFollowed! ? Icons.check : Icons.add;
     var text = user.isFollowed! ? AppLocalizations.of(context)!.search_followed : AppLocalizations.of(context)!.search_follow;
     var iconColor = user.isFollowed! ? Theme.of(context).hintColor : Theme.of(context).scaffoldBackgroundColor;

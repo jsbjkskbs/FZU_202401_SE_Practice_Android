@@ -202,7 +202,7 @@ class _VideoPageState extends State<VideoPage> {
                 width: MediaQuery.of(context).size.width * 0.6,
               ),
               Text(
-                '啊哦!出了点小问题/(ㄒoㄒ)/~~',
+                '啊哦!好像什么都没有?!',
                 style: TextStyle(fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize, color: Theme.of(context).primaryColor),
               ),
             ],

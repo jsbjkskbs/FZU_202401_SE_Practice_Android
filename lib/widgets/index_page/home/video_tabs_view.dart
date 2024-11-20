@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dio/dio.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +34,6 @@ class VideoTabsView extends StatefulWidget {
 class _VideoTabsViewState extends State<VideoTabsView> {
   static const int _n = 10;
   int offset = 0;
-  List<Video> videoList = [];
   UniqueKey _gridViewKey = UniqueKey();
   final EasyRefreshController _easyRefreshController = EasyRefreshController(
     controlFinishLoad: true,
@@ -45,17 +46,7 @@ class _VideoTabsViewState extends State<VideoTabsView> {
     offset = Global.cachedVideoList[widget.assignedIndex.toString()]!.value;
     WidgetsBinding widgetsBinding = WidgetsBinding.instance;
     widgetsBinding.addPostFrameCallback((_) {
-      if (Global.cachedVideoList[widget.assignedIndex.toString()]!.key.isEmpty && widget.currentIndex == widget.assignedIndex) {
-        _easyRefreshController.callRefresh();
-      }
-    });
-  }
-
-  @override
-  void didUpdateWidget(covariant VideoTabsView oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    setState(() {
-      if (Global.cachedVideoList[widget.assignedIndex.toString()]!.key.isEmpty && widget.currentIndex == widget.assignedIndex) {
+      if (Global.cachedVideoList[widget.assignedIndex.toString()]!.key.isEmpty) {
         _easyRefreshController.callRefresh();
       }
     });
@@ -84,13 +75,12 @@ class _VideoTabsViewState extends State<VideoTabsView> {
             if (context.mounted) {
               ToastificationUtils.showSimpleToastification(context, '尝试重新请求');
             }
-            offset = 0;
+            offset = Random().nextInt(_n);
             Global.cachedVideoList[widget.assignedIndex.toString()] = MapEntry([], offset);
           }
           var oldLength = Global.cachedVideoList[widget.assignedIndex.toString()]!.key.length;
           await _fetchVideoFeedAndAddFront();
           setState(() {
-            videoList = Global.cachedVideoList[widget.assignedIndex.toString()]!.key;
             _gridViewKey = UniqueKey();
             // force rebuild, otherwise the gridview will not be refreshed
           });
@@ -105,7 +95,6 @@ class _VideoTabsViewState extends State<VideoTabsView> {
             }
           }
           _easyRefreshController.finishRefresh();
-          _easyRefreshController.resetHeader();
         },
         onLoad: () async {
           if (offset == -1) {
@@ -113,12 +102,10 @@ class _VideoTabsViewState extends State<VideoTabsView> {
               ToastificationUtils.showSimpleToastification(context, '没有更多了');
             }
             _easyRefreshController.finishLoad();
-            _easyRefreshController.resetFooter();
           }
           var oldLength = Global.cachedVideoList[widget.assignedIndex.toString()]!.key.length;
           await _fetchVideoFeedAndAddBack();
           setState(() {
-            videoList = Global.cachedVideoList[widget.assignedIndex.toString()]!.key;
             // _gridViewKey = UniqueKey();
             // force rebuilding would reset the scroll position, so we just update the list
           });
@@ -133,7 +120,6 @@ class _VideoTabsViewState extends State<VideoTabsView> {
             }
           }
           _easyRefreshController.finishLoad();
-          _easyRefreshController.resetFooter();
         },
         childBuilder: (BuildContext context, ScrollPhysics physics) {
           return OptionGridView(
@@ -157,7 +143,6 @@ class _VideoTabsViewState extends State<VideoTabsView> {
         "n": _n,
         if (widget.category != null) "category": widget.category,
       });
-
       if (response.data["code"] != Global.successCode) {
         return;
       }

@@ -135,34 +135,84 @@ class _ProfileState extends State<Profile> {
         ),
         const SizedBox(height: 16.0),
         TextButton(
-          onPressed: () async {
-            String? result = await _uploadAvatar();
-            if (result != null) {
-              if (context.mounted) {
-                ToastificationUtils.showSimpleToastification(context, result);
-              }
-            } else {
-              if (context.mounted) {
-                ToastificationUtils.showSimpleToastification(context, '上传成功');
-              }
-            }
-          },
-          style: ButtonStyle(
-            overlayColor: WidgetStateProperty.all(Theme.of(context).scaffoldBackgroundColor.withOpacity(0.5)),
-            backgroundColor: WidgetStateProperty.all(Theme.of(context).primaryColor),
-            shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0))),
-          ),
+          onPressed: Global.self.id == Global.cachedMapUser[widget.keyInCachedMapUser]!.id
+              ? () async {
+                  String? result = await _uploadAvatar();
+                  if (result != null) {
+                    if (context.mounted) {
+                      ToastificationUtils.showSimpleToastification(context, result);
+                    }
+                  } else {
+                    if (context.mounted) {
+                      ToastificationUtils.showSimpleToastification(context, '上传成功');
+                    }
+                  }
+                }
+              : () async {
+                  String? result = await _follow();
+                  if (result != null) {
+                    if (context.mounted) {
+                      ToastificationUtils.showSimpleToastification(context, result);
+                    }
+                  } else {
+                    if (context.mounted) {
+                      ToastificationUtils.showSimpleToastification(context, '操作成功');
+                    }
+                  }
+                },
+          style: Global.self.id == Global.cachedMapUser[widget.keyInCachedMapUser]!.id
+              ? ButtonStyle(
+                  overlayColor: WidgetStateProperty.all(Theme.of(context).scaffoldBackgroundColor.withOpacity(0.5)),
+                  backgroundColor: WidgetStateProperty.all(Theme.of(context).primaryColor),
+                  shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0))),
+                )
+              : ButtonStyle(
+                  overlayColor: WidgetStateProperty.all(Theme.of(context).scaffoldBackgroundColor.withOpacity(0.5)),
+                  backgroundColor: WidgetStateProperty.all(Global.cachedMapUser[widget.keyInCachedMapUser]?.isFollowed == true
+                      ? Theme.of(context).dialogBackgroundColor
+                      : Theme.of(context).primaryColor),
+                  shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0))),
+                ),
           child: Text(
-            Global.self.id == Global.cachedMapUser[widget.keyInCachedMapUser]!.id ? "上传头像" : "关注",
-            style: TextStyle(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
-                fontWeight: FontWeight.bold),
+            Global.self.id == Global.cachedMapUser[widget.keyInCachedMapUser]!.id
+                ? "上传头像"
+                : (Global.cachedMapUser[widget.keyInCachedMapUser]?.isFollowed == true ? "取消关注" : "关注"),
+            style: Global.self.id == Global.cachedMapUser[widget.keyInCachedMapUser]!.id
+                ? TextStyle(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                    fontWeight: FontWeight.bold)
+                : TextStyle(
+                    color: Global.cachedMapUser[widget.keyInCachedMapUser]?.isFollowed == true
+                        ? Theme.of(context).unselectedWidgetColor
+                        : Theme.of(context).scaffoldBackgroundColor,
+                    fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                    fontWeight: FontWeight.bold),
           ),
         ),
         const SizedBox(height: 16.0),
       ],
     );
+  }
+
+  Future<String?> _follow() async {
+    Response response;
+    response = await Global.dio.post("/api/v1/relation/follow/action", data: {
+      "to_user_id": Global.cachedMapUser[widget.keyInCachedMapUser]?.id,
+      "action_type": Global.cachedMapUser[widget.keyInCachedMapUser]?.isFollowed == true ? 0 : 1
+    });
+    if (response.data["code"] == Global.successCode) {
+      setState(() {
+        Global.cachedMapUser[widget.keyInCachedMapUser]?.isFollowed =
+            !(Global.cachedMapUser[widget.keyInCachedMapUser]?.isFollowed ?? false);
+        Global.cachedMapUser[widget.keyInCachedMapUser]?.followerCount =
+            (Global.cachedMapUser[widget.keyInCachedMapUser]?.followerCount ?? 0) +
+                (Global.cachedMapUser[widget.keyInCachedMapUser]?.isFollowed == true ? 1 : -1);
+      });
+    } else {
+      return response.data["msg"];
+    }
+    return null;
   }
 
   Future<String?> _uploadAvatar() async {

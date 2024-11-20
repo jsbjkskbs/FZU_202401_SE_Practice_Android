@@ -54,7 +54,7 @@ class ToastificationUtils {
       type: ToastificationType.success,
       style: ToastificationStyle.flat,
       title: const Text('下载成功'),
-      description: Text('文件已保存至$path'),
+      description: Text('文件已保存至$path', maxLines: 10),
       alignment: Alignment.center,
       autoCloseDuration: const Duration(seconds: 3),
       animationBuilder: (

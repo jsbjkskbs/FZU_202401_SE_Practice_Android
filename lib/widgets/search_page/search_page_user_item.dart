@@ -24,9 +24,9 @@ class _SearchPageUserItemState extends State<SearchPageUserItem> {
   Widget _getFollowButton(BuildContext context) {
     var elStyle = ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        backgroundColor: widget.user.isFollowed! ? Theme.of(context).disabledColor : Theme.of(context).primaryColor,
+        backgroundColor: widget.user.isFollowed! ? Theme.of(context).dialogBackgroundColor : Theme.of(context).primaryColor,
         padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
-        overlayColor: widget.user.isFollowed! ? Theme.of(context).disabledColor : Theme.of(context).primaryColor);
+        overlayColor: widget.user.isFollowed! ? Theme.of(context).dialogBackgroundColor : Theme.of(context).primaryColor);
     var icon = widget.user.isFollowed! ? Icons.check : Icons.add;
     var text = widget.user.isFollowed! ? AppLocalizations.of(context)!.search_followed : AppLocalizations.of(context)!.search_follow;
     var iconColor = widget.user.isFollowed! ? Theme.of(context).hintColor : Theme.of(context).scaffoldBackgroundColor;

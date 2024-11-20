@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fulifuli_app/global.dart';
+import 'package:fulifuli_app/widgets/empty_placeholder.dart';
 import 'package:fulifuli_app/widgets/search_page/search_page_video_item.dart';
 import 'package:fulifuli_app/widgets/video_page/video_profile_view.dart';
 
@@ -55,8 +56,7 @@ class _VideoIntroductionViewState extends State<VideoIntroductionView> {
                 data: item,
                 onTap: () {},
               ),
-          if (!Global.cachedMapVideoList.containsKey(key) || Global.cachedMapVideoList[key]!.key.isEmpty)
-            const Padding(padding: EdgeInsets.all(16), child: Text('没有更多了哦~')),
+          if (!Global.cachedMapVideoList.containsKey(key) || Global.cachedMapVideoList[key]!.key.isEmpty) const EmptyPlaceHolder(),
         ][index];
       },
       itemCount: 1 + (Global.cachedMapVideoList.containsKey(key) ? Global.cachedMapVideoList[key]!.key.length : 1),
