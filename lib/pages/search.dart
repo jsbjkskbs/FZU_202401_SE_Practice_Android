@@ -22,6 +22,13 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   late Widget body = const Center();
 
+  @override
+  void dispose() {
+    super.dispose();
+    Global.cachedMapUserList.remove(SearchPageUserTabsView.uniqueKey);
+    Global.cachedMapVideoList.remove(SearchPageVideoTabsView.uniqueKey);
+  }
+
   Future<void> _onSearch(String keyword) async {
     Global.cachedMapUserList.remove(SearchPageUserTabsView.uniqueKey);
     Global.cachedMapVideoList.remove(SearchPageVideoTabsView.uniqueKey);

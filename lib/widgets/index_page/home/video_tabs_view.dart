@@ -45,9 +45,12 @@ class _VideoTabsViewState extends State<VideoTabsView> {
     super.initState();
     offset = Global.cachedVideoList[widget.assignedIndex.toString()]!.value;
     WidgetsBinding widgetsBinding = WidgetsBinding.instance;
-    widgetsBinding.addPostFrameCallback((_) {
+    widgetsBinding.addPostFrameCallback((_) async {
       if (Global.cachedVideoList[widget.assignedIndex.toString()]!.key.isEmpty) {
-        _easyRefreshController.callRefresh();
+        // _easyRefreshController.callRefresh();
+        // avoid refresh action stopped by user
+        await _fetchVideoFeedAndAddFront();
+        setState(() {});
       }
     });
   }
@@ -98,10 +101,9 @@ class _VideoTabsViewState extends State<VideoTabsView> {
         },
         onLoad: () async {
           if (offset == -1) {
-            if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, '没有更多了');
-            }
+            ToastificationUtils.showSimpleToastification(context, '没有更多了');
             _easyRefreshController.finishLoad();
+            return;
           }
           var oldLength = Global.cachedVideoList[widget.assignedIndex.toString()]!.key.length;
           await _fetchVideoFeedAndAddBack();

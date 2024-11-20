@@ -5,6 +5,7 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
+import 'package:fulifuli_app/widgets/load_footer.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
 import '../model/comment.dart';
@@ -69,12 +70,14 @@ class _CommentListViewState extends State<CommentListView> {
     WidgetsBinding widgetsBinding = WidgetsBinding.instance;
     widgetsBinding.addPostFrameCallback((_) async {
       // _controller.callRefresh();
-      if (widget.isComment) {
-        await _fetchDataOfChildComment();
-      } else {
-        await _fetchData();
+      if (Global.cachedMapCommentList[key]!.key.isEmpty && Global.cachedMapCommentList[key]!.value == false) {
+        if (widget.isComment) {
+          await _fetchDataOfChildComment();
+        } else {
+          await _fetchData();
+        }
+        setState(() {});
       }
-      setState(() {});
     });
   }
 
@@ -82,7 +85,7 @@ class _CommentListViewState extends State<CommentListView> {
   dispose() {
     super.dispose();
     _controller.dispose();
-    Global.cachedMapCommentList.remove(key);
+    // Global.cachedMapCommentList.remove(key);
   }
 
   late final EasyRefreshController _controller;
@@ -92,19 +95,7 @@ class _CommentListViewState extends State<CommentListView> {
   Widget build(BuildContext context) {
     return EasyRefresh.builder(
       header: const MaterialHeader(),
-      footer: BezierFooter(
-        foregroundColor: Theme.of(context).scaffoldBackgroundColor,
-        backgroundColor: Theme.of(context).primaryColor,
-        spinWidget: SizedBox(
-          width: 25,
-          height: 25,
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).scaffoldBackgroundColor),
-            strokeWidth: 4,
-          ),
-        ),
-        springRebound: true,
-      ),
+      footer: LoadFooter.buildInformationFooter(context),
       controller: _controller,
       onRefresh: () async {
         isEnd = false;
@@ -128,8 +119,7 @@ class _CommentListViewState extends State<CommentListView> {
       },
       onLoad: () async {
         if (Global.cachedMapCommentList[key]!.value) {
-          ToastificationUtils.showSimpleToastification(context, '没有更多了');
-          _controller.finishLoad();
+          _controller.finishLoad(IndicatorResult.noMore, true);
           return;
         }
         String? result;

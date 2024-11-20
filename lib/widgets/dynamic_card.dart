@@ -11,6 +11,7 @@ import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 import '../utils/number_converter.dart';
 import '../utils/toastification.dart';
+import 'comment_list.dart';
 import 'icons/def.dart';
 
 class DynamicCard extends StatefulWidget {
@@ -25,6 +26,13 @@ class DynamicCard extends StatefulWidget {
 }
 
 class _DynamicCardState extends State<DynamicCard> {
+  @override
+  void dispose() {
+    super.dispose();
+    Global.cachedMapCommentList.remove('${CommentListView.uniqueKey}/activity/child_comment/${widget.data.id}');
+    Global.cachedMapCommentList.remove('${CommentListView.uniqueKey}/activity/${widget.data.id}');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(

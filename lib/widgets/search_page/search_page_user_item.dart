@@ -81,7 +81,7 @@ class _SearchPageUserItemState extends State<SearchPageUserItem> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         widget.onTap();
       },

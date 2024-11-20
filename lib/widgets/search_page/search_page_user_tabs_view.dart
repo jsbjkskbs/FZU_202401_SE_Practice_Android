@@ -5,6 +5,7 @@ import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/pages/space.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:fulifuli_app/widgets/empty_placeholder.dart';
+import 'package:fulifuli_app/widgets/load_footer.dart';
 import 'package:fulifuli_app/widgets/search_page/search_page_user_item.dart';
 
 import '../../model/user.dart';
@@ -39,7 +40,10 @@ class _SearchPageUserTabsViewState extends State<SearchPageUserTabsView> {
       if (!Global.cachedMapUserList.containsKey(SearchPageUserTabsView.uniqueKey)) {
         Global.cachedMapUserList[SearchPageUserTabsView.uniqueKey] = const MapEntry([], false);
       }
-      _controller.callRefresh();
+      if (Global.cachedMapUserList[SearchPageUserTabsView.uniqueKey]!.key.isEmpty &&
+          Global.cachedMapUserList[SearchPageUserTabsView.uniqueKey]!.value == false) {
+        _controller.callRefresh();
+      }
     });
   }
 
@@ -47,7 +51,6 @@ class _SearchPageUserTabsViewState extends State<SearchPageUserTabsView> {
   void dispose() {
     super.dispose();
     _controller.dispose();
-    Global.cachedMapUserList.remove(SearchPageUserTabsView.uniqueKey);
   }
 
   @override
@@ -55,7 +58,7 @@ class _SearchPageUserTabsViewState extends State<SearchPageUserTabsView> {
     return EasyRefresh(
         controller: _controller,
         header: const MaterialHeader(),
-        footer: const MaterialFooter(),
+        footer: LoadFooter.buildInformationFooter(context),
         onRefresh: () async {
           pageNum = 0;
           isEnd = false;
@@ -73,8 +76,7 @@ class _SearchPageUserTabsViewState extends State<SearchPageUserTabsView> {
         },
         onLoad: () async {
           if (isEnd) {
-            _controller.finishLoad();
-            ToastificationUtils.showSimpleToastification(context, '没有更多了');
+            _controller.finishLoad(IndicatorResult.noMore, true);
             return;
           }
           String? result = await _fetchData();

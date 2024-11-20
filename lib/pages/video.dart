@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fulifuli_app/pkg/chewie/chewie.dart';
+import 'package:fulifuli_app/widgets/comment_list.dart';
 import 'package:fulifuli_app/widgets/video_page/video_page_tabs_container.dart';
 import 'package:rect_getter/rect_getter.dart';
 import 'package:sensors_plus/sensors_plus.dart';
@@ -72,6 +73,11 @@ class _VideoPageState extends State<VideoPage> {
     if (video != null) {
       Global.cachedMapVideo.remove(video!.id!);
       Global.cachedMapVideoList.remove('${VideoIntroductionView.cachePrefix}/${video!.id!}');
+      if (Global.cachedMapCommentList.containsKey('${CommentListView.uniqueKey}/video/${video!.id!}')) {
+        debugPrint('remove ${CommentListView.uniqueKey}/video/${video!.id!}');
+      }
+      Global.cachedMapCommentList.remove('${CommentListView.uniqueKey}/video/child_comment/${video!.id!}');
+      Global.cachedMapCommentList.remove('${CommentListView.uniqueKey}/video/${video!.id!}');
     }
     super.dispose();
   }

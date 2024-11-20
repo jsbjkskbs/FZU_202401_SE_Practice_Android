@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
+import 'package:fulifuli_app/widgets/search_page/search_page_user_tabs_view.dart';
 
 class SearchPageTopBar extends StatefulWidget {
   const SearchPageTopBar({super.key, required this.onSearch});
@@ -39,6 +41,8 @@ class _SearchPageTopBarState extends State<SearchPageTopBar> {
                   ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.search_input_box_no_text_hint);
                   return;
                 }
+                Global.cachedMapVideoList.remove(SearchPageUserTabsView.uniqueKey);
+                Global.cachedMapUserList.remove(SearchPageUserTabsView.uniqueKey);
                 widget.onSearch(value);
               },
               onChanged: (value) => {text = value},
@@ -50,6 +54,8 @@ class _SearchPageTopBarState extends State<SearchPageTopBar> {
                 ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.search_input_box_no_text_hint);
                 return;
               }
+              Global.cachedMapVideoList.remove(SearchPageUserTabsView.uniqueKey);
+              Global.cachedMapUserList.remove(SearchPageUserTabsView.uniqueKey);
               widget.onSearch(text);
             },
             style: ButtonStyle(

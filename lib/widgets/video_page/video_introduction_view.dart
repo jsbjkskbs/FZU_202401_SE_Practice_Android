@@ -5,6 +5,7 @@ import 'package:fulifuli_app/widgets/search_page/search_page_video_item.dart';
 import 'package:fulifuli_app/widgets/video_page/video_profile_view.dart';
 
 import '../../model/video.dart';
+import '../../pages/video.dart';
 
 class VideoIntroductionView extends StatefulWidget {
   const VideoIntroductionView({super.key, required this.video});
@@ -54,7 +55,13 @@ class _VideoIntroductionViewState extends State<VideoIntroductionView> {
             for (var item in Global.cachedMapVideoList[key]!.key)
               SearchPageVideoItem(
                 data: item,
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                    return VideoPage(
+                      videoId: item.id!,
+                    );
+                  }));
+                },
               ),
           if (!Global.cachedMapVideoList.containsKey(key) || Global.cachedMapVideoList[key]!.key.isEmpty) const EmptyPlaceHolder(),
         ][index];

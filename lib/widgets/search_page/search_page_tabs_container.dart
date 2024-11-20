@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/widgets/index_page/home/video_tabs_view.dart';
 import 'package:fulifuli_app/widgets/search_page/search_page_user_tabs_view.dart';
 import 'package:fulifuli_app/widgets/search_page/search_page_video_tabs_view.dart';
@@ -54,8 +53,6 @@ class _SearchPageTabsContainerState extends State<SearchPageTabsContainer> with 
   void dispose() {
     super.dispose();
     _tabController.dispose();
-    Global.cachedMapUserList.remove(SearchPageUserTabsView.uniqueKey);
-    Global.cachedMapVideoList.remove(SearchPageVideoTabsView.uniqueKey);
   }
 
   @override

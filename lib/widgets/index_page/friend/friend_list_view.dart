@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fulifuli_app/pages/space.dart';
 import 'package:fulifuli_app/widgets/empty_placeholder.dart';
 import 'package:fulifuli_app/widgets/index_page/friend/friend_item.dart';
+import 'package:fulifuli_app/widgets/load_footer.dart';
 
 import '../../../global.dart';
 import '../../../model/user.dart';
@@ -36,7 +37,10 @@ class _FriendListViewState extends State<FriendListView> {
       if (Global.cachedMapUserList[FriendListView.uniqueKey] == null) {
         Global.cachedMapUserList[FriendListView.uniqueKey] = const MapEntry([], false);
       }
-      _controller.callRefresh();
+      if (Global.cachedMapUserList[FriendListView.uniqueKey]!.key.isEmpty &&
+          Global.cachedMapUserList[FriendListView.uniqueKey]!.value == false) {
+        _controller.callRefresh();
+      }
     });
   }
 
@@ -44,7 +48,8 @@ class _FriendListViewState extends State<FriendListView> {
   void dispose() {
     super.dispose();
     _controller.dispose();
-    Global.cachedMapUserList.remove(FriendListView.uniqueKey);
+    // if not necessary, don't remove the cache
+    // Global.cachedMapUserList.remove(FriendListView.uniqueKey);
   }
 
   @override
@@ -52,7 +57,7 @@ class _FriendListViewState extends State<FriendListView> {
     return EasyRefresh(
         controller: _controller,
         header: const MaterialHeader(),
-        footer: const MaterialFooter(),
+        footer: LoadFooter.buildInformationFooter(context),
         onRefresh: () async {
           pageNum = 0;
           isEnd = false;
@@ -71,8 +76,7 @@ class _FriendListViewState extends State<FriendListView> {
         },
         onLoad: () async {
           if (isEnd) {
-            ToastificationUtils.showSimpleToastification(context, '没有更多了');
-            _controller.finishLoad();
+            _controller.finishLoad(IndicatorResult.noMore, true);
             return;
           }
           String? result = await _fetchData();
@@ -140,6 +144,8 @@ class _FriendListViewState extends State<FriendListView> {
       }
       Global.cachedMapUserList[FriendListView.uniqueKey] =
           MapEntry([...Global.cachedMapUserList[FriendListView.uniqueKey]!.key, ...list], isEnd);
+    } else {
+      return response.data['msg'];
     }
     return null;
   }

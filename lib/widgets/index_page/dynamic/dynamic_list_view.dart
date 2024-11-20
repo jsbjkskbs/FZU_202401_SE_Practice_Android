@@ -1,10 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:easy_refresh/easy_refresh.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/model/activity.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:fulifuli_app/widgets/empty_placeholder.dart';
+import 'package:fulifuli_app/widgets/load_footer.dart';
 
 import '../../dynamic_card.dart';
 
@@ -34,7 +35,12 @@ class _DynamicListViewState extends State<DynamicListView> {
 
     WidgetsBinding widgetsBinding = WidgetsBinding.instance;
     widgetsBinding.addPostFrameCallback((_) {
-      _controller.callRefresh();
+      if (!Global.cachedMapDynamicList.containsKey(_uniqueKey)) {
+        Global.cachedMapDynamicList[_uniqueKey] = const MapEntry([], false);
+      }
+      if (Global.cachedMapDynamicList[_uniqueKey]!.key.isEmpty && Global.cachedMapDynamicList[_uniqueKey]!.value == false) {
+        _controller.callRefresh();
+      }
     });
   }
 
@@ -42,14 +48,15 @@ class _DynamicListViewState extends State<DynamicListView> {
   void dispose() {
     super.dispose();
     _controller.dispose();
-    Global.cachedMapDynamicList.remove(_uniqueKey);
+    // if not necessary, don not remove it
+    // Global.cachedMapDynamicList.remove(_uniqueKey);
   }
 
   @override
   Widget build(BuildContext context) {
     return EasyRefresh(
         header: const MaterialHeader(),
-        footer: const MaterialFooter(),
+        footer: LoadFooter.buildInformationFooter(context),
         controller: _controller,
         onRefresh: () async {
           Global.cachedMapDynamicList.remove(_uniqueKey);
@@ -71,8 +78,7 @@ class _DynamicListViewState extends State<DynamicListView> {
         },
         onLoad: () async {
           if (isEnd) {
-            _controller.finishLoad();
-            ToastificationUtils.showSimpleToastification(context, '没有更多了');
+            _controller.finishLoad(IndicatorResult.noMore, true);
             return;
           }
           String? result = await _fetchData();

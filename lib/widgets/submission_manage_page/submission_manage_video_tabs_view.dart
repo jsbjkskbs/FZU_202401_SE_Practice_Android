@@ -5,6 +5,7 @@ import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/pages/video.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:fulifuli_app/widgets/empty_placeholder.dart';
+import 'package:fulifuli_app/widgets/load_footer.dart';
 import 'package:fulifuli_app/widgets/submission_manage_page/submission_manage_video_item.dart';
 
 import '../../model/video.dart';
@@ -37,7 +38,12 @@ class _SubmissionManageVideoTabsViewState extends State<SubmissionManageVideoTab
     super.initState();
     var widgetsBinding = WidgetsBinding.instance;
     widgetsBinding.addPostFrameCallback((callback) {
-      _controller.callRefresh();
+      if (!Global.cachedMapVideoList.containsKey(widget.uniqueKey)) {
+        Global.cachedMapVideoList[widget.uniqueKey] = const MapEntry([], false);
+      }
+      if (Global.cachedMapVideoList[widget.uniqueKey]!.key.isEmpty && Global.cachedMapVideoList[widget.uniqueKey]!.value == false) {
+        _controller.callRefresh();
+      }
     });
   }
 
@@ -51,7 +57,7 @@ class _SubmissionManageVideoTabsViewState extends State<SubmissionManageVideoTab
   Widget build(BuildContext context) {
     return EasyRefresh(
         header: const MaterialHeader(),
-        footer: const MaterialFooter(),
+        footer: LoadFooter.buildInformationFooter(context),
         controller: _controller,
         onRefresh: () async {
           pageNum = 0;
@@ -68,7 +74,7 @@ class _SubmissionManageVideoTabsViewState extends State<SubmissionManageVideoTab
         },
         onLoad: () async {
           if (isEnd) {
-            _controller.finishLoad();
+            _controller.finishLoad(IndicatorResult.noMore, true);
             return;
           }
           String? result = await _fetchData();

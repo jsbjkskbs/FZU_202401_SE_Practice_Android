@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/pages/video.dart';
 import 'package:fulifuli_app/widgets/empty_placeholder.dart';
+import 'package:fulifuli_app/widgets/load_footer.dart';
 import 'package:fulifuli_app/widgets/search_page/search_page_video_item.dart';
 
 import '../../model/video.dart';
@@ -40,7 +41,9 @@ class _SearchPageVideoTabsViewState extends State<SearchPageVideoTabsView> {
       if (!Global.cachedMapVideoList.containsKey(key)) {
         Global.cachedMapVideoList[key] = const MapEntry([], false);
       }
-      _controller.callRefresh();
+      if (Global.cachedMapVideoList[key]!.key.isEmpty && Global.cachedMapVideoList[key]!.value == false) {
+        _controller.callRefresh();
+      }
     });
   }
 
@@ -48,14 +51,13 @@ class _SearchPageVideoTabsViewState extends State<SearchPageVideoTabsView> {
   void dispose() {
     super.dispose();
     _controller.dispose();
-    Global.cachedMapVideoList.remove(key);
   }
 
   @override
   Widget build(BuildContext context) {
     return EasyRefresh(
         header: const MaterialHeader(),
-        footer: const MaterialFooter(),
+        footer: LoadFooter.buildInformationFooter(context),
         controller: _controller,
         onRefresh: () async {
           pageNum = 0;
@@ -75,8 +77,7 @@ class _SearchPageVideoTabsViewState extends State<SearchPageVideoTabsView> {
         },
         onLoad: () async {
           if (isEnd) {
-            _controller.finishLoad();
-            ToastificationUtils.showSimpleToastification(context, '没有更多了');
+            _controller.finishLoad(IndicatorResult.noMore, true);
             return;
           }
           String? result = await _fetchData();
