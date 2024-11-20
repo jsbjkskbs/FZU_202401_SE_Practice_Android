@@ -54,56 +54,30 @@ class _SubmissionManageVideoTabsViewState extends State<SubmissionManageVideoTab
         footer: const MaterialFooter(),
         controller: _controller,
         onRefresh: () async {
-          if (Global.cachedMapVideoList[widget.uniqueKey]!.value) {
-            ToastificationUtils.showSimpleToastification(context, '没有更多数据了');
-            _controller.finishRefresh();
-            return;
-          }
-          Response response;
-          response = await Global.dio.get("/api/v1/video/submit/${widget.querySuffix}", queryParameters: {
-            "page_num": pageNum,
-            "page_size": 10,
-          });
-          if (response.data["code"] == Global.successCode) {
-            List<Video> list = [];
-            for (var item in response.data["data"]["items"]) {
-              list.add(Video.fromJson(item));
-            }
-            isEnd = response.data["data"]["is_end"];
-            if (!isEnd) {
-              pageNum++;
-            }
-            Global.cachedMapVideoList[widget.uniqueKey] = MapEntry([...Global.cachedMapVideoList[widget.uniqueKey]!.key, ...list], isEnd);
-            setState(() {});
-          } else {
+          pageNum = 0;
+          isEnd = false;
+          Global.cachedMapVideoList[widget.uniqueKey] = const MapEntry([], false);
+          String? result = await _fetchData();
+          if (result != null) {
             if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, '没有更多数据了');
+              ToastificationUtils.showSimpleToastification(context, result);
             }
           }
+          setState(() {});
           _controller.finishRefresh();
         },
         onLoad: () async {
-          Response response;
-          response = await Global.dio.get("/api/v1/video/submit/${widget.querySuffix}", queryParameters: {
-            "page_num": pageNum,
-            "page_size": 10,
-          });
-          if (response.data["code"] == Global.successCode) {
-            List<Video> list = [];
-            for (var item in response.data["data"]["items"]) {
-              list.add(Video.fromJson(item));
-            }
-            isEnd = response.data["data"]["is_end"];
-            if (!isEnd) {
-              pageNum++;
-            }
-            Global.cachedMapVideoList[widget.uniqueKey] = MapEntry([...Global.cachedMapVideoList[widget.uniqueKey]!.key, ...list], isEnd);
-            setState(() {});
-          } else {
+          if (isEnd) {
+            _controller.finishLoad();
+            return;
+          }
+          String? result = await _fetchData();
+          if (result != null) {
             if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, '没有更多数据了');
+              ToastificationUtils.showSimpleToastification(context, result);
             }
           }
+          setState(() {});
           _controller.finishLoad();
         },
         child: ListView.separated(
@@ -113,25 +87,15 @@ class _SubmissionManageVideoTabsViewState extends State<SubmissionManageVideoTab
                     children: [
                       SubmissionManageVideoItem(
                         onTap: () {
-                          Global.cachedMapVideo[Global.cachedMapVideoList[widget.uniqueKey]!.key[index].id!] =
-                              Global.cachedMapVideoList[widget.uniqueKey]!.key[index];
-                          Global.dio.get('/api/v1/user/follower_count', data: {
-                            "user_id": Global.cachedMapVideoList[widget.uniqueKey]!.key[index].user!.id,
-                          }).then((data) {
-                            if (data.data["code"] != Global.successCode) {
-                              if (context.mounted) {
-                                ToastificationUtils.showSimpleToastification(context, data.data["msg"]);
-                              }
-                              return;
-                            }
-                            Global.cachedMapVideoList[widget.uniqueKey]!.key[index].user!.followerCount =
-                                data.data["data"]["follower_count"];
-                            if (context.mounted) {
-                              Navigator.of(context).pushNamed(VideoPage.routeName, arguments: {
-                                "vid": Global.cachedMapVideoList[widget.uniqueKey]!.key[index].id,
-                              });
-                            }
-                          });
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return VideoPage(
+                                  videoId: Global.cachedMapVideoList[widget.uniqueKey]!.key[index].id!,
+                                );
+                              },
+                            ),
+                          );
                         },
                         data: Global.cachedMapVideoList[widget.uniqueKey]!.key[index],
                         badge: Global.cachedMapVideoList[widget.uniqueKey]!.key[index].status!.substring(0, 1).toUpperCase(),
@@ -139,7 +103,30 @@ class _SubmissionManageVideoTabsViewState extends State<SubmissionManageVideoTab
                     ],
                   ),
             separatorBuilder: (context, index) => const Divider(),
-            itemCount:
-                Global.cachedMapVideoList[widget.uniqueKey]!.key.isEmpty ? 1 : Global.cachedMapVideoList[widget.uniqueKey]!.key.length));
+            itemCount: !Global.cachedMapVideoList.containsKey(widget.uniqueKey) || Global.cachedMapVideoList[widget.uniqueKey]!.key.isEmpty
+                ? 1
+                : Global.cachedMapVideoList[widget.uniqueKey]!.key.length));
+  }
+
+  Future<String?> _fetchData() async {
+    Response response;
+    response = await Global.dio.get("/api/v1/video/submit/${widget.querySuffix}", queryParameters: {
+      "page_num": pageNum,
+      "page_size": 10,
+    });
+    if (response.data["code"] == Global.successCode) {
+      List<Video> list = [];
+      for (var item in response.data["data"]["items"]) {
+        list.add(Video.fromJson(item));
+      }
+      isEnd = response.data["data"]["is_end"];
+      if (!isEnd) {
+        pageNum++;
+      }
+      Global.cachedMapVideoList[widget.uniqueKey] = MapEntry([...Global.cachedMapVideoList[widget.uniqueKey]!.key, ...list], isEnd);
+      return null;
+    } else {
+      return response.data["msg"];
+    }
   }
 }

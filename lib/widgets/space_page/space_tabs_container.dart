@@ -5,10 +5,10 @@ import 'package:fulifuli_app/widgets/space_page/space_video_tabs_view.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 class SpaceTabsContainer extends StatefulWidget {
-  const SpaceTabsContainer({super.key, required this.tabs, required this.uniqueKey, this.scrollController});
+  const SpaceTabsContainer({super.key, required this.tabs, required this.uniqueKeySuffix, this.scrollController});
 
   final List<String> tabs;
-  final String uniqueKey;
+  final String uniqueKeySuffix;
   final ScrollController? scrollController;
 
   @override
@@ -79,16 +79,11 @@ class _SpaceTabsContainerState extends State<SpaceTabsContainer> with TickerProv
               SpaceVideoTabsView(
                 controller: _scrollController,
                 currentIndex: _currentIndex,
-                onUpdate: () {},
                 assignedIndex: 0,
-                uniqueKey: widget.uniqueKey,
+                userId: widget.uniqueKeySuffix,
               ),
               SpaceDynamicTabsView(
-                  controller: _scrollController,
-                  currentIndex: _currentIndex,
-                  onUpdate: () {},
-                  assignedIndex: 1,
-                  uniqueKey: widget.uniqueKey),
+                  controller: _scrollController, currentIndex: _currentIndex, assignedIndex: 1, userId: widget.uniqueKeySuffix),
             ],
           ),
         )

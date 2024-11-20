@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
+import 'package:fulifuli_app/pages/space.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:fulifuli_app/widgets/icons/def.dart';
 import 'package:like_button/like_button.dart';
@@ -49,7 +50,13 @@ class _HomeTopBarState extends State<HomeTopBar> {
                     avatarUrl: Global.self.avatarUrl == "" ? null : Global.self.avatarUrl,
                     onTap: () {
                       if (Global.isLogin()) {
-                        Navigator.of(context).pushNamed('/space', arguments: {'user_id': Global.self.id});
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return SpacePage(userId: Global.self.id!);
+                            },
+                          ),
+                        );
                       } else {
                         ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.home_login_hint);
                         Navigator.of(context).pushNamed('/login');

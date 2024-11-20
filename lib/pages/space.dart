@@ -1,19 +1,21 @@
-import 'dart:async';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/widgets/empty_placeholder.dart';
 import 'package:fulifuli_app/widgets/space_page/space_tabs_container.dart';
+import 'package:fulifuli_app/widgets/space_page/space_video_tabs_view.dart';
 
 import '../model/user.dart';
 import '../widgets/space_page/profile.dart';
+import '../widgets/space_page/space_dynamic_tabs_view.dart';
 
 class SpacePage extends StatefulWidget {
-  const SpacePage({super.key});
+  const SpacePage({super.key, required this.userId});
 
   static String routeName = '/space';
+  final String userId;
+  final String uniqueKey = "SpacePage";
 
   @override
   State<StatefulWidget> createState() {
@@ -22,55 +24,54 @@ class SpacePage extends StatefulWidget {
 }
 
 class _SpacePageState extends State<SpacePage> {
-  late String userId = "";
-  User? user;
+  late String key = '${widget.uniqueKey}/${widget.userId}';
 
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding widgetsBinding = WidgetsBinding.instance;
-    widgetsBinding.addPostFrameCallback((_) {});
+    widgetsBinding.addPostFrameCallback((_) async {
+      await _fetchData();
+      setState(() {});
+    });
   }
 
   @override
   void dispose() {
     super.dispose();
-    Global.cachedMapVideoList.remove(userId);
-    Global.cachedMapDynamicList.remove(userId);
+    Global.cachedMapUser.remove(key);
+    Global.cachedMapVideoList.remove('${SpaceVideoTabsView.uniqueKey}/${widget.userId}');
+    Global.cachedMapDynamicList.remove('${SpaceDynamicTabsView.uniqueKey}/${widget.userId}');
   }
 
   @override
   Widget build(BuildContext context) {
-    Timer.run(() {
-      dynamic args = ModalRoute.of(context)!.settings.arguments;
-      if (args != null && args["user_id"] != null) {
-        userId = args['user_id'];
-      }
-      if (userId.isEmpty) {
-        Navigator.of(context).pop();
-      }
-      fetchData(context);
-      setState(() {});
-    });
-
-    return user == null
-        ? const Center(
-            child: EmptyPlaceHolder(),
+    return !Global.cachedMapUser.containsKey(key)
+        ? SafeArea(
+            child: Container(
+              width: double.infinity,
+              height: double.infinity,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
+              ),
+              child: const EmptyPlaceHolder(),
+            ),
           )
         : Scaffold(
             appBar: AppBar(
-              title: Text('${user!.name}'),
+              title: Text('${Global.cachedMapUser[key]!.name}'),
               centerTitle: true,
             ),
             body: CustomScrollView(
               slivers: [
                 SliverToBoxAdapter(
-                  child: Profile(userId: user!.id!),
+                  child: Profile(keyInCachedMapUser: key),
                 ),
                 SliverFillRemaining(
                     child: SpaceTabsContainer(
-                  uniqueKey: userId,
+                  uniqueKeySuffix: widget.userId,
                   tabs: [
                     AppLocalizations.of(context)!.space_video,
                     AppLocalizations.of(context)!.space_dynamic,
@@ -80,38 +81,36 @@ class _SpacePageState extends State<SpacePage> {
             ));
   }
 
-  void fetchData(BuildContext context) async {
-    if (Global.cachedMapUser.containsKey(userId)) {
-      user = Global.cachedMapUser[userId]!;
-    } else {
-      Response response = await Global.dio.get("/api/v1/user/info", data: {
-        "user_id": userId,
-      });
-      if (response.data["code"] == Global.successCode) {
-        user = User.fromJson(response.data["data"]);
-      }
+  Future<void> _fetchData() async {
+    if (!Global.cachedMapUser.containsKey(key)) {
+      Global.cachedMapUser[key] = User();
     }
-    if (user!.followerCount == null) {
-      Global.dio.get("/api/v1/user/follower_count", data: {
-        "user_id": userId,
-      }).then((Response response) {
-        user!.followerCount = response.data["data"]["follower_count"];
-      });
+
+    var user = Global.cachedMapUser[widget.userId];
+    Response response = await Global.dio.get("/api/v1/user/info", data: {
+      "user_id": widget.userId,
+    });
+    if (response.data["code"] == Global.successCode) {
+      user = User.fromJson(response.data["data"]);
     }
-    if (user!.followingCount == null) {
-      Global.dio.get("/api/v1/user/following_count", data: {
-        "user_id": userId,
-      }).then((Response response) {
-        user!.followingCount = response.data["data"]["following_count"];
-      });
+    response = await Global.dio.get("/api/v1/user/follower_count", data: {
+      "user_id": widget.userId,
+    });
+    if (response.data["code"] == Global.successCode) {
+      user!.followerCount = response.data["data"]["follower_count"];
     }
-    if (user!.likeCount == null) {
-      Global.dio.get("/api/v1/user/like_count", data: {
-        "user_id": userId,
-      }).then((Response response) {
-        user!.likeCount = response.data["data"]["like_count"];
-      });
+    response = await Global.dio.get("/api/v1/user/following_count", data: {
+      "user_id": widget.userId,
+    });
+    if (response.data["code"] == Global.successCode) {
+      user!.followingCount = response.data["data"]["following_count"];
     }
-    Global.cachedMapUser[userId] = user!;
+    response = await Global.dio.get("/api/v1/user/like_count", data: {
+      "user_id": widget.userId,
+    });
+    if (response.data["code"] == Global.successCode) {
+      user!.likeCount = response.data["data"]["like_count"];
+    }
+    Global.cachedMapUser[key] = user!;
   }
 }

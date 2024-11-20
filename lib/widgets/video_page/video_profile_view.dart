@@ -12,9 +12,12 @@ import '../expand_shrink_text.dart';
 import '../icons/def.dart';
 
 class VideoProfileView extends StatefulWidget {
-  const VideoProfileView({super.key, required this.vid});
+  const VideoProfileView({
+    super.key,
+    required this.video,
+  });
 
-  final String vid;
+  final Video video;
 
   @override
   State<VideoProfileView> createState() => _VideoProfileViewState();
@@ -22,15 +25,28 @@ class VideoProfileView extends StatefulWidget {
 
 class _VideoProfileViewState extends State<VideoProfileView> {
   bool expanded = false;
-  Video? video;
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding widgetsBinding = WidgetsBinding.instance;
+    widgetsBinding.addPostFrameCallback((callback) async {
+      Response response;
+      response = await Global.dio.get('/api/v1/user/follower_count', data: {
+        "user_id": widget.video.user!.id,
+      });
+      if (response.data["code"] == Global.successCode) {
+        widget.video.user!.followerCount = response.data["data"]["follower_count"];
+      } else {
+        widget.video.user!.followerCount = 0;
+      }
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    video = Global.cachedMapVideo[widget.vid];
-    debugPrint('video: ${video!.toJson()}');
-    if (video == null) {
-      return Container();
-    }
     return Column(
       children: [
         Row(
@@ -40,7 +56,7 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                 Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: TDImage(
-                      imgUrl: video!.user!.avatarUrl,
+                      imgUrl: widget.video.user!.avatarUrl,
                       width: 36,
                       height: 36,
                       type: TDImageType.circle,
@@ -52,14 +68,14 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                     ConstrainedBox(
                       constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 2),
                       child: Text(
-                        video!.user!.name!,
+                        widget.video.user!.name!,
                         style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal, overflow: TextOverflow.ellipsis),
                       ),
                     ),
                     ConstrainedBox(
                         constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 2),
                         child: Text(
-                          '${NumberConverter.convertNumber(video!.user!.followerCount!)}粉丝',
+                          '${NumberConverter.convertNumber(widget.video.user!.followerCount ?? 0)}粉丝',
                           style: TextStyle(fontSize: 10, color: Theme.of(context).hintColor),
                         ))
                   ],
@@ -77,11 +93,12 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                           onPressed: () async {
                             Response response;
                             response = await Global.dio.post('/api/v1/relation/follow/action',
-                                data: {"to_user_id": video!.user!.id, "action_type": video!.user!.isFollowed! ? 0 : 1});
+                                data: {"to_user_id": widget.video.user!.id, "action_type": widget.video.user!.isFollowed! ? 0 : 1});
                             if (response.data["code"] == Global.successCode) {
-                              video!.user!.followerCount =
-                                  video!.user!.isFollowed! ? video!.user!.followerCount! - 1 : video!.user!.followerCount! + 1;
-                              video!.user!.isFollowed = !video!.user!.isFollowed!;
+                              widget.video.user!.followerCount = widget.video.user!.isFollowed!
+                                  ? widget.video.user!.followerCount! - 1
+                                  : widget.video.user!.followerCount! + 1;
+                              widget.video.user!.isFollowed = !widget.video.user!.isFollowed!;
                               setState(() {});
                             } else {
                               if (context.mounted) {
@@ -89,33 +106,36 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                               }
                             }
                           },
-                          style: !video!.user!.isFollowed!
+                          style: !widget.video.user!.isFollowed!
                               ? ElevatedButton.styleFrom(
                                   overlayColor: Colors.transparent,
                                   backgroundColor: Theme.of(context).primaryColor,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
-                                  ))
+                                  ),
+                                  padding: const EdgeInsets.only(left: 16, right: 16))
                               : ElevatedButton.styleFrom(
                                   overlayColor: Colors.transparent,
                                   backgroundColor: Theme.of(context).disabledColor,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
-                                  )),
+                                  ),
+                                  padding: const EdgeInsets.only(left: 16, right: 16)),
                           child: IntrinsicWidth(
                             child: Row(
                               children: [
                                 Icon(
                                   Icons.add,
                                   size: 14,
-                                  color:
-                                      !video!.user!.isFollowed! ? Theme.of(context).scaffoldBackgroundColor : Theme.of(context).hintColor,
+                                  color: !widget.video.user!.isFollowed!
+                                      ? Theme.of(context).scaffoldBackgroundColor
+                                      : Theme.of(context).hintColor,
                                 ),
                                 Text(
-                                  !video!.user!.isFollowed! ? '关注' : "已关注",
+                                  !widget.video.user!.isFollowed! ? '关注' : "取关",
                                   style: TextStyle(
                                       fontSize: 14,
-                                      color: !video!.user!.isFollowed!
+                                      color: !widget.video.user!.isFollowed!
                                           ? Theme.of(context).scaffoldBackgroundColor
                                           : Theme.of(context).hintColor),
                                 )
@@ -148,7 +168,7 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                                 expanded = !expanded;
                               });
                             },
-                            child: ExpandShrinkText(video!.title!,
+                            child: ExpandShrinkText(widget.video.title!,
                                 maxShrinkLine: 1,
                                 isExpanded: expanded,
                                 style: TextStyle(
@@ -162,17 +182,17 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                           children: [
                             Icon(DisplayIcons.video_player, size: 16, color: Theme.of(context).hintColor),
                             const SizedBox(width: 4),
-                            Text(NumberConverter.convertNumber(video!.visitCount!),
+                            Text(NumberConverter.convertNumber(widget.video.visitCount!),
                                 style: TextStyle(fontSize: 12, color: Theme.of(context).hintColor, overflow: TextOverflow.ellipsis)),
                             const SizedBox(width: 8),
-                            Text(DateTime.fromMillisecondsSinceEpoch(video!.createdAt! * 1000).toLocal().toString().substring(0, 16),
+                            Text(DateTime.fromMillisecondsSinceEpoch(widget.video.createdAt! * 1000).toLocal().toString().substring(0, 16),
                                 style: TextStyle(fontSize: 12, color: Theme.of(context).hintColor, overflow: TextOverflow.ellipsis)),
                           ],
                         ),
                         AnimatedSize(
                           duration: const Duration(milliseconds: 400),
                           curve: Curves.easeInOutCubicEmphasized,
-                          child: ExpandShrinkText(video!.description!,
+                          child: ExpandShrinkText(widget.video.description!,
                               maxShrinkLine: 0,
                               isExpanded: expanded,
                               style: TextStyle(
@@ -185,7 +205,7 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                                 padding: const EdgeInsets.only(top: 8),
                                 child: Wrap(
                                   children: [
-                                    for (var tag in video!.labels!)
+                                    for (var tag in widget.video.labels!)
                                       Padding(
                                         padding: const EdgeInsets.only(right: 8, bottom: 8),
                                         child: TDTag(
@@ -204,21 +224,22 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.25,
                               child: LikeButton(
-                                isLiked: video!.isLiked,
+                                isLiked: widget.video.isLiked,
                                 onTap: (isLike) async {
                                   Response response;
                                   response = await Global.dio.post('/api/v1/interact/like/video/action',
-                                      data: {"video_id": video!.id, "action_type": video!.isLiked! ? 0 : 1});
+                                      data: {"video_id": widget.video.id, "action_type": widget.video.isLiked! ? 0 : 1});
                                   if (response.data["code"] == Global.successCode) {
-                                    video!.likeCount = video!.isLiked! ? video!.likeCount! - 1 : video!.likeCount! + 1;
-                                    video!.isLiked = !video!.isLiked!;
+                                    widget.video.likeCount =
+                                        widget.video.isLiked! ? widget.video.likeCount! - 1 : widget.video.likeCount! + 1;
+                                    widget.video.isLiked = !widget.video.isLiked!;
                                     setState(() {});
                                   } else {
                                     if (context.mounted) {
                                       ToastificationUtils.showSimpleToastification(context, response.data["msg"]);
                                     }
                                   }
-                                  return video!.isLiked!;
+                                  return widget.video.isLiked!;
                                 },
                                 size: 28,
                                 circleColor:
@@ -234,7 +255,7 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                                     size: 28,
                                   );
                                 },
-                                likeCount: video!.likeCount,
+                                likeCount: widget.video.likeCount,
                                 countPostion: CountPostion.bottom,
                                 countBuilder: (int? count, bool isLiked, String text) {
                                   var color = isLiked ? Theme.of(context).primaryColor : Theme.of(context).unselectedWidgetColor;
@@ -246,7 +267,7 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                                     );
                                   } else {
                                     result = Text(
-                                      NumberConverter.convertNumber(video!.likeCount!),
+                                      NumberConverter.convertNumber(widget.video.likeCount!),
                                       style: TextStyle(color: color, fontSize: 12),
                                     );
                                   }
@@ -304,7 +325,7 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                                 },
                                 onTap: (b) async {
                                   ReportPopup.show(context, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.6,
-                                      oType: 'video', oId: video!.id!);
+                                      oType: 'video', oId: widget.video.id!);
                                   return false;
                                 },
                                 animationDuration: const Duration(milliseconds: 0),

@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:dio/dio.dart';
@@ -806,26 +805,6 @@ class _SubmitPageState extends State<SubmitPage> {
         ],
       ),
     );
-  }
-
-  Future<void> _progressTest(BuildContext context) {
-    return Future.delayed(const Duration(milliseconds: 100), () {
-      _uploadingPercent += Random().nextDouble() / 10;
-      if (_uploadingPercent < 1) {
-        setState(() {});
-        if (context.mounted) {
-          _progressTest(context);
-        }
-      } else {
-        _onUploading = false;
-        _uploadingPercent = 0.0;
-        reset();
-        setState(() {});
-        if (context.mounted) {
-          ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.submit_video_uploading_success);
-        }
-      }
-    });
   }
 
   bool _checkMessageFilled() {

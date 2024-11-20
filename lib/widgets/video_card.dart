@@ -8,6 +8,7 @@ import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:fulifuli_app/widgets/icons/def.dart';
 import 'package:fulifuli_app/widgets/report_popup.dart';
 
+import '../pages/video.dart';
 import '../utils/image_shader_mask.dart';
 
 class VideoCard extends StatefulWidget {
@@ -91,38 +92,12 @@ class _VideoCardState extends State<VideoCard> {
               ],
             )),
         child: GestureDetector(
-          onTap: () async {
-            Response r1;
-            r1 = await Global.dio.get("/api/v1/video/info", data: {
-              "video_id": video.id,
-            });
-            debugPrint(Global.dio.options.headers.toString());
-            debugPrint(r1.data.toString());
-            if (r1.data["code"] != Global.successCode) {
-              if (context.mounted) {
-                ToastificationUtils.showSimpleToastification(context, r1.data["msg"]);
-              }
-              return;
-            }
-            video = Video.fromJson(r1.data["data"]);
-            Global.cachedMapVideo[video.id!] = video;
-            Response response = await Global.dio.get("/api/v1/user/follower_count", data: {
-              "user_id": video.user?.id,
-            });
-            debugPrint("VideoCard: ${response.data}");
-            if (response.data["code"] == Global.successCode) {
-              video.user!.followerCount = response.data["data"]["follower_count"];
-              Global.cachedMapVideo[video.id!] = video;
-              if (context.mounted) {
-                Navigator.of(context).pushNamed('/video', arguments: {
-                  'vid': video.id,
-                });
-              }
-            } else {
-              if (context.mounted) {
-                ToastificationUtils.showSimpleToastification(context, response.data["msg"]);
-              }
-            }
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) {
+                return VideoPage(videoId: video.id!);
+              }),
+            );
           },
           child: Padding(
             padding: const EdgeInsets.only(bottom: 0),

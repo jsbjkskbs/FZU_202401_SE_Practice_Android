@@ -7,9 +7,9 @@ import 'package:fulifuli_app/widgets/video_page/video_profile_view.dart';
 import '../../model/video.dart';
 
 class VideoIntroductionView extends StatefulWidget {
-  const VideoIntroductionView({super.key, required this.vid});
+  const VideoIntroductionView({super.key, required this.video});
 
-  final String vid;
+  final Video video;
   static const String cachePrefix = "video_introduction_view";
 
   @override
@@ -19,17 +19,18 @@ class VideoIntroductionView extends StatefulWidget {
 }
 
 class _VideoIntroductionViewState extends State<VideoIntroductionView> {
+  late String key = '${VideoIntroductionView.cachePrefix}/${widget.video.id}';
   bool expanded = false;
 
   @override
   Widget build(BuildContext context) {
-    if (!Global.cachedMapVideoList.containsKey(VideoIntroductionView.cachePrefix + widget.vid)) {
+    if (!Global.cachedMapVideoList.containsKey(key)) {
       Global.dio.get('/api/v1/video/neighbour/feed', data: {
-        "video_id": widget.vid,
+        "video_id": widget.video.id,
         "offset": 0,
         "n": 10,
       }).then((data) {
-        Global.cachedMapVideoList[VideoIntroductionView.cachePrefix + widget.vid] = const MapEntry([], true);
+        Global.cachedMapVideoList[key] = const MapEntry([], true);
         if (data.data["code"] != Global.successCode) {
           if (context.mounted) {
             ToastificationUtils.showSimpleToastification(context, data.data["msg"]);
@@ -40,7 +41,7 @@ class _VideoIntroductionViewState extends State<VideoIntroductionView> {
         for (var item in data.data["data"]["items"]) {
           list.add(Video.fromJson(item));
         }
-        Global.cachedMapVideoList[VideoIntroductionView.cachePrefix + widget.vid] = MapEntry(list, true);
+        Global.cachedMapVideoList[key] = MapEntry(list, true);
         setState(() {});
       });
     }
@@ -54,22 +55,19 @@ class _VideoIntroductionViewState extends State<VideoIntroductionView> {
       itemBuilder: (BuildContext context, int index) {
         return [
           VideoProfileView(
-            vid: widget.vid,
+            video: widget.video,
           ),
-          if (Global.cachedMapVideoList.containsKey(VideoIntroductionView.cachePrefix + widget.vid))
-            for (var item in Global.cachedMapVideoList[VideoIntroductionView.cachePrefix + widget.vid]!.key)
+          if (Global.cachedMapVideoList.containsKey(key) && Global.cachedMapVideoList[key]!.key.isNotEmpty)
+            for (var item in Global.cachedMapVideoList[key]!.key)
               SearchPageVideoItem(
                 data: item,
                 onTap: () {},
               ),
-          if (!Global.cachedMapVideoList.containsKey(VideoIntroductionView.cachePrefix + widget.vid))
+          if (!Global.cachedMapVideoList.containsKey(key) || Global.cachedMapVideoList[key]!.key.isEmpty)
             const Padding(padding: EdgeInsets.all(16), child: Text('没有更多了哦~')),
         ][index];
       },
-      itemCount: 1 +
-          (Global.cachedMapVideoList.containsKey(VideoIntroductionView.cachePrefix + widget.vid)
-              ? Global.cachedMapVideoList[VideoIntroductionView.cachePrefix + widget.vid]!.key.length
-              : 0),
+      itemCount: 1 + (Global.cachedMapVideoList.containsKey(key) ? Global.cachedMapVideoList[key]!.key.length : 1),
     );
   }
 }

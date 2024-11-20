@@ -14,9 +14,9 @@ import '../../utils/number_converter.dart';
 import '../../utils/toastification.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({super.key, required this.userId});
+  const Profile({super.key, required this.keyInCachedMapUser});
 
-  final String userId;
+  final String keyInCachedMapUser;
 
   @override
   State<StatefulWidget> createState() {
@@ -43,8 +43,8 @@ class _ProfileState extends State<Profile> {
                   TDImageViewer.showImageViewer(
                       context: context,
                       images: [
-                        Global.cachedMapUser[widget.userId]?.avatarUrl != ""
-                            ? Global.cachedMapUser[widget.userId]?.avatarUrl
+                        Global.cachedMapUser[widget.keyInCachedMapUser]?.avatarUrl != ""
+                            ? Global.cachedMapUser[widget.keyInCachedMapUser]?.avatarUrl
                             : Global.defaultAvatarUrl,
                         "assets/images/dot.png",
                       ],
@@ -55,7 +55,7 @@ class _ProfileState extends State<Profile> {
                       });
                 },
                 child: TDImage(
-                  imgUrl: Global.cachedMapUser[widget.userId]?.avatarUrl,
+                  imgUrl: Global.cachedMapUser[widget.keyInCachedMapUser]?.avatarUrl,
                   errorWidget: TDImage(
                     assetUrl: "assets/images/default_avatar.avif",
                     type: TDImageType.circle,
@@ -73,15 +73,15 @@ class _ProfileState extends State<Profile> {
             const SizedBox(),
             GestureDetector(
               onTap: () {
-                Navigator.of(context).pushNamed(FollowerPage.routeName, arguments: {"user_id": widget.userId});
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => FollowerPage(userId: widget.keyInCachedMapUser)));
               },
               child: SizedBox(
                   width: MediaQuery.of(context).size.width / 4,
                   child: Column(
                     children: [
                       Text(
-                          Global.cachedMapUser[widget.userId] != null
-                              ? NumberConverter.convertNumber(Global.cachedMapUser[widget.userId]!.followerCount ?? 0)
+                          Global.cachedMapUser[widget.keyInCachedMapUser] != null
+                              ? NumberConverter.convertNumber(Global.cachedMapUser[widget.keyInCachedMapUser]!.followerCount ?? 0)
                               : "NaN",
                           style:
                               _labelStyle.copyWith(fontWeight: FontWeight.bold, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize)),
@@ -94,15 +94,15 @@ class _ProfileState extends State<Profile> {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.of(context).pushNamed(FollowingPage.routeName, arguments: {"user_id": widget.userId});
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => FollowingPage(userId: widget.keyInCachedMapUser)));
               },
               child: SizedBox(
                   width: MediaQuery.of(context).size.width / 4,
                   child: Column(
                     children: [
                       Text(
-                          Global.cachedMapUser[widget.userId] != null
-                              ? NumberConverter.convertNumber(Global.cachedMapUser[widget.userId]!.followingCount ?? 0)
+                          Global.cachedMapUser[widget.keyInCachedMapUser] != null
+                              ? NumberConverter.convertNumber(Global.cachedMapUser[widget.keyInCachedMapUser]!.followingCount ?? 0)
                               : "NaN",
                           style:
                               _labelStyle.copyWith(fontWeight: FontWeight.bold, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize)),
@@ -118,8 +118,8 @@ class _ProfileState extends State<Profile> {
                 child: Column(
                   children: [
                     Text(
-                      Global.cachedMapUser[widget.userId] != null
-                          ? NumberConverter.convertNumber(Global.cachedMapUser[widget.userId]!.likeCount ?? 0)
+                      Global.cachedMapUser[widget.keyInCachedMapUser] != null
+                          ? NumberConverter.convertNumber(Global.cachedMapUser[widget.keyInCachedMapUser]!.likeCount ?? 0)
                           : "NaN",
                       style: _labelStyle.copyWith(fontWeight: FontWeight.bold, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize),
                       overflow: TextOverflow.ellipsis,
@@ -136,66 +136,14 @@ class _ProfileState extends State<Profile> {
         const SizedBox(height: 16.0),
         TextButton(
           onPressed: () async {
-            Response response;
-            if (Global.self.id == widget.userId) {
-              response = await Global.dio.get('/api/v1/user/avatar/upload');
-              if (response.data["code"] == Global.successCode) {
-                debugPrint(response.data.toString());
-                var uploadUrl = response.data["data"]["upload_url"];
-                var uptoken = response.data["data"]["uptoken"];
-                var uploadKey = response.data["data"]["upload_key"];
-                if (uploadUrl != null && uptoken != null && uploadKey != null) {
-                  File? file = await _pickFile();
-                  if (file != null) {
-                    var uFile = await MultipartFile.fromFile(file.path);
-                    FormData formData = FormData.fromMap({
-                      "file": uFile,
-                      "key": uploadKey,
-                      "token": uptoken,
-                    });
-                    response = await Global.dio.post(uploadUrl, data: formData);
-                    if (response.statusCode == 200) {
-                      Response rr;
-                      rr = await Global.dio.get('/api/v1/user/info', data: {
-                        "user_id": Global.self.id,
-                      });
-                      if (rr.data["code"] == Global.successCode) {
-                        setState(() {
-                          Global.self.avatarUrl = rr.data["data"]["avatar_url"];
-                          Global.cachedMapUser[Global.self.id!] = Global.self;
-                          debugPrint(Global.self.avatarUrl);
-                        });
-                      } else {
-                        if (context.mounted) {
-                          ToastificationUtils.showSimpleToastification(context, rr.data["msg"]);
-                        }
-                      }
-                    } else {
-                      if (context.mounted) {
-                        ToastificationUtils.showSimpleToastification(context, '上传失败');
-                      }
-                    }
-                  } else {
-                    if (context.mounted) {
-                      ToastificationUtils.showSimpleToastification(context, '请选择图片');
-                    }
-                  }
-                }
-              } else {
-                if (context.mounted) {
-                  ToastificationUtils.showSimpleToastification(context, response.data["msg"]);
-                }
+            String? result = await _uploadAvatar();
+            if (result != null) {
+              if (context.mounted) {
+                ToastificationUtils.showSimpleToastification(context, result);
               }
             } else {
-              response = await Global.dio.post("/api/v1/relation/follow/action",
-                  data: {"to_user_id": widget.userId, "action_type": Global.cachedMapUser[widget.userId]?.isFollowed == true ? 0 : 1});
-              if (response.data["code"] == Global.successCode) {
-                Global.cachedMapUser[widget.userId]?.isFollowed = !(Global.cachedMapUser[widget.userId]?.isFollowed ?? false);
-                setState(() {});
-              } else {
-                if (context.mounted) {
-                  ToastificationUtils.showSimpleToastification(context, response.data["msg"]);
-                }
+              if (context.mounted) {
+                ToastificationUtils.showSimpleToastification(context, '上传成功');
               }
             }
           },
@@ -205,7 +153,7 @@ class _ProfileState extends State<Profile> {
             shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0))),
           ),
           child: Text(
-            Global.self.id == widget.userId ? "上传头像" : "关注",
+            Global.self.id == Global.cachedMapUser[widget.keyInCachedMapUser]!.id ? "上传头像" : "关注",
             style: TextStyle(
                 color: Theme.of(context).scaffoldBackgroundColor,
                 fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
@@ -215,6 +163,67 @@ class _ProfileState extends State<Profile> {
         const SizedBox(height: 16.0),
       ],
     );
+  }
+
+  Future<String?> _uploadAvatar() async {
+    Response response;
+    if (Global.self.id == Global.cachedMapUser[widget.keyInCachedMapUser]!.id) {
+      response = await Global.dio.get('/api/v1/user/avatar/upload');
+      if (response.data["code"] == Global.successCode) {
+        var uploadUrl = response.data["data"]["upload_url"];
+        var uptoken = response.data["data"]["uptoken"];
+        var uploadKey = response.data["data"]["upload_key"];
+        if (uploadUrl != null && uptoken != null && uploadKey != null) {
+          File? file = await _pickFile();
+          if (file != null) {
+            var uFile = await MultipartFile.fromFile(file.path);
+            FormData formData = FormData.fromMap({
+              "file": uFile,
+              "key": uploadKey,
+              "token": uptoken,
+            });
+            response = await Global.dio.post(uploadUrl, data: formData);
+            if (response.statusCode == 200) {
+              Response rr;
+              rr = await Global.dio.get('/api/v1/user/info', data: {
+                "user_id": Global.self.id,
+              });
+              if (rr.data["code"] == Global.successCode) {
+                setState(() {
+                  Global.self.avatarUrl = rr.data["data"]["avatar_url"];
+                  Global.cachedMapUser[Global.self.id]?.avatarUrl = rr.data["data"]["avatar_url"];
+                });
+              } else {
+                return rr.data["msg"];
+              }
+            } else {
+              return '上传失败';
+            }
+          } else {
+            return '请选择图片';
+          }
+        }
+      } else {
+        return response.data["msg"];
+      }
+    } else {
+      response = await Global.dio.post("/api/v1/relation/follow/action", data: {
+        "to_user_id": widget.keyInCachedMapUser,
+        "action_type": Global.cachedMapUser[widget.keyInCachedMapUser]?.isFollowed == true ? 0 : 1
+      });
+      if (response.data["code"] == Global.successCode) {
+        setState(() {
+          Global.cachedMapUser[widget.keyInCachedMapUser]?.isFollowed =
+              !(Global.cachedMapUser[widget.keyInCachedMapUser]?.isFollowed ?? false);
+          Global.cachedMapUser[widget.keyInCachedMapUser]?.followerCount =
+              (Global.cachedMapUser[widget.keyInCachedMapUser]?.followerCount ?? 0) +
+                  (Global.cachedMapUser[widget.keyInCachedMapUser]?.isFollowed == true ? 1 : -1);
+        });
+      } else {
+        return response.data["msg"];
+      }
+    }
+    return null;
   }
 
   Future<File?> _pickFile() async {

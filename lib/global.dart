@@ -111,7 +111,7 @@ class Global {
     }
     tasks.clear();
 
-    tasks.add(Timer.periodic(const Duration(hours: 1), (timer) async {
+    tasks.add(Timer.periodic(const Duration(minutes: 45), (timer) async {
       await accessTokenRefresh();
     }));
 

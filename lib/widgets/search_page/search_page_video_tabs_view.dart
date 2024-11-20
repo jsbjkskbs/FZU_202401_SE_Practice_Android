@@ -124,9 +124,9 @@ class _SearchPageVideoTabsViewState extends State<SearchPageVideoTabsView> {
                   children: [
                     SearchPageVideoItem(
                       onTap: () {
-                        Navigator.of(context).pushNamed(VideoPage.routeName, arguments: {
-                          "vid": videoList[index].id,
-                        });
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                          return VideoPage(videoId: videoList[index].id!);
+                        }));
                       },
                       data: videoList[index],
                     )

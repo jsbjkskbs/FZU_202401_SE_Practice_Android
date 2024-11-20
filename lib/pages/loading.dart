@@ -8,9 +8,10 @@ import 'package:tdesign_flutter/tdesign_flutter.dart';
 import 'index.dart';
 
 class LoadingPage extends StatefulWidget {
-  const LoadingPage({super.key});
+  const LoadingPage({super.key, required this.onLoading});
 
   static String routeName = '/loading';
+  final Function onLoading;
 
   @override
   State<StatefulWidget> createState() {
@@ -19,6 +20,24 @@ class LoadingPage extends StatefulWidget {
 }
 
 class _LoadingPageState extends State<LoadingPage> {
+  dynamic _loadingResult;
+  bool _isLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding widgetsBinding = WidgetsBinding.instance;
+    widgetsBinding.addPostFrameCallback((_) async {
+      _loadingResult = await widget.onLoading();
+      if (_loadingResult != null && _loadingResult is String) {
+        ToastificationUtils.showSimpleToastification(context, _loadingResult);
+      }
+      setState(() {
+        _isLoaded = true;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -32,7 +51,12 @@ class _LoadingPageState extends State<LoadingPage> {
               height: MediaQuery.of(context).size.height / 12,
               child: GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pushReplacementNamed(IndexPage.routeName);
+                    if (!_isLoaded) {
+                      ToastificationUtils.showSimpleToastification(context, '加载中，请稍后再试');
+                      return;
+                    } else {
+                      Navigator.of(context).pushReplacementNamed(IndexPage.routeName);
+                    }
                   },
                   child: CircularCountDownTimer(
                     width: MediaQuery.of(context).size.width / 10,
@@ -48,6 +72,9 @@ class _LoadingPageState extends State<LoadingPage> {
                         color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.bold),
                     onComplete: () {
+                      if (!_isLoaded) {
+                        return;
+                      }
                       Navigator.of(context).pushReplacementNamed(IndexPage.routeName);
                       ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.loading_hint,
                           duration: const Duration(seconds: 3));
@@ -72,8 +99,17 @@ class _LoadingPageState extends State<LoadingPage> {
               padding: EdgeInsets.only(right: MediaQuery.of(context).size.width / 20, bottom: MediaQuery.of(context).size.height / 24),
               child: ElevatedButton(
                   onPressed: () {
+                    if (!_isLoaded) {
+                      ToastificationUtils.showSimpleToastification(context, '加载中，请稍后再试');
+                      return;
+                    }
                     Navigator.of(context).pushReplacementNamed(IndexPage.routeName);
                   },
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
                   child: Text(AppLocalizations.of(context)!.loading_skip,
                       style: TextStyle(
                           fontSize: MediaQuery.of(context).size.width / 20,

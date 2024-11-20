@@ -18,7 +18,10 @@ class EmptyPlaceHolder extends StatelessWidget {
           ),
           Text(
             '啊哦!好像什么都没有/(ㄒoㄒ)/~~',
-            style: TextStyle(fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize, color: Theme.of(context).primaryColor),
+            style: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                color: Theme.of(context).primaryColor,
+                decoration: TextDecoration.none),
           ),
         ],
       ),

@@ -7,14 +7,15 @@ import 'package:fulifuli_app/widgets/index_page/home/video_tabs_view.dart';
 import 'package:fulifuli_app/widgets/video_page/video_introduction_view.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
+import '../../model/video.dart';
 import '../comment_list.dart';
 import '../comment_reply_fake_container.dart';
 
 class VideoPageTabsContainer extends StatefulWidget {
-  const VideoPageTabsContainer({super.key, required this.tabs, required this.vid});
+  const VideoPageTabsContainer({super.key, required this.tabs, required this.video});
 
   final List<String> tabs;
-  final String vid;
+  final Video video;
 
   @override
   State<StatefulWidget> createState() {
@@ -129,18 +130,18 @@ class _VideoPageTabsContainer extends State<VideoPageTabsContainer> with TickerP
           child: TabBarView(
             controller: _tabController,
             children: [
-              VideoIntroductionView(vid: widget.vid),
+              VideoIntroductionView(video: widget.video),
               Column(
                 children: [
                   Expanded(
                       child: CommentListView(
                     oType: 'video',
-                    oId: widget.vid,
+                    oId: widget.video.id!,
                     easyRefreshController: _easyRefreshController,
                   )),
                   GestureDetector(
                     onTap: () {
-                      CommentPopup.showReplyPanel(context, oType: 'video', oId: widget.vid, onSend: () {
+                      CommentPopup.showReplyPanel(context, oType: 'video', oId: widget.video.id!, onSend: () {
                         _easyRefreshController.callRefresh();
                       });
                     },

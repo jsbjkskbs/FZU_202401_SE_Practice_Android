@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fulifuli_app/pkg/chewie/chewie.dart';
@@ -16,9 +17,10 @@ import '../widgets/video_page/custom_controls/custom_controls.dart';
 import '../widgets/video_page/video_introduction_view.dart';
 
 class VideoPage extends StatefulWidget {
-  const VideoPage({super.key});
+  const VideoPage({super.key, required this.videoId});
 
   static const String routeName = '/video';
+  final String videoId;
 
   @override
   State<StatefulWidget> createState() {
@@ -32,14 +34,19 @@ class _VideoPageState extends State<VideoPage> {
   StreamSubscription<AccelerometerEvent>? accelerometerHandler;
   final GlobalKey<RectGetterState> _rectGetterKey = RectGetter.createGlobalKey();
   double _chewieOpacity = 0;
-  late Video? video;
+  Video? video;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding widgetsBinding = WidgetsBinding.instance;
-    widgetsBinding.addPostFrameCallback((_) {
-      _initializeVideoPlayer(context);
+    widgetsBinding.addPostFrameCallback((_) async {
+      await _fetchData();
+      debugPrint('video: $video');
+      if (video != null) {
+        await _initializeVideoPlayer(context);
+      }
+      setState(() {});
     });
     accelerometerHandler = accelerometerEventStream().listen((event) {
       if (_chewieController == null) {
@@ -62,74 +69,73 @@ class _VideoPageState extends State<VideoPage> {
       _chewieController!.dispose();
     }
     accelerometerHandler!.cancel();
-    Global.cachedMapVideo.remove(video!.id);
-    Global.cachedMapVideoList.remove(VideoIntroductionView.cachePrefix + video!.id.toString());
+    if (video != null) {
+      Global.cachedMapVideo.remove(video!.id!);
+      Global.cachedMapVideoList.remove('${VideoIntroductionView.cachePrefix}/${video!.id!}');
+    }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    var vid = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)["vid"] as String;
-    video = Global.cachedMapVideo[vid];
-    if (video == null) {
-      return _getErrorPage();
-    }
     return SafeArea(
       child: SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        child: CustomScrollView(
-          //  controller: _headerScrollController,
-          slivers: [
-            SliverAppBar(
-              leading: Container(),
-              expandedHeight: MediaQuery.of(context).size.width * 9 / 16,
-              flexibleSpace: VisibilityDetector(
-                  key: const Key('v_s-_S---ss'),
-                  child: RectGetter(
-                      key: _rectGetterKey,
-                      child: AspectRatio(
-                          aspectRatio: 16 / 9,
-                          child: Stack(
-                            children: [
-                              Chewie(
-                                controller: _chewieController!,
-                              ),
-                              if (_chewieOpacity > 0.25)
-                                AnimatedOpacity(
-                                    opacity: _chewieOpacity,
-                                    duration: const Duration(milliseconds: 300),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    ))
-                            ],
-                          ))),
-                  onVisibilityChanged: (_) {
-                    var old = _chewieOpacity;
-                    _chewieOpacity =
-                        1.0 - _rectGetterKey.currentContext!.size!.height / MediaQuery.of(context).size.width * 9.0 / 16.0 - 0.8;
-                    _chewieOpacity = _chewieOpacity * 15;
-                    _chewieOpacity = _chewieOpacity > 1 ? 1 : _chewieOpacity;
-                    _chewieOpacity = _chewieOpacity < 0 ? 0 : _chewieOpacity;
-                    if (old != _chewieOpacity) {
-                      setState(() {});
-                    }
-                  }),
-            ),
-            SliverFillRemaining(
-                child: Material(
-              child: VideoPageTabsContainer(
-                vid: video!.id!,
-                tabs: const [
-                  '简介',
-                  '评论',
+        child: video == null
+            ? _getErrorPage()
+            : CustomScrollView(
+                //  controller: _headerScrollController,
+                slivers: [
+                  SliverAppBar(
+                    leading: Container(),
+                    expandedHeight: MediaQuery.of(context).size.width * 9 / 16,
+                    flexibleSpace: VisibilityDetector(
+                        key: const Key('v_s-_S---ss'),
+                        child: RectGetter(
+                            key: _rectGetterKey,
+                            child: AspectRatio(
+                                aspectRatio: 16 / 9,
+                                child: Stack(
+                                  children: [
+                                    Chewie(
+                                      controller: _chewieController!,
+                                    ),
+                                    if (_chewieOpacity > 0.25)
+                                      AnimatedOpacity(
+                                          opacity: _chewieOpacity,
+                                          duration: const Duration(milliseconds: 300),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Theme.of(context).primaryColor,
+                                            ),
+                                          ))
+                                  ],
+                                ))),
+                        onVisibilityChanged: (_) {
+                          var old = _chewieOpacity;
+                          _chewieOpacity =
+                              1.0 - _rectGetterKey.currentContext!.size!.height / MediaQuery.of(context).size.width * 9.0 / 16.0 - 0.8;
+                          _chewieOpacity = _chewieOpacity * 15;
+                          _chewieOpacity = _chewieOpacity > 1 ? 1 : _chewieOpacity;
+                          _chewieOpacity = _chewieOpacity < 0 ? 0 : _chewieOpacity;
+                          if (old != _chewieOpacity) {
+                            setState(() {});
+                          }
+                        }),
+                  ),
+                  SliverFillRemaining(
+                      child: Material(
+                    child: VideoPageTabsContainer(
+                      video: video!,
+                      tabs: const [
+                        '简介',
+                        '评论',
+                      ],
+                    ),
+                  ))
                 ],
               ),
-            ))
-          ],
-        ),
       ),
     );
   }
@@ -204,5 +210,17 @@ class _VideoPageState extends State<VideoPage> {
         ),
       ),
     ));
+  }
+
+  Future<void> _fetchData() async {
+    Response response;
+    response = await Global.dio.get('/api/v1/video/info', data: {
+      "video_id": widget.videoId,
+    });
+    if (response.data["code"] == Global.successCode) {
+      video = Video.fromJson(response.data["data"]);
+    } else {
+      video = null;
+    }
   }
 }

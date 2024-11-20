@@ -14,16 +14,15 @@ class SpaceDynamicTabsView extends StatefulWidget {
     super.key,
     required this.controller,
     required this.currentIndex,
-    required this.onUpdate,
     required this.assignedIndex,
-    required this.uniqueKey,
+    required this.userId,
   });
 
   final ScrollController? controller;
   final int currentIndex;
-  final Function onUpdate;
   final int assignedIndex;
-  final String uniqueKey;
+  final String userId;
+  static String uniqueKey = "SpaceDynamicTabsView";
 
   @override
   State<SpaceDynamicTabsView> createState() {
@@ -32,6 +31,7 @@ class SpaceDynamicTabsView extends StatefulWidget {
 }
 
 class _SpaceDynamicTabsViewState extends State<SpaceDynamicTabsView> {
+  late String key = '${SpaceDynamicTabsView.uniqueKey}/${widget.userId}';
   final EasyRefreshController _easyRefreshController = EasyRefreshController(
     controlFinishLoad: true,
     controlFinishRefresh: true,
@@ -47,6 +47,10 @@ class _SpaceDynamicTabsViewState extends State<SpaceDynamicTabsView> {
 
     var widgetsBinding = WidgetsBinding.instance;
     widgetsBinding.addPostFrameCallback((_) {
+      if (!Global.cachedMapVideoList.containsKey(key)) {
+        Global.cachedMapVideoList[key] = const MapEntry([], false);
+        setState(() {});
+      }
       _easyRefreshController.callRefresh();
     });
   }
@@ -84,7 +88,8 @@ class _SpaceDynamicTabsViewState extends State<SpaceDynamicTabsView> {
         controller: _easyRefreshController,
         onRefresh: () async {
           pageNum = 0;
-          Global.cachedMapDynamicList[widget.uniqueKey] = const MapEntry([], false);
+          isEnd = false;
+          Global.cachedMapDynamicList[key] = const MapEntry([], false);
           var result = await _fetchData();
           if (result != null) {
             if (context.mounted) {
@@ -114,12 +119,13 @@ class _SpaceDynamicTabsViewState extends State<SpaceDynamicTabsView> {
         childBuilder: (BuildContext context, ScrollPhysics physics) {
           return ListView.separated(
             physics: physics,
-            itemCount:
-                Global.cachedMapDynamicList.containsKey(widget.uniqueKey) ? Global.cachedMapDynamicList[widget.uniqueKey]!.key.length : 1,
+            itemCount: Global.cachedMapDynamicList.containsKey(key) && Global.cachedMapDynamicList[key]!.key.isNotEmpty
+                ? Global.cachedMapDynamicList[key]!.key.length
+                : 1,
             itemBuilder: (context, index) {
-              return Global.cachedMapDynamicList.containsKey(widget.uniqueKey)
+              return Global.cachedMapDynamicList.containsKey(key) && Global.cachedMapDynamicList[key]!.key.isNotEmpty
                   ? DynamicCard(
-                      data: Global.cachedMapDynamicList[widget.uniqueKey]!.key[index],
+                      data: Global.cachedMapDynamicList[key]!.key[index],
                     )
                   : const EmptyPlaceHolder();
             },
@@ -131,13 +137,13 @@ class _SpaceDynamicTabsViewState extends State<SpaceDynamicTabsView> {
   }
 
   Future<String?> _fetchData() async {
-    if (!Global.cachedMapDynamicList.containsKey(widget.uniqueKey)) {
-      Global.cachedMapDynamicList[widget.uniqueKey] = const MapEntry([], false);
+    if (!Global.cachedMapDynamicList.containsKey(key)) {
+      Global.cachedMapDynamicList[key] = const MapEntry([], false);
     }
 
     Response response;
     response = await Global.dio.get('/api/v1/activity/list', data: {
-      "user_id": widget.uniqueKey,
+      "user_id": widget.userId,
       "page_num": pageNum,
       "page_size": pageSize,
     });
@@ -151,7 +157,7 @@ class _SpaceDynamicTabsViewState extends State<SpaceDynamicTabsView> {
       } else {
         pageNum++;
       }
-      Global.cachedMapDynamicList[widget.uniqueKey] = MapEntry([...Global.cachedMapDynamicList[widget.uniqueKey]!.key, ...list], isEnd);
+      Global.cachedMapDynamicList[key] = MapEntry([...Global.cachedMapDynamicList[key]!.key, ...list], isEnd);
       return null;
     } else {
       return response.data["message"];

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:fulifuli_app/pages/space.dart';
+import 'package:fulifuli_app/widgets/empty_placeholder.dart';
 
 import '../global.dart';
 import '../model/user.dart';
@@ -9,9 +10,12 @@ import '../utils/toastification.dart';
 import '../widgets/search_page/search_page_user_item.dart';
 
 class FollowingPage extends StatefulWidget {
-  const FollowingPage({super.key});
+  const FollowingPage({super.key, required this.userId});
 
   static String routeName = '/following/list';
+  static const uniqueKey = "FollowingPage";
+
+  final String userId;
 
   @override
   State<StatefulWidget> createState() {
@@ -20,14 +24,12 @@ class FollowingPage extends StatefulWidget {
 }
 
 class _FollowingPageState extends State<FollowingPage> {
-  static const _uniqueKey = "FollowingPage";
+  late String key = "${FollowingPage.uniqueKey}/${widget.userId}";
 
   final EasyRefreshController _controller = EasyRefreshController(
     controlFinishRefresh: true,
     controlFinishLoad: true,
   );
-  List<User> userList = [];
-  late String userId;
   int pageNum = 0;
   bool isEnd = false;
 
@@ -37,18 +39,22 @@ class _FollowingPageState extends State<FollowingPage> {
 
     WidgetsBinding widgetsBinding = WidgetsBinding.instance;
     widgetsBinding.addPostFrameCallback((_) {
+      if (!Global.cachedMapUserList.containsKey(key)) {
+        Global.cachedMapUserList[key] = const MapEntry([], false);
+      }
       _controller.callRefresh();
     });
   }
 
   @override
-  Widget build(BuildContext context) {
-    var args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    userId = args["user_id"];
-    if (!Global.cachedMapUserList.containsKey('${_FollowingPageState._uniqueKey}$userId')) {
-      Global.cachedMapUserList['$_uniqueKey$userId'] = const MapEntry([], false);
-    }
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+    Global.cachedMapUserList.remove(key);
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -61,54 +67,72 @@ class _FollowingPageState extends State<FollowingPage> {
               header: const MaterialHeader(),
               footer: const MaterialFooter(),
               onRefresh: () async {
-                userList = [];
                 pageNum = 0;
                 isEnd = false;
-                Global.cachedMapUserList['${_FollowingPageState._uniqueKey}$userId'] = const MapEntry([], false);
-                _fetchData(context);
+                Global.cachedMapUserList[key] = const MapEntry([], false);
+                String? result = await _fetchData();
+                if (result != null) {
+                  if (context.mounted) {
+                    ToastificationUtils.showSimpleToastification(context, result);
+                  }
+                  _controller.finishRefresh();
+                  return;
+                }
+                setState(() {});
                 _controller.finishRefresh();
               },
               onLoad: () async {
-                _fetchData(context);
+                if (isEnd) {
+                  _controller.finishLoad();
+                  ToastificationUtils.showSimpleToastification(context, "没有更多了");
+                  return;
+                }
+                String? result = await _fetchData();
+                if (result != null) {
+                  if (context.mounted) {
+                    ToastificationUtils.showSimpleToastification(context, result);
+                  }
+                  _controller.finishLoad();
+                  return;
+                }
+                setState(() {});
                 _controller.finishLoad();
               },
               child: ListView.separated(
                   itemBuilder: (context, index) {
-                    return SearchPageUserItem(
-                      onTap: () {
-                        Navigator.of(context).pushNamed(SpacePage.routeName, arguments: {"user_id": userList[index].id});
-                      },
-                      user: userList[index],
-                    );
+                    return Global.cachedMapUserList.containsKey(key) && Global.cachedMapUserList[key]!.key.isNotEmpty
+                        ? SearchPageUserItem(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                                return SpacePage(
+                                  userId: Global.cachedMapUserList[key]!.key[index].id!,
+                                );
+                              }));
+                            },
+                            user: Global.cachedMapUserList[key]!.key[index],
+                          )
+                        : const EmptyPlaceHolder();
                   },
                   separatorBuilder: (context, index) => const Divider(),
-                  itemCount: userList.length))),
+                  itemCount: Global.cachedMapUserList.containsKey(key) && Global.cachedMapUserList[key]!.key.isNotEmpty
+                      ? Global.cachedMapUserList[key]!.key.length
+                      : 1))),
     ));
   }
 
-  void _fetchData(BuildContext context) async {
-    if (Global.cachedMapUserList.containsKey('${_FollowingPageState._uniqueKey}$userId')) {
-      userList = Global.cachedMapUserList['${_FollowingPageState._uniqueKey}$userId']!.key;
-      isEnd = Global.cachedMapUserList['${_FollowingPageState._uniqueKey}$userId']!.value;
-      if (isEnd) {
-        if (context.mounted) {
-          ToastificationUtils.showSimpleToastification(context, "没有更多了");
-        }
-        setState(() {});
-        return;
-      }
+  Future<String?> _fetchData() async {
+    if (!Global.cachedMapUserList.containsKey(key)) {
+      Global.cachedMapUserList[key] = const MapEntry([], false);
     }
+
     Response response;
     response = await Global.dio.get("/api/v1/relation/follow/list", data: {
-      "user_id": userId,
+      "user_id": widget.userId,
       "page_num": pageNum,
       "page_size": 10,
     });
     if (response.data["code"] != Global.successCode) {
-      if (context.mounted) {
-        ToastificationUtils.showSimpleToastification(context, response.data["msg"]);
-        return;
-      }
+      return response.data["msg"];
     }
     List<User> list = [];
     for (var item in response.data["data"]["items"]) {
@@ -121,15 +145,12 @@ class _FollowingPageState extends State<FollowingPage> {
       user.followerCount = r.data["data"]["follower_count"];
       list.add(user);
     }
-    userList = [...userList, ...list];
-    Global.cachedMapUserList['${_FollowingPageState._uniqueKey}$userId'] = MapEntry(userList, response.data["data"]["is_end"]);
-    pageNum++;
     if (response.data["data"]["is_end"]) {
       isEnd = true;
-      if (context.mounted) {
-        ToastificationUtils.showSimpleToastification(context, "没有更多了");
-      }
+    } else {
+      pageNum++;
     }
-    setState(() {});
+    Global.cachedMapUserList[key] = MapEntry([...Global.cachedMapUserList[key]!.key, ...list], isEnd);
+    return null;
   }
 }

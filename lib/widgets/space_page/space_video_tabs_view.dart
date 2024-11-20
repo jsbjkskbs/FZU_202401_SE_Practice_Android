@@ -1,8 +1,12 @@
+import 'dart:async';
+
+import 'package:dio/dio.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
+import 'package:fulifuli_app/widgets/empty_placeholder.dart';
 import 'package:fulifuli_app/widgets/video_card.dart';
 
 import '../../../model/video.dart';
@@ -13,16 +17,15 @@ class SpaceVideoTabsView extends StatefulWidget {
     super.key,
     required this.controller,
     required this.currentIndex,
-    required this.onUpdate,
     required this.assignedIndex,
-    required this.uniqueKey,
+    required this.userId,
   });
 
   final ScrollController? controller;
   final int currentIndex;
-  final Function onUpdate;
   final int assignedIndex;
-  final String uniqueKey;
+  final String userId;
+  static String uniqueKey = "SpaceVideoTabsView";
 
   @override
   State<SpaceVideoTabsView> createState() {
@@ -31,69 +34,32 @@ class SpaceVideoTabsView extends StatefulWidget {
 }
 
 class _SpaceVideoTabsViewState extends State<SpaceVideoTabsView> {
-  late List<Video> videoList = [];
-  late EasyRefreshController _easyRefreshController;
+  late String key = '${SpaceVideoTabsView.uniqueKey}/${widget.userId}';
+  final EasyRefreshController _easyRefreshController = EasyRefreshController(
+    controlFinishRefresh: true,
+    controlFinishLoad: true,
+  );
+
   int pageNum = 0;
+  static const int pageSize = 10;
   bool isEnd = false;
 
   @override
   void initState() {
     super.initState();
-    bool isCached = Global.cachedMapVideoList.containsKey(widget.uniqueKey);
-    if (!isCached) {
-      Global.cachedMapVideoList.addEntries([MapEntry(widget.uniqueKey, MapEntry(videoList, isEnd))]);
-    }
-    videoList = Global.cachedMapVideoList[widget.uniqueKey]!.key;
-    isEnd = Global.cachedMapVideoList[widget.uniqueKey]!.value;
 
-    if (isCached) {
-      return;
-    }
-    var widgetsBinding = WidgetsBinding.instance;
+    WidgetsBinding widgetsBinding = WidgetsBinding.instance;
     widgetsBinding.addPostFrameCallback((_) {
-      if (widget.currentIndex == widget.assignedIndex) {
-        Global.dio.get("/api/v1/video/list", data: {
-          "user_id": widget.uniqueKey,
-          "page_num": pageNum,
-          "page_size": 10,
-        }).then((data) {
-          if (data.data["code"] == Global.successCode) {
-            for (var item in data.data["data"]["items"]) {
-              videoList.add(Video.fromJson(item));
-            }
-            isEnd = data.data["data"]["is_end"];
-            Global.cachedMapVideoList[widget.uniqueKey] = MapEntry(videoList, isEnd);
-            setState(() {
-              pageNum++;
-            });
-          }
-        });
+      if (!Global.cachedMapVideoList.containsKey(key)) {
+        Global.cachedMapVideoList[key] = const MapEntry([], false);
+        setState(() {});
       }
-      setState(() {});
+      _easyRefreshController.callRefresh();
     });
   }
 
   @override
-  void didUpdateWidget(covariant SpaceVideoTabsView oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (videoList.isEmpty && widget.currentIndex == widget.assignedIndex) {
-      setState(() {});
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    _easyRefreshController = EasyRefreshController(
-      controlFinishRefresh: true,
-      controlFinishLoad: true,
-    );
-
-    TextStyle hintStyle = TextStyle(
-      fontSize: Theme.of(context).textTheme.headlineSmall!.fontSize,
-      fontWeight: FontWeight.bold,
-      color: Theme.of(context).primaryColor,
-    );
-
     return EasyRefresh.builder(
         header: MaterialHeader(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -124,114 +90,80 @@ class _SpaceVideoTabsViewState extends State<SpaceVideoTabsView> {
         ),
         controller: _easyRefreshController,
         onRefresh: () async {
-          await Future<void>.delayed(const Duration(milliseconds: 500));
-          if (!mounted) {
+          pageNum = 0;
+          Global.cachedMapVideoList.remove(key);
+          String? result = await _fetchData();
+          if (result != null) {
+            if (context.mounted) {
+              ToastificationUtils.showSimpleToastification(context, result);
+            }
+            _easyRefreshController.finishRefresh();
             return;
           }
-          videoList.clear();
-          pageNum = 0;
-          Global.dio.get("/api/v1/video/list", data: {
-            "user_id": widget.uniqueKey,
-            "page_num": pageNum,
-            "page_size": 10,
-          }).then((data) {
-            if (data.data["code"] == Global.successCode) {
-              for (var item in data.data["data"]["items"]) {
-                videoList.add(Video.fromJson(item));
-              }
-              isEnd = data.data["data"]["is_end"];
-              Global.cachedMapVideoList[widget.uniqueKey] = MapEntry(videoList, isEnd);
-              setState(() {
-                pageNum++;
-              });
-            }
-          });
-          if (context.mounted) {
-            ToastificationUtils.showSimpleToastification(context, '刷新成功');
-          }
-          _easyRefreshController.finishRefresh();
-          _easyRefreshController.resetHeader();
           setState(() {});
+          _easyRefreshController.finishRefresh();
         },
         onLoad: () async {
-          await Future<void>.delayed(const Duration(milliseconds: 500));
           if (isEnd) {
+            ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.home_page_refresher_no_more_text);
+            _easyRefreshController.finishLoad();
+            return;
+          }
+
+          String? result = await _fetchData();
+          if (result != null) {
             if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, '没有更多了');
+              ToastificationUtils.showSimpleToastification(context, result);
             }
             _easyRefreshController.finishLoad();
-            _easyRefreshController.resetFooter();
-            return IndicatorResult.noMore;
+            return;
           }
-          if (!mounted) {
-            return IndicatorResult.noMore;
-          }
-          Global.dio.get("/api/v1/video/list", data: {
-            "user_id": widget.uniqueKey,
-            "page_num": pageNum,
-            "page_size": 10,
-          }).then((data) {
-            if (data.data["code"] == Global.successCode) {
-              for (var item in data.data["data"]["items"]) {
-                videoList.add(Video.fromJson(item));
-              }
-              isEnd = data.data["data"]["is_end"];
-              Global.cachedMapVideoList[widget.uniqueKey] = MapEntry(videoList, isEnd);
-              setState(() {
-                pageNum++;
-              });
-            }
-          });
-          if (context.mounted) {
-            ToastificationUtils.showSimpleToastification(context, '加载成功');
-          }
+          setState(() {});
           _easyRefreshController.finishLoad();
-          _easyRefreshController.resetFooter();
-          if (isEnd && context.mounted) {
-            ToastificationUtils.showSimpleToastification(context, '没有更多了');
-            return IndicatorResult.noMore;
-          }
-          return IndicatorResult.success;
         },
         scrollController: widget.controller,
         childBuilder: (BuildContext context, ScrollPhysics physics) {
-          return videoList.isEmpty
-              ? OptionGridView(
-                  itemCount: 1,
-                  rowCount: 1,
-                  itemBuilder: (_, __) {
-                    return SizedBox(
-                        height: MediaQuery.of(context).size.height,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Column(
-                              children: [
-                                Image.asset('assets/images/cute/konata_dancing.webp'),
-                                Text(
-                                  AppLocalizations.of(context)!.space_nothing_hint,
-                                  style: hintStyle,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(),
-                            Text(
-                              AppLocalizations.of(context)!.space_nothing_hint_bottom,
-                              style: hintStyle,
-                            ),
-                            const SizedBox()
-                          ],
-                        ));
-                  })
-              : OptionGridView(
-                  physics: physics,
-                  itemCount: videoList.length,
-                  rowCount: 2,
-                  itemBuilder: (context, index) {
-                    return VideoCard(video: videoList[index]);
-                  },
-                );
+          return OptionGridView(
+            physics: physics,
+            itemCount: Global.cachedMapVideoList.containsKey(key) && Global.cachedMapVideoList[key]!.key.isNotEmpty
+                ? Global.cachedMapVideoList[key]!.key.length
+                : 1,
+            rowCount: Global.cachedMapVideoList.containsKey(key) && Global.cachedMapVideoList[key]!.key.isNotEmpty ? 2 : 1,
+            itemBuilder: (context, index) {
+              return Global.cachedMapVideoList.containsKey(key) && Global.cachedMapVideoList[key]!.key.isNotEmpty
+                  ? VideoCard(video: Global.cachedMapVideoList[key]!.key[index])
+                  : const EmptyPlaceHolder();
+            },
+          );
         });
+  }
+
+  Future<String?> _fetchData() async {
+    if (!Global.cachedMapVideoList.containsKey(key)) {
+      Global.cachedMapVideoList[key] = const MapEntry([], false);
+    }
+
+    Response response;
+    response = await Global.dio.get('/api/v1/video/list', data: {
+      "user_id": widget.userId,
+      "page_num": pageNum,
+      "page_size": pageSize,
+    });
+
+    if (response.data["code"] == Global.successCode) {
+      var list = <Video>[];
+      for (var item in response.data["data"]["items"]) {
+        list.add(Video.fromJson(item));
+      }
+      if (response.data["data"]["is_end"]) {
+        isEnd = true;
+      } else {
+        pageNum++;
+      }
+      Global.cachedMapVideoList[key] = MapEntry([...Global.cachedMapVideoList[key]!.key, ...list], isEnd);
+      return null;
+    } else {
+      return response.data["message"];
+    }
   }
 }

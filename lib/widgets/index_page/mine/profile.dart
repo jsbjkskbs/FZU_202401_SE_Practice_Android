@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 import '../../../global.dart';
+import '../../../pages/space.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -26,7 +27,11 @@ class _ProfileViewState extends State<ProfileView> {
         ),
         onPressed: () {
           if (Global.self.isValidUser()) {
-            Navigator.of(context).pushNamed("/space", arguments: {"user_id": Global.self.id});
+            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
+              return SpacePage(
+                userId: Global.self.id!,
+              );
+            }));
           } else {
             Navigator.of(context).pushNamed("/login");
           }
@@ -42,10 +47,17 @@ class _ProfileViewState extends State<ProfileView> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                  child: TDAvatar(
-                    size: TDAvatarSize.large,
-                    avatarUrl: Global.self.avatarUrl == "" ? null : Global.self.avatarUrl,
-                    defaultUrl: "assets/images/default_avatar.avif",
+                  child: TDImage(
+                    width: 60.0,
+                    height: 60.0,
+                    type: TDImageType.circle,
+                    imgUrl: Global.self.avatarUrl,
+                    errorWidget: const TDImage(
+                      width: 60.0,
+                      height: 60.0,
+                      type: TDImageType.circle,
+                      assetUrl: "assets/images/default_avatar.avif",
+                    ),
                   ),
                 ),
                 Padding(

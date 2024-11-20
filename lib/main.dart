@@ -23,7 +23,6 @@ import 'package:fulifuli_app/pages/space.dart';
 import 'package:fulifuli_app/pages/submission_manage.dart';
 import 'package:fulifuli_app/pages/video.dart';
 import 'package:fulifuli_app/utils/scheme_reflect.dart';
-import 'package:fulifuli_app/utils/toastification.dart';
 
 import 'model/user.dart';
 
@@ -33,30 +32,6 @@ Future<void> main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  Global.appPersistentData = await Storage.getPersistentData();
-  Global.self = Global.appPersistentData.user ?? User();
-  Global.updateDioToken(accessToken: Global.self.accessToken, refreshToken: Global.self.refreshToken);
-  var valid = Global.refreshTokenRefresh();
-  if (await valid) {
-    var valid = await Global.accessTokenRefresh();
-    if (!valid) {
-      Global.self = User();
-      Global.appPersistentData.user = Global.self;
-      Global.updateDioToken(accessToken: null, refreshToken: null);
-      Storage.storePersistentData(Global.appPersistentData);
-    } else {
-      debugPrint("Global.main.startAsyncTask, with user: ${Global.self}");
-      Global.startAsyncTask();
-    }
-  } else {
-    if (Global.self.accessToken != null && Global.self.accessToken!.isNotEmpty) {
-      Global.cachedMap["delayed-notification/not-valid"] = true;
-      Global.self = User();
-      Global.appPersistentData.user = Global.self;
-      Global.updateDioToken(accessToken: null, refreshToken: null);
-      Storage.storePersistentData(Global.appPersistentData);
-    }
-  }
   runApp(const MyApp());
 }
 
@@ -87,10 +62,6 @@ class MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    if (Global.cachedMap["delayed-notification/not-valid"] == true) {
-      Global.cachedMap.remove("delayed-notification/not-valid");
-      ToastificationUtils.showSimpleToastification(context, '登录状态已失效，请重新登录');
-    }
     return AdaptiveTheme(
         initial: Global.appPersistentData.themeMode == 0 ? AdaptiveThemeMode.light : AdaptiveThemeMode.dark,
         light: FlexThemeData.light(
@@ -144,20 +115,76 @@ class MyAppState extends State<MyApp> {
               // initialRoute: IndexPage.routeName,
               initialRoute: LoadingPage.routeName,
               routes: {
-                LoadingPage.routeName: (context) => const LoadingPage(),
+                LoadingPage.routeName: (context) => LoadingPage(onLoading: _initialize),
                 LoginScreen.routeName: (context) => const LoginScreen(),
                 IndexPage.routeName: (context) => const IndexPage(),
                 MFAVerification.routeName: (context) => const MFAVerification(),
                 SettingsPage.routeName: (context) => const SettingsPage(),
-                SpacePage.routeName: (context) => const SpacePage(),
+                SpacePage.routeName: (context) => const SpacePage(
+                      userId: "",
+                    ),
                 SearchPage.routeName: (context) => const SearchPage(),
                 SubmissionManagePage.routeName: (context) => const SubmissionManagePage(),
                 DynamicPostPage.routeName: (context) => const DynamicPostPage(),
-                VideoPage.routeName: (context) => const VideoPage(),
-                FollowerPage.routeName: (context) => const FollowerPage(),
-                FollowingPage.routeName: (context) => const FollowingPage(),
+                VideoPage.routeName: (context) => const VideoPage(
+                      videoId: "",
+                    ),
+                FollowerPage.routeName: (context) => const FollowerPage(
+                      userId: "",
+                    ),
+                FollowingPage.routeName: (context) => const FollowingPage(
+                      userId: "",
+                    ),
                 LikedVideosPage.routeName: (context) => const LikedVideosPage(),
               },
             ));
+  }
+
+  Future<String?> _initialize() async {
+    Global.appPersistentData = await Storage.getPersistentData();
+    debugPrint("Global.main.startAsyncTask, with persistent data: ${Global.appPersistentData.toJson()}");
+    Global.self =
+        Global.appPersistentData.user != null && Global.appPersistentData.user!.isValidUser() ? Global.appPersistentData.user! : User();
+    debugPrint("Global.main.startAsyncTask, with user: ${Global.self.toJson()}");
+    Global.updateDioToken(accessToken: Global.self.accessToken, refreshToken: Global.self.refreshToken);
+    debugPrint("Global.main.startAsyncTask, with dio token: ${Global.self.accessToken}, ${Global.self.refreshToken}");
+    var valid = await Global.refreshTokenRefresh();
+    debugPrint("Global.main.startAsyncTask, with refresh token valid: $valid");
+    if (valid) {
+      var valid2 = await Global.accessTokenRefresh();
+      debugPrint("Global.main.startAsyncTask, with access token valid: $valid2");
+      if (!valid2) {
+        Global.self = User();
+        debugPrint("Global.main.startAsyncTask, with user: ${Global.self.toJson()}");
+        Global.appPersistentData.user = Global.self;
+        debugPrint("Global.main.startAsyncTask, with persistent data: ${Global.appPersistentData.toJson()}");
+        Global.updateDioToken(accessToken: null, refreshToken: null);
+        debugPrint("Global.main.startAsyncTask, with dio token: ${Global.self.accessToken}, ${Global.self.refreshToken}");
+        Storage.storePersistentData(Global.appPersistentData);
+        return '登录状态已失效，请重新登录';
+      } else {
+        debugPrint("Global.main.startAsyncTask, with user: ${Global.self.toJson()}");
+        Global.startAsyncTask();
+      }
+    } else {
+      if (Global.self.accessToken != null && Global.self.accessToken!.isNotEmpty) {
+        Global.self = User();
+        debugPrint("Global.main.startAsyncTask, with user: ${Global.self.toJson()}");
+        Global.appPersistentData.user = Global.self;
+        debugPrint("Global.main.startAsyncTask, with persistent data: ${Global.appPersistentData.toJson()}");
+        Global.updateDioToken(accessToken: null, refreshToken: null);
+        debugPrint("Global.main.startAsyncTask, with dio token: ${Global.self.accessToken}, ${Global.self.refreshToken}");
+        Storage.storePersistentData(Global.appPersistentData);
+        return '登录状态已失效，请重新登录';
+      }
+      Global.self = User();
+      debugPrint("Global.main.startAsyncTask, with user: ${Global.self.toJson()}");
+      Global.appPersistentData.user = Global.self;
+      debugPrint("Global.main.startAsyncTask, with persistent data: ${Global.appPersistentData.toJson()}");
+      Global.updateDioToken(accessToken: null, refreshToken: null);
+      debugPrint("Global.main.startAsyncTask, with dio token: ${Global.self.accessToken}, ${Global.self.refreshToken}");
+      Storage.storePersistentData(Global.appPersistentData);
+    }
+    return null;
   }
 }
