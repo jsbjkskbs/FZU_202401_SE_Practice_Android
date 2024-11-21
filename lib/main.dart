@@ -148,6 +148,7 @@ class MyAppState extends State<MyApp> {
 
   Future<String?> _initialize() async {
     Global.appPersistentData = await Storage.getPersistentData();
+    MyAppState.appLocale.changeLocale(Locale(Global.appPersistentData.languageCode));
     debugPrint("Global.main.startAsyncTask, with persistent data: ${Global.appPersistentData.toJson()}");
     Global.self =
         Global.appPersistentData.user != null && Global.appPersistentData.user!.isValidUser() ? Global.appPersistentData.user! : User();
