@@ -32,6 +32,10 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m5(count, max) => " ${count}/${max} caracteres";
 
+  static String m6(path) => "Archivo guardado en ${path}";
+
+  static String m7(code) => "Error de red, código: ${code}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "comment_popup_title":
@@ -542,6 +546,16 @@ class MessageLookup extends MessageLookupByLibrary {
             "Intentaremos mostrarle menos contenido similar"),
         "video_comments_title": MessageLookupByLibrary.simpleMessage("CMT"),
         "video_introduction_title":
-            MessageLookupByLibrary.simpleMessage("Intro")
+            MessageLookupByLibrary.simpleMessage("Intro"),
+        "when_download_success":
+            MessageLookupByLibrary.simpleMessage("Descarga exitosa"),
+        "when_file_saved_to_path": m6,
+        "when_internet_error": MessageLookupByLibrary.simpleMessage(
+            "Error de red, por favor revise su conexión a Internet"),
+        "when_internet_error0": m7,
+        "when_server_error": MessageLookupByLibrary.simpleMessage(
+            "Error del servidor, por favor intente de nuevo más tarde"),
+        "when_token_expired": MessageLookupByLibrary.simpleMessage(
+            "Token expirado, por favor inicie sesión nuevamente")
       };
 }

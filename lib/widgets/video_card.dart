@@ -58,7 +58,7 @@ class _VideoCardState extends State<VideoCard> {
                     children: [
                       const Icon(DisplayIcons.report),
                       const SizedBox(width: 4),
-                      Text(S.of(context).video_card_report),
+                      Text(S.current.video_card_report),
                     ],
                   ))),
               TextButton(
@@ -70,14 +70,11 @@ class _VideoCardState extends State<VideoCard> {
                   onPressed: () async {
                     String? result = await _uninterested();
                     if (result != null) {
-                      if (context.mounted) {
-                        ToastificationUtils.showSimpleToastification(context, result);
-                      }
                       return;
                     }
                     if (context.mounted) {
                       Navigator.of(context).pop();
-                      ToastificationUtils.showSimpleToastification(context, S.of(context).video_card_uninterested_success);
+                      ToastificationUtils.showSimpleToastification(S.current.video_card_uninterested_success);
                     }
                   },
                   child: IntrinsicWidth(
@@ -85,7 +82,7 @@ class _VideoCardState extends State<VideoCard> {
                     children: [
                       const Icon(DisplayIcons.not_interest),
                       const SizedBox(width: 4),
-                      Text(S.of(context).video_card_uninterested),
+                      Text(S.current.video_card_uninterested),
                     ],
                   ))),
             ],

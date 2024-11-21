@@ -1,6 +1,26 @@
 {
   "@@locale": "es",
   "egg_wa_ao": "¡Wa Ao!",
+  "when_internet_error": "Error de red, por favor revise su conexión a Internet",
+  "when_internet_error0": "Error de red, código: {code}",
+  "@when_internet_error0": {
+    "placeholders": {
+      "code": {
+        "type": "int"
+      }
+    }
+  },
+  "when_server_error": "Error del servidor, por favor intente de nuevo más tarde",
+  "when_token_expired": "Token expirado, por favor inicie sesión nuevamente",
+  "when_download_success": "Descarga exitosa",
+  "when_file_saved_to_path": "Archivo guardado en {path}",
+  "@when_file_saved_to_path": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "function_default_like_on_zero": "Me gusta",
   "function_default_dislike": "No me gusta",
   "function_default_report": "Reportar",

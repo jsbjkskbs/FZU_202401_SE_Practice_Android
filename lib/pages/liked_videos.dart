@@ -8,7 +8,6 @@ import 'package:fulifuli_app/widgets/load_footer.dart';
 import '../generated/l10n.dart';
 import '../global.dart';
 import '../model/video.dart';
-import '../utils/toastification.dart';
 import '../widgets/search_page/search_page_video_item.dart';
 
 class LikedVideosPage extends StatefulWidget {
@@ -55,7 +54,7 @@ class _LikedVideosPageState extends State<LikedVideosPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).liked_video_title),
+        title: Text(S.current.liked_video_title),
         centerTitle: true,
       ),
       body: EasyRefresh(
@@ -69,9 +68,6 @@ class _LikedVideosPageState extends State<LikedVideosPage> {
 
           String? result = await _fetchData();
           if (result != null) {
-            if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, result);
-            }
             _controller.finishRefresh();
             return;
           }
@@ -85,9 +81,6 @@ class _LikedVideosPageState extends State<LikedVideosPage> {
           }
           String? result = await _fetchData();
           if (result != null) {
-            if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, result);
-            }
             _controller.finishLoad();
             return;
           }

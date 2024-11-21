@@ -73,8 +73,8 @@ class _SpacePageState extends State<SpacePage> {
                     child: SpaceTabsContainer(
                   uniqueKeySuffix: widget.userId,
                   tabs: [
-                    S.of(context).space_video,
-                    S.of(context).space_dynamic,
+                    S.current.space_video,
+                    S.current.space_dynamic,
                   ],
                 )),
               ],

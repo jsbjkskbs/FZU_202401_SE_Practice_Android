@@ -54,7 +54,7 @@ class _CommentReplyPopupFakeContainerState extends State<CommentReplyPopupFakeCo
           Expanded(
               child: GestureDetector(
                   onTap: () {
-                    ToastificationUtils.showSimpleToastification(context, S.of(context).egg_wa_ao);
+                    ToastificationUtils.showSimpleToastification(S.current.egg_wa_ao);
                   },
                   child: const Icon(DisplayIcons.cat)))
         ],

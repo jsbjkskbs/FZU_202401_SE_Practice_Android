@@ -73,12 +73,11 @@ class _SpaceDynamicTabsViewState extends State<SpaceDynamicTabsView> {
           Global.cachedMapDynamicList[key] = const MapEntry([], false);
           var result = await _fetchData();
           if (result != null) {
-            if (context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)));
-            }
+            _easyRefreshController.finishRefresh();
+            return;
           }
-          _easyRefreshController.finishRefresh();
           setState(() {});
+          _easyRefreshController.finishRefresh();
         },
         onLoad: () async {
           if (isEnd) {
@@ -88,12 +87,11 @@ class _SpaceDynamicTabsViewState extends State<SpaceDynamicTabsView> {
 
           var result = await _fetchData();
           if (result != null) {
-            if (context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)));
-            }
+            _easyRefreshController.finishLoad();
+            return;
           }
-          _easyRefreshController.finishLoad();
           setState(() {});
+          _easyRefreshController.finishLoad();
         },
         scrollController: widget.controller,
         childBuilder: (BuildContext context, ScrollPhysics physics) {

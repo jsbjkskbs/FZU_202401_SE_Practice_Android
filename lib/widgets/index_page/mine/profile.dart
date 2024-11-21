@@ -66,7 +66,7 @@ class _ProfileViewState extends State<ProfileView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        Global.self.name ?? S.of(context).mine_profile_login_or_register,
+                        Global.self.name ?? S.current.mine_profile_login_or_register,
                         style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
@@ -80,7 +80,7 @@ class _ProfileViewState extends State<ProfileView> {
             ),
             Row(
               children: [
-                Text(Global.self.isValidUser() ? S.of(context).mine_profile_view_profile : "",
+                Text(Global.self.isValidUser() ? S.current.mine_profile_view_profile : "",
                     style: TextStyle(
                       color: Theme.of(context).primaryColor,
                       fontSize: 16.0,

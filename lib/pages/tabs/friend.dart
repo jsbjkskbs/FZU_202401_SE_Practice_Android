@@ -16,7 +16,7 @@ class FriendPage extends StatelessWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(S.of(context).friend_title, style: Theme.of(context).textTheme.headlineSmall),
+            Text(S.current.friend_title, style: Theme.of(context).textTheme.headlineSmall),
             IconButton(
               onPressed: () {
                 Navigator.of(context).push(TDSlidePopupRoute(
@@ -35,7 +35,7 @@ class FriendPage extends StatelessWidget {
                           ),
                           child: Center(
                             child: Text(
-                              S.of(context).friend_about_description,
+                              S.current.friend_about_description,
                               style: TextStyle(
                                 decoration: TextDecoration.none,
                                 color: Theme.of(context).textTheme.headlineSmall!.color,

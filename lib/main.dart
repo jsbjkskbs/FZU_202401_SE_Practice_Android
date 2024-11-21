@@ -22,6 +22,8 @@ import 'package:fulifuli_app/pages/settings.dart';
 import 'package:fulifuli_app/pages/space.dart';
 import 'package:fulifuli_app/pages/submission_manage.dart';
 import 'package:fulifuli_app/pages/video.dart';
+import 'package:fulifuli_app/utils/context_provider.dart';
+import 'package:fulifuli_app/utils/dio_interceptors.dart';
 import 'package:fulifuli_app/utils/scheme_reflect.dart';
 
 import 'generated/l10n.dart';
@@ -97,56 +99,60 @@ class MyAppState extends State<MyApp> {
           cupertinoOverrideTheme: const CupertinoThemeData(applyThemeToAll: true),
         ),
         builder: (theme, darkTheme) => MaterialApp(
-              locale: appLocale.locale,
-              localeResolutionCallback: (locale, supportedLocales) {
-                var result = supportedLocales.where((element) => element.languageCode == locale?.languageCode);
-                if (result.isNotEmpty) {
-                  return locale;
-                }
-                return const Locale('zh');
-              },
-              localizationsDelegates: const [
-                S.delegate,
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-              ],
-              supportedLocales: S.delegate.supportedLocales,
-              theme: theme.copyWith(
-                  pageTransitionsTheme: const PageTransitionsTheme(builders: <TargetPlatform, PageTransitionsBuilder>{
-                TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-                TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-              })),
-              darkTheme: darkTheme,
-              // initialRoute: IndexPage.routeName,
-              initialRoute: LoadingPage.routeName,
-              routes: {
-                LoadingPage.routeName: (context) => LoadingPage(onLoading: _initialize),
-                LoginScreen.routeName: (context) => const LoginScreen(),
-                IndexPage.routeName: (context) => const IndexPage(),
-                MFAVerification.routeName: (context) => const MFAVerification(),
-                SettingsPage.routeName: (context) => const SettingsPage(),
-                SpacePage.routeName: (context) => const SpacePage(
-                      userId: "",
-                    ),
-                SearchPage.routeName: (context) => const SearchPage(),
-                SubmissionManagePage.routeName: (context) => const SubmissionManagePage(),
-                DynamicPostPage.routeName: (context) => const DynamicPostPage(),
-                VideoPage.routeName: (context) => const VideoPage(
-                      videoId: "",
-                    ),
-                FollowerPage.routeName: (context) => const FollowerPage(
-                      userId: "",
-                    ),
-                FollowingPage.routeName: (context) => const FollowingPage(
-                      userId: "",
-                    ),
-                LikedVideosPage.routeName: (context) => const LikedVideosPage(),
-              },
+              home: MaterialApp(
+                navigatorKey: ContextProvider.navigatorKey,
+                locale: appLocale.locale,
+                localeResolutionCallback: (locale, supportedLocales) {
+                  var result = supportedLocales.where((element) => element.languageCode == locale?.languageCode);
+                  if (result.isNotEmpty) {
+                    return locale;
+                  }
+                  return const Locale('zh');
+                },
+                localizationsDelegates: const [
+                  S.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                supportedLocales: S.delegate.supportedLocales,
+                theme: theme.copyWith(
+                    pageTransitionsTheme: const PageTransitionsTheme(builders: <TargetPlatform, PageTransitionsBuilder>{
+                  TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+                  TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+                })),
+                darkTheme: darkTheme,
+                // initialRoute: IndexPage.routeName,
+                initialRoute: LoadingPage.routeName,
+                routes: {
+                  LoadingPage.routeName: (context) => LoadingPage(onLoading: _initialize),
+                  LoginScreen.routeName: (context) => const LoginScreen(),
+                  IndexPage.routeName: (context) => const IndexPage(),
+                  MFAVerification.routeName: (context) => const MFAVerification(),
+                  SettingsPage.routeName: (context) => const SettingsPage(),
+                  SpacePage.routeName: (context) => const SpacePage(
+                        userId: "",
+                      ),
+                  SearchPage.routeName: (context) => const SearchPage(),
+                  SubmissionManagePage.routeName: (context) => const SubmissionManagePage(),
+                  DynamicPostPage.routeName: (context) => const DynamicPostPage(),
+                  VideoPage.routeName: (context) => const VideoPage(
+                        videoId: "",
+                      ),
+                  FollowerPage.routeName: (context) => const FollowerPage(
+                        userId: "",
+                      ),
+                  FollowingPage.routeName: (context) => const FollowingPage(
+                        userId: "",
+                      ),
+                  LikedVideosPage.routeName: (context) => const LikedVideosPage(),
+                },
+              ),
             ));
   }
 
   Future<String?> _initialize() async {
+    Global.dio.interceptors.addAll([DioHttpErrorInterceptor(), DioHttpResponseInterceptor()]);
     Global.appPersistentData = await Storage.getPersistentData();
     MyAppState.appLocale.changeLocale(Locale(Global.appPersistentData.languageCode));
     debugPrint("Global.main.startAsyncTask, with persistent data: ${Global.appPersistentData.toJson()}");
@@ -157,9 +163,15 @@ class MyAppState extends State<MyApp> {
     debugPrint("Global.main.startAsyncTask, with dio token: ${Global.self.accessToken}, ${Global.self.refreshToken}");
     var valid = await Global.refreshTokenRefresh();
     debugPrint("Global.main.startAsyncTask, with refresh token valid: $valid");
+    if (valid == null) {
+      return S.current.when_internet_error;
+    }
     if (valid) {
       var valid2 = await Global.accessTokenRefresh();
       debugPrint("Global.main.startAsyncTask, with access token valid: $valid2");
+      if (valid2 == null) {
+        return S.current.when_internet_error;
+      }
       if (!valid2) {
         Global.self = User();
         debugPrint("Global.main.startAsyncTask, with user: ${Global.self.toJson()}");
@@ -168,7 +180,7 @@ class MyAppState extends State<MyApp> {
         Global.updateDioToken(accessToken: null, refreshToken: null);
         debugPrint("Global.main.startAsyncTask, with dio token: ${Global.self.accessToken}, ${Global.self.refreshToken}");
         Storage.storePersistentData(Global.appPersistentData);
-        return '登录状态已失效，请重新登录';
+        return S.current.when_token_expired;
       } else {
         debugPrint("Global.main.startAsyncTask, with user: ${Global.self.toJson()}");
         Global.startAsyncTask();
@@ -182,7 +194,7 @@ class MyAppState extends State<MyApp> {
         Global.updateDioToken(accessToken: null, refreshToken: null);
         debugPrint("Global.main.startAsyncTask, with dio token: ${Global.self.accessToken}, ${Global.self.refreshToken}");
         Storage.storePersistentData(Global.appPersistentData);
-        return '登录状态已失效，请重新登录';
+        return S.current.when_token_expired;
       }
       Global.self = User();
       debugPrint("Global.main.startAsyncTask, with user: ${Global.self.toJson()}");

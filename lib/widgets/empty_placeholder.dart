@@ -19,7 +19,7 @@ class EmptyPlaceHolder extends StatelessWidget {
             width: MediaQuery.of(context).size.width * 0.6,
           ),
           Text(
-            S.of(context).empty_placeholder_hint,
+            S.current.empty_placeholder_hint,
             style: TextStyle(
                 fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
                 color: Theme.of(context).primaryColor,

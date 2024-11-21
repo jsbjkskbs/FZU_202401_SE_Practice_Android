@@ -8,7 +8,6 @@ import 'package:fulifuli_app/widgets/load_footer.dart';
 import '../generated/l10n.dart';
 import '../global.dart';
 import '../model/user.dart';
-import '../utils/toastification.dart';
 import '../widgets/search_page/search_page_user_item.dart';
 
 class FollowingPage extends StatefulWidget {
@@ -60,7 +59,7 @@ class _FollowingPageState extends State<FollowingPage> {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).following_title),
+        title: Text(S.current.following_title),
         centerTitle: true,
       ),
       body: Center(
@@ -74,9 +73,6 @@ class _FollowingPageState extends State<FollowingPage> {
                 Global.cachedMapUserList[key] = const MapEntry([], false);
                 String? result = await _fetchData();
                 if (result != null) {
-                  if (context.mounted) {
-                    ToastificationUtils.showSimpleToastification(context, result);
-                  }
                   _controller.finishRefresh();
                   return;
                 }
@@ -90,9 +86,6 @@ class _FollowingPageState extends State<FollowingPage> {
                 }
                 String? result = await _fetchData();
                 if (result != null) {
-                  if (context.mounted) {
-                    ToastificationUtils.showSimpleToastification(context, result);
-                  }
                   _controller.finishLoad();
                   return;
                 }

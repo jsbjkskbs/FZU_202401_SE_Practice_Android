@@ -137,7 +137,7 @@ class _CommentReplyPopupContainerState extends State<CommentReplyPopupContainer>
                                 children: [
                                   Icon(DisplayIcons.clear, color: Theme.of(context).scaffoldBackgroundColor),
                                   const SizedBox(width: 4),
-                                  Text(S.of(context).function_default_clear,
+                                  Text(S.current.function_default_clear,
                                       style: TextStyle(color: Theme.of(context).scaffoldBackgroundColor)),
                                 ],
                               ))),
@@ -151,14 +151,11 @@ class _CommentReplyPopupContainerState extends State<CommentReplyPopupContainer>
                             onPressed: () async {
                               var result = await sendComment();
                               if (result != null) {
-                                if (context.mounted) {
-                                  ToastificationUtils.showSimpleToastification(context, result);
-                                }
                               } else {
                                 _controller.clear();
                                 widget.onSend();
                                 if (context.mounted) {
-                                  ToastificationUtils.showSimpleToastification(context, S.of(context).reply_comment_popup_submit_success);
+                                  ToastificationUtils.showSimpleToastification(S.current.reply_comment_popup_submit_success);
                                 }
                               }
                             },
@@ -166,7 +163,7 @@ class _CommentReplyPopupContainerState extends State<CommentReplyPopupContainer>
                               children: [
                                 Icon(DisplayIcons.post, color: Theme.of(context).primaryColor),
                                 const SizedBox(width: 4),
-                                Text(S.of(context).function_default_send, style: TextStyle(color: Theme.of(context).primaryColor)),
+                                Text(S.current.function_default_send, style: TextStyle(color: Theme.of(context).primaryColor)),
                               ],
                             )),
                       ),

@@ -32,6 +32,10 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m5(count, max) => " ${count}/${max} символов";
 
+  static String m6(path) => "Файл сохранен в ${path}";
+
+  static String m7(code) => "Ошибка сети, код ошибки: ${code}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "comment_popup_title":
@@ -525,6 +529,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "video_comments_title":
             MessageLookupByLibrary.simpleMessage("Комментарии"),
         "video_introduction_title":
-            MessageLookupByLibrary.simpleMessage("Введение")
+            MessageLookupByLibrary.simpleMessage("Введение"),
+        "when_download_success":
+            MessageLookupByLibrary.simpleMessage("Загрузка успешна"),
+        "when_file_saved_to_path": m6,
+        "when_internet_error": MessageLookupByLibrary.simpleMessage(
+            "Ошибка сети, пожалуйста, проверьте подключение к интернету"),
+        "when_internet_error0": m7,
+        "when_server_error": MessageLookupByLibrary.simpleMessage(
+            "Ошибка сервера, пожалуйста, попробуйте позже"),
+        "when_token_expired": MessageLookupByLibrary.simpleMessage(
+            "Срок действия токена истек, пожалуйста, войдите снова")
       };
 }

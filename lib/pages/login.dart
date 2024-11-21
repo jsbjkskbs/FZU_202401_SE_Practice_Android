@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:fulifuli_app/global.dart';
+import 'package:fulifuli_app/utils/dio_interceptors.dart';
 import 'package:fulifuli_app/widgets/index_page/login/recover_password.dart';
 
 import '../generated/l10n.dart';
@@ -29,6 +30,12 @@ class _LoginScreenState extends State<LoginScreen> {
   final dio = Dio(BaseOptions(baseUrl: Global.baseUrl));
 
   String _cachedEmail = "";
+
+  @override
+  void initState() {
+    super.initState();
+    dio.interceptors.add(DioHttpErrorInterceptor());
+  }
 
   Future<String?> _login(LoginData data) async {
     Response response;
@@ -147,13 +154,13 @@ class _LoginScreenState extends State<LoginScreen> {
       userType: LoginUserType.name,
       userValidator: (value) {
         if (value!.isEmpty) {
-          return S.of(context).login_user_empty;
+          return S.current.login_user_empty;
         }
         return null;
       },
       passwordValidator: (value) {
         if (value!.isEmpty) {
-          return S.of(context).login_password_empty;
+          return S.current.login_password_empty;
         }
         return null;
       },
@@ -170,14 +177,14 @@ class _LoginScreenState extends State<LoginScreen> {
       additionalSignupFields: [
         UserFormField(
           keyName: "email",
-          displayName: S.of(context).login_additional_sign_up_email_hint,
+          displayName: S.current.login_additional_sign_up_email_hint,
           icon: const Icon(Icons.email),
           fieldValidator: (value) {
             if (value!.isEmpty) {
-              return S.of(context).login_additional_sign_up_email_empty;
+              return S.current.login_additional_sign_up_email_empty;
             }
             if (!RegExp(r'^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$').hasMatch(value)) {
-              return S.of(context).login_additional_sign_up_email_validation_error;
+              return S.current.login_additional_sign_up_email_validation_error;
             }
             return null;
           },
@@ -187,38 +194,38 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.of(context).pushReplacementNamed(IndexPage.routeName);
       },
       messages: LoginMessages(
-        userHint: S.of(context).login_user_hint,
-        passwordHint: S.of(context).login_password_hint,
-        confirmPasswordHint: S.of(context).login_confirm_password_hint,
-        loginButton: S.of(context).login_login_button,
-        signupButton: S.of(context).login_signup_button,
-        forgotPasswordButton: S.of(context).login_forgot_password_button,
-        recoverPasswordButton: S.of(context).login_recover_password_button,
-        goBackButton: S.of(context).login_go_back_button,
-        confirmPasswordError: S.of(context).login_confirm_password_error,
-        recoverPasswordIntro: S.of(context).login_recover_password_intro,
-        recoverPasswordDescription: S.of(context).login_recover_password_description,
-        recoverPasswordSuccess: S.of(context).login_recover_password_success,
-        providersTitleFirst: S.of(context).login_providers_title_first,
-        confirmRecoverSuccess: S.of(context).login_confirm_recover_success,
-        confirmationCodeHint: S.of(context).login_confirmation_code_hint,
-        confirmationCodeValidationError: S.of(context).login_confirmation_code_validation_error,
-        confirmRecoverIntro: S.of(context).login_confirm_recover_intro,
-        confirmSignupButton: S.of(context).login_confirm_signup_button,
-        confirmSignupIntro: S.of(context).login_confirm_signup_intro,
-        confirmSignupSuccess: S.of(context).login_confirm_signup_success,
-        resendCodeButton: S.of(context).login_resend_code_button,
-        resendCodeSuccess: S.of(context).login_resend_code_success,
-        recoveryCodeHint: S.of(context).login_recovery_code_hint,
-        recoverCodePasswordDescription: S.of(context).login_recover_code_password_description,
-        recoveryCodeValidationError: S.of(context).login_recovery_code_validation_error,
-        signUpSuccess: S.of(context).login_sign_up_success,
-        setPasswordButton: S.of(context).login_set_password_button,
-        flushbarTitleError: S.of(context).login_flushbar_title_error,
-        flushbarTitleSuccess: S.of(context).login_flushbar_title_success,
-        providersTitleSecond: S.of(context).login_providers_title_second,
-        additionalSignUpFormDescription: S.of(context).login_additional_sign_up_form_description,
-        additionalSignUpSubmitButton: S.of(context).login_additional_sign_up_submit_button,
+        userHint: S.current.login_user_hint,
+        passwordHint: S.current.login_password_hint,
+        confirmPasswordHint: S.current.login_confirm_password_hint,
+        loginButton: S.current.login_login_button,
+        signupButton: S.current.login_signup_button,
+        forgotPasswordButton: S.current.login_forgot_password_button,
+        recoverPasswordButton: S.current.login_recover_password_button,
+        goBackButton: S.current.login_go_back_button,
+        confirmPasswordError: S.current.login_confirm_password_error,
+        recoverPasswordIntro: S.current.login_recover_password_intro,
+        recoverPasswordDescription: S.current.login_recover_password_description,
+        recoverPasswordSuccess: S.current.login_recover_password_success,
+        providersTitleFirst: S.current.login_providers_title_first,
+        confirmRecoverSuccess: S.current.login_confirm_recover_success,
+        confirmationCodeHint: S.current.login_confirmation_code_hint,
+        confirmationCodeValidationError: S.current.login_confirmation_code_validation_error,
+        confirmRecoverIntro: S.current.login_confirm_recover_intro,
+        confirmSignupButton: S.current.login_confirm_signup_button,
+        confirmSignupIntro: S.current.login_confirm_signup_intro,
+        confirmSignupSuccess: S.current.login_confirm_signup_success,
+        resendCodeButton: S.current.login_resend_code_button,
+        resendCodeSuccess: S.current.login_resend_code_success,
+        recoveryCodeHint: S.current.login_recovery_code_hint,
+        recoverCodePasswordDescription: S.current.login_recover_code_password_description,
+        recoveryCodeValidationError: S.current.login_recovery_code_validation_error,
+        signUpSuccess: S.current.login_sign_up_success,
+        setPasswordButton: S.current.login_set_password_button,
+        flushbarTitleError: S.current.login_flushbar_title_error,
+        flushbarTitleSuccess: S.current.login_flushbar_title_success,
+        providersTitleSecond: S.current.login_providers_title_second,
+        additionalSignUpFormDescription: S.current.login_additional_sign_up_form_description,
+        additionalSignUpSubmitButton: S.current.login_additional_sign_up_submit_button,
       ),
       headerWidget: AnimatedTextKit(totalRepeatCount: 1, animatedTexts: [
         TyperAnimatedText(
@@ -240,7 +247,7 @@ class _LoginScreenState extends State<LoginScreen> {
       loginProviders: <LoginProvider>[
         LoginProvider(
             icon: Icons.email,
-            label: S.of(context).login_additional_sign_up_email_hint,
+            label: S.current.login_additional_sign_up_email_hint,
             callback: () async {
               _recoverPassword("", context);
               return "no-error";

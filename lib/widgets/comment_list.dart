@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:fulifuli_app/global.dart';
-import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:fulifuli_app/widgets/load_footer.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
@@ -108,9 +107,6 @@ class _CommentListViewState extends State<CommentListView> {
           result = await _fetchData();
         }
         if (result != null) {
-          if (context.mounted) {
-            ToastificationUtils.showSimpleToastification(context, result);
-          }
           _controller.finishRefresh();
           return;
         }
@@ -129,9 +125,6 @@ class _CommentListViewState extends State<CommentListView> {
           result = await _fetchData();
         }
         if (result != null) {
-          if (context.mounted) {
-            ToastificationUtils.showSimpleToastification(context, result);
-          }
           _controller.finishLoad();
           return;
         }

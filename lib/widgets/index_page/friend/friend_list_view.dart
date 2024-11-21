@@ -8,7 +8,6 @@ import 'package:fulifuli_app/widgets/load_footer.dart';
 
 import '../../../global.dart';
 import '../../../model/user.dart';
-import '../../../utils/toastification.dart';
 
 class FriendListView extends StatefulWidget {
   const FriendListView({super.key});
@@ -65,9 +64,6 @@ class _FriendListViewState extends State<FriendListView> {
 
           String? result = await _fetchData();
           if (result != null) {
-            if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, result);
-            }
             _controller.finishRefresh();
             return;
           }
@@ -81,9 +77,6 @@ class _FriendListViewState extends State<FriendListView> {
           }
           String? result = await _fetchData();
           if (result != null) {
-            if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, result);
-            }
             _controller.finishLoad();
             return;
           }

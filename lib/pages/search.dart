@@ -43,7 +43,7 @@ class _SearchPageState extends State<SearchPage> {
             height: MediaQuery.of(context).size.height * 0.2,
             width: MediaQuery.of(context).size.width * 0.6,
           ),
-          Text(S.of(context).search_loading_hint),
+          Text(S.current.search_loading_hint),
         ],
       )),
     );
@@ -55,7 +55,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _getTabsView(String keyword) {
-    return SearchPageTabsContainer(tabs: [S.of(context).search_video, S.of(context).search_user], keyword: keyword);
+    return SearchPageTabsContainer(tabs: [S.current.search_video, S.current.search_user], keyword: keyword);
   }
 
   @override

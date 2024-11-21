@@ -8,7 +8,6 @@ import 'package:fulifuli_app/widgets/load_footer.dart';
 import 'package:fulifuli_app/widgets/search_page/search_page_video_item.dart';
 
 import '../../model/video.dart';
-import '../../utils/toastification.dart';
 
 class SearchPageVideoTabsView extends StatefulWidget {
   const SearchPageVideoTabsView({super.key, required this.currentIndex, required this.assignedIndex, required this.keyword});
@@ -66,9 +65,6 @@ class _SearchPageVideoTabsViewState extends State<SearchPageVideoTabsView> {
 
           String? result = await _fetchData();
           if (result != null) {
-            if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, result);
-            }
             _controller.finishRefresh();
             return;
           }
@@ -82,9 +78,6 @@ class _SearchPageVideoTabsViewState extends State<SearchPageVideoTabsView> {
           }
           String? result = await _fetchData();
           if (result != null) {
-            if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, result);
-            }
             _controller.finishLoad();
             return;
           }

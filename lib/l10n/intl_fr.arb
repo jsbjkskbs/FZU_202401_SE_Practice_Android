@@ -1,6 +1,26 @@
 {
   "@@locale": "fr",
   "egg_wa_ao": "Wa Ao!",
+  "when_internet_error": "Erreur de connexion Internet",
+  "when_internet_error0": "Erreur de connexion Internet, code: {code}",
+  "@when_internet_error0": {
+    "placeholders": {
+      "code": {
+        "type": "int"
+      }
+    }
+  },
+  "when_server_error": "Erreur de serveur",
+  "when_token_expired": "La session a expiré, veuillez vous reconnecter",
+  "when_download_success": "Téléchargement réussi",
+  "when_file_saved_to_path": "Fichier enregistré dans {path}",
+  "@when_file_saved_to_path": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "function_default_like_on_zero": "J'aime",
   "function_default_dislike": "Je n'aime pas",
   "function_default_report": "Signaler",

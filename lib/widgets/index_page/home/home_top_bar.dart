@@ -59,7 +59,7 @@ class _HomeTopBarState extends State<HomeTopBar> {
                           ),
                         );
                       } else {
-                        ToastificationUtils.showSimpleToastification(context, S.of(context).home_login_hint);
+                        ToastificationUtils.showSimpleToastification(S.current.home_login_hint);
                         Navigator.of(context).pushNamed('/login');
                       }
                     },
@@ -68,7 +68,7 @@ class _HomeTopBarState extends State<HomeTopBar> {
                 const SizedBox(width: 16),
                 Expanded(
                   child: SearchBar(
-                    hintText: S.of(context).home_top_bar_search,
+                    hintText: S.current.home_top_bar_search,
                     leading: Icon(
                       Icons.search,
                       color: Theme.of(context).unselectedWidgetColor,

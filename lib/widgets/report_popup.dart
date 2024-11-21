@@ -17,7 +17,7 @@ class ReportPopup {
           modalBarrierColor: Theme.of(context).textTheme.headlineMedium!.color!.withOpacity(0.5),
           builder: (context) {
             return TDPopupBottomDisplayPanel(
-                title: S.of(context).function_default_report,
+                title: S.current.function_default_report,
                 titleColor: Theme.of(context).textTheme.headlineMedium!.color,
                 closeColor: Theme.of(context).textTheme.headlineMedium!.color,
                 closeClick: () {
@@ -85,12 +85,12 @@ class _ReportPopupContainerState extends State<ReportPopupContainer> {
                     _selected = value;
                   });
                 },
-                child: Text(LanguageReflect.reportReflect(context, _reportSelections[i])),
+                child: Text(LanguageReflect.reportReflect(_reportSelections[i])),
               ),
             const Divider(),
             TDTextarea(
               controller: _controller,
-              hintText: S.of(context).report_report_reason_hint,
+              hintText: S.current.report_report_reason_hint,
               minLines: 3,
               maxLength: 256,
               textStyle: TextStyle(
@@ -125,7 +125,7 @@ class _ReportPopupContainerState extends State<ReportPopupContainer> {
                             const Icon(DisplayIcons.clear, color: Colors.white),
                             const SizedBox(width: 4),
                             Text(
-                              S.of(context).function_default_clear,
+                              S.current.function_default_clear,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
@@ -137,13 +137,10 @@ class _ReportPopupContainerState extends State<ReportPopupContainer> {
                         onPressed: () async {
                           String? result = await _sendReport();
                           if (result != null) {
-                            if (context.mounted) {
-                              ToastificationUtils.showSimpleToastification(context, result);
-                            }
                           } else {
                             if (context.mounted) {
                               _controller.clear();
-                              ToastificationUtils.showSimpleToastification(context, S.of(context).report_submit_success);
+                              ToastificationUtils.showSimpleToastification(S.current.report_submit_success);
                               Navigator.pop(context, true);
                             }
                           }
@@ -159,7 +156,7 @@ class _ReportPopupContainerState extends State<ReportPopupContainer> {
                             Icon(DisplayIcons.post, color: Theme.of(context).primaryColor),
                             const SizedBox(width: 4),
                             Text(
-                              S.of(context).function_default_submit,
+                              S.current.function_default_submit,
                               style: TextStyle(
                                 color: Theme.of(context).primaryColor,
                                 fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
@@ -178,10 +175,10 @@ class _ReportPopupContainerState extends State<ReportPopupContainer> {
 
   Future<String?> _sendReport() async {
     if (_selected == null) {
-      return S.of(context).report_not_select_report_type;
+      return S.current.report_not_select_report_type;
     }
     if (_controller.text.isEmpty) {
-      return S.of(context).report_not_type_report_reason;
+      return S.current.report_not_type_report_reason;
     }
     debugPrint('sendReport: ${widget.oType}, ${widget.oId}, ${_reportSelections[_selected!]}, ${_controller.text}');
     debugPrint('sendReport: ${widget.commentType}, ${widget.fromMediaId}');

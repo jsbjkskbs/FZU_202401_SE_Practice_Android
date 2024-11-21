@@ -3,11 +3,9 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/model/activity.dart';
-import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:fulifuli_app/widgets/empty_placeholder.dart';
 import 'package:fulifuli_app/widgets/load_footer.dart';
 
-import '../../../generated/l10n.dart';
 import '../../dynamic_card.dart';
 
 class DynamicListView extends StatefulWidget {
@@ -66,15 +64,10 @@ class _DynamicListViewState extends State<DynamicListView> {
 
           String? result = await _fetchData();
           if (result != null) {
-            if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, result);
-            }
-          } else {
-            if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, S.of(context).dynamic_refresh_success);
-              setState(() {});
-            }
+            _controller.finishRefresh();
+            return;
           }
+          setState(() {});
           _controller.finishRefresh();
         },
         onLoad: () async {
@@ -84,15 +77,10 @@ class _DynamicListViewState extends State<DynamicListView> {
           }
           String? result = await _fetchData();
           if (result != null) {
-            if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, result);
-            }
-          } else {
-            if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, S.of(context).dynamic_load_success);
-              setState(() {});
-            }
+            _controller.finishLoad();
+            return;
           }
+          setState(() {});
           _controller.finishLoad();
         },
         child: ListView.separated(

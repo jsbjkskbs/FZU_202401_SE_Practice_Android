@@ -32,6 +32,10 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m5(count, max) => " ${count}/${max} 字";
 
+  static String m6(path) => "文件已保存至 ${path}";
+
+  static String m7(code) => "网络连接失败: ${code}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "comment_popup_title": MessageLookupByLibrary.simpleMessage("评论详情"),
@@ -428,6 +432,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "video_card_uninterested_success":
             MessageLookupByLibrary.simpleMessage("将减少此类推荐"),
         "video_comments_title": MessageLookupByLibrary.simpleMessage("评论"),
-        "video_introduction_title": MessageLookupByLibrary.simpleMessage("简介")
+        "video_introduction_title": MessageLookupByLibrary.simpleMessage("简介"),
+        "when_download_success": MessageLookupByLibrary.simpleMessage("下载成功"),
+        "when_file_saved_to_path": m6,
+        "when_internet_error":
+            MessageLookupByLibrary.simpleMessage("网络连接失败，请检查网络设置"),
+        "when_internet_error0": m7,
+        "when_server_error":
+            MessageLookupByLibrary.simpleMessage("服务器开小差了，请稍后再试"),
+        "when_token_expired":
+            MessageLookupByLibrary.simpleMessage("登录已过期，请重新登录")
       };
 }

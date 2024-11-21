@@ -77,7 +77,7 @@ class _VideoTabsViewState extends State<VideoTabsView> {
         onRefresh: () async {
           if (offset == -1) {
             if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, S.of(context).home_page_no_more);
+              ToastificationUtils.showSimpleToastification(S.current.home_page_no_more);
             }
             offset = Random().nextInt(_n);
             Global.cachedVideoList[widget.assignedIndex.toString()] = MapEntry([], offset);
@@ -90,19 +90,19 @@ class _VideoTabsViewState extends State<VideoTabsView> {
           });
           if (offset == -1) {
             if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, S.of(context).home_page_no_more);
+              ToastificationUtils.showSimpleToastification(S.current.home_page_no_more);
             }
           } else {
             if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context,
-                  S.of(context).home_page_get_data_count(Global.cachedVideoList[widget.assignedIndex.toString()]!.key.length - oldLength));
+              ToastificationUtils.showSimpleToastification(
+                  S.current.home_page_get_data_count(Global.cachedVideoList[widget.assignedIndex.toString()]!.key.length - oldLength));
             }
           }
           _easyRefreshController.finishRefresh();
         },
         onLoad: () async {
           if (offset == -1) {
-            ToastificationUtils.showSimpleToastification(context, S.of(context).home_page_no_more);
+            ToastificationUtils.showSimpleToastification(S.current.home_page_no_more);
             _easyRefreshController.finishLoad(IndicatorResult.noMore, true);
             return;
           }
@@ -114,12 +114,12 @@ class _VideoTabsViewState extends State<VideoTabsView> {
           });
           if (offset == -1) {
             if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, S.of(context).home_page_no_more);
+              ToastificationUtils.showSimpleToastification(S.current.home_page_no_more);
             }
           } else {
             if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context,
-                  S.of(context).home_page_get_data_count(Global.cachedVideoList[widget.assignedIndex.toString()]!.key.length - oldLength));
+              ToastificationUtils.showSimpleToastification(
+                  S.current.home_page_get_data_count(Global.cachedVideoList[widget.assignedIndex.toString()]!.key.length - oldLength));
             }
           }
           _easyRefreshController.finishLoad();

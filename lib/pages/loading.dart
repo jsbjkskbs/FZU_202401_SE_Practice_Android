@@ -20,7 +20,7 @@ class LoadingPage extends StatefulWidget {
 }
 
 class _LoadingPageState extends State<LoadingPage> {
-  dynamic _loadingResult;
+  String? _loadingError;
   bool _isLoaded = false;
 
   @override
@@ -28,13 +28,12 @@ class _LoadingPageState extends State<LoadingPage> {
     super.initState();
     WidgetsBinding widgetsBinding = WidgetsBinding.instance;
     widgetsBinding.addPostFrameCallback((_) async {
-      _loadingResult = await widget.onLoading();
-      if (_loadingResult != null && _loadingResult is String) {
-        ToastificationUtils.showSimpleToastification(context, _loadingResult);
+      _loadingError = await widget.onLoading();
+      if (_loadingError == null) {
+        setState(() {
+          _isLoaded = true;
+        });
       }
-      setState(() {
-        _isLoaded = true;
-      });
     });
   }
 
@@ -52,7 +51,11 @@ class _LoadingPageState extends State<LoadingPage> {
               child: GestureDetector(
                   onTap: () {
                     if (!_isLoaded) {
-                      ToastificationUtils.showSimpleToastification(context, S.of(context).loading_not_completed);
+                      if (_loadingError != null) {
+                        ToastificationUtils.showSimpleToastification(_loadingError!);
+                      } else {
+                        ToastificationUtils.showSimpleToastification(S.current.loading_not_completed);
+                      }
                       return;
                     } else {
                       Navigator.of(context).pushReplacementNamed(IndexPage.routeName);
@@ -76,8 +79,7 @@ class _LoadingPageState extends State<LoadingPage> {
                         return;
                       }
                       Navigator.of(context).pushReplacementNamed(IndexPage.routeName);
-                      ToastificationUtils.showSimpleToastification(context, S.of(context).loading_hint,
-                          duration: const Duration(seconds: 3));
+                      ToastificationUtils.showSimpleToastification(S.current.loading_hint, duration: const Duration(seconds: 3));
                     },
                   )),
             ),
@@ -100,7 +102,11 @@ class _LoadingPageState extends State<LoadingPage> {
               child: ElevatedButton(
                   onPressed: () {
                     if (!_isLoaded) {
-                      ToastificationUtils.showSimpleToastification(context, S.of(context).loading_not_completed);
+                      if (_loadingError != null) {
+                        ToastificationUtils.showSimpleToastification(_loadingError!);
+                      } else {
+                        ToastificationUtils.showSimpleToastification(S.current.loading_not_completed);
+                      }
                       return;
                     }
                     Navigator.of(context).pushReplacementNamed(IndexPage.routeName);
@@ -110,7 +116,7 @@ class _LoadingPageState extends State<LoadingPage> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  child: Text(S.of(context).loading_skip,
+                  child: Text(S.current.loading_skip,
                       style: TextStyle(
                           fontSize: MediaQuery.of(context).size.width / 20,
                           fontWeight: FontWeight.bold,

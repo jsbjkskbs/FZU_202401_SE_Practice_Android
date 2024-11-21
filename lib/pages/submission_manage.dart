@@ -20,15 +20,15 @@ class _SubmissionManagePageState extends State<SubmissionManagePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        title: Text(S.of(context).submission_management_title),
+        title: Text(S.current.submission_management_title),
       ),
       body: Center(
         child: SubmissionManageTabsContainer(
           tabs: [
-            S.of(context).submission_management_kind_all,
-            S.of(context).submission_management_kind_passed,
-            S.of(context).submission_management_kind_review,
-            S.of(context).submission_management_kind_locked
+            S.current.submission_management_kind_all,
+            S.current.submission_management_kind_passed,
+            S.current.submission_management_kind_review,
+            S.current.submission_management_kind_locked
           ],
         ),
       ),

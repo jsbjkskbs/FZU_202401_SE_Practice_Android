@@ -66,7 +66,7 @@ class _SearchPageUserTabsViewState extends State<SearchPageUserTabsView> {
           String? result = await _fetchData();
           if (result != null) {
             if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, result);
+              ToastificationUtils.showSimpleToastification(result);
             }
             _controller.finishRefresh();
             return;
@@ -82,7 +82,7 @@ class _SearchPageUserTabsViewState extends State<SearchPageUserTabsView> {
           String? result = await _fetchData();
           if (result != null) {
             if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, result);
+              ToastificationUtils.showSimpleToastification(result);
             }
             _controller.finishLoad();
             return;

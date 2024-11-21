@@ -70,7 +70,7 @@ class _DynamicPostPage extends State<DynamicPostPage> {
                     padding: EdgeInsets.zero),
                 child: Icon(Icons.arrow_back_ios_new,
                     size: Theme.of(context).textTheme.headlineSmall!.fontSize, color: Theme.of(context).textTheme.headlineSmall!.color)),
-            Text(S.of(context).dynamic_post_title, style: Theme.of(context).textTheme.headlineSmall),
+            Text(S.current.dynamic_post_title, style: Theme.of(context).textTheme.headlineSmall),
             CustomPopup(
                 contentPadding: const EdgeInsets.all(2),
                 content: IntrinsicWidth(
@@ -83,7 +83,7 @@ class _DynamicPostPage extends State<DynamicPostPage> {
                               if (context.mounted) {
                                 Navigator.pop(context);
                                 if (files == null) {
-                                  ToastificationUtils.showSimpleToastification(context, S.of(context).dynamic_post_not_select_right_image);
+                                  ToastificationUtils.showSimpleToastification(S.current.dynamic_post_not_select_right_image);
                                 } else {
                                   setState(() {
                                     _files = [..._files!, ...files];
@@ -96,7 +96,7 @@ class _DynamicPostPage extends State<DynamicPostPage> {
                               children: [
                                 const Icon(Icons.upload_file_outlined),
                                 const SizedBox(width: 4),
-                                Text(S.of(context).dynamic_post_upload_image, style: TextStyle(color: Theme.of(context).primaryColor)),
+                                Text(S.current.dynamic_post_upload_image, style: TextStyle(color: Theme.of(context).primaryColor)),
                               ],
                             )),
                       ],
@@ -120,7 +120,7 @@ class _DynamicPostPage extends State<DynamicPostPage> {
               return [
                 const SizedBox(height: 16),
                 TDTextarea(
-                    hintText: S.of(context).dynamic_post_textarea_hint,
+                    hintText: S.current.dynamic_post_textarea_hint,
                     autofocus: false,
                     minLines: 8,
                     maxLength: 256,
@@ -144,7 +144,7 @@ class _DynamicPostPage extends State<DynamicPostPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 16),
-                Text(S.of(context).dynamic_post_image_count_hint(_files!.length),
+                Text(S.current.dynamic_post_image_count_hint(_files!.length),
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).primaryColor)),
                 const Divider(
                   height: 1,
@@ -166,7 +166,7 @@ class _DynamicPostPage extends State<DynamicPostPage> {
                                   _files!.removeAt(index);
                                   listViewKey = UniqueKey();
                                 });
-                                ToastificationUtils.showSimpleToastification(context, S.of(context).dynamic_post_delete_image_success);
+                                ToastificationUtils.showSimpleToastification(S.current.dynamic_post_delete_image_success);
                                 Navigator.pop(context);
                               },
                               child: IntrinsicHeight(
@@ -175,7 +175,7 @@ class _DynamicPostPage extends State<DynamicPostPage> {
                                     children: [
                                       const Icon(Icons.delete_forever, color: Colors.red),
                                       const SizedBox(width: 4),
-                                      Text(S.of(context).function_default_delete, style: const TextStyle(color: Colors.red)),
+                                      Text(S.current.function_default_delete, style: const TextStyle(color: Colors.red)),
                                     ],
                                   ),
                                 ),
@@ -232,7 +232,7 @@ class _DynamicPostPage extends State<DynamicPostPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Icon(DisplayIcons.clear, color: Colors.white),
-                          Text(S.of(context).function_default_delete, style: const TextStyle(color: Colors.white)),
+                          Text(S.current.function_default_delete, style: const TextStyle(color: Colors.white)),
                         ],
                       )),
                 ),
@@ -242,11 +242,9 @@ class _DynamicPostPage extends State<DynamicPostPage> {
                       onPressed: () async {
                         String? result = await _sendDynamic();
                         if (context.mounted) {
-                          if (result != null) {
-                            ToastificationUtils.showSimpleToastification(context, result);
-                          } else {
+                          if (result == null) {
                             Navigator.pop(context);
-                            ToastificationUtils.showSimpleToastification(context, S.of(context).dynamic_post_submit_success);
+                            ToastificationUtils.showSimpleToastification(S.current.dynamic_post_submit_success);
                           }
                         }
                       },
@@ -263,7 +261,7 @@ class _DynamicPostPage extends State<DynamicPostPage> {
                         children: [
                           Icon(DisplayIcons.post, color: Theme.of(context).primaryColor),
                           Text(
-                            S.of(context).function_default_send,
+                            S.current.function_default_send,
                             style: TextStyle(color: Theme.of(context).primaryColor),
                           )
                         ],

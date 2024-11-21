@@ -54,24 +54,24 @@ class _IndexPageState extends State<IndexPage> {
         items: [
           BottomNavigationBarItem(
             icon: const Icon(DisplayIcons.home),
-            label: S.of(context).index_tabs_home,
+            label: S.current.index_tabs_home,
           ),
           BottomNavigationBarItem(
             icon: const Icon(DisplayIcons.dynamic),
-            label: S.of(context).index_tabs_dynamic,
+            label: S.current.index_tabs_dynamic,
           ),
           BottomNavigationBarItem(
             icon: const Icon(DisplayIcons.submit),
-            label: S.of(context).index_tabs_submit,
+            label: S.current.index_tabs_submit,
           ),
           BottomNavigationBarItem(
             icon: const Icon(DisplayIcons.friend),
-            label: S.of(context).index_tabs_friend,
+            label: S.current.index_tabs_friend,
           ),
           BottomNavigationBarItem(
             icon: const Icon(DisplayIcons.mine),
             activeIcon: const Icon(DisplayIcons.mine_active),
-            label: S.of(context).index_tabs_mine,
+            label: S.current.index_tabs_mine,
           ),
         ],
         currentIndex: _currentIndex,

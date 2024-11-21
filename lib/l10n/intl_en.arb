@@ -1,6 +1,26 @@
 {
   "@@locale": "en",
   "egg_wa_ao": "Wa Ao!",
+  "when_internet_error": "Network error, please check your network settings",
+  "when_internet_error0": "Network error, error code: {code}",
+  "@when_internet_error0": {
+    "placeholders": {
+      "code": {
+        "type": "int"
+      }
+    }
+  },
+  "when_server_error": "Server error, please try again later",
+  "when_token_expired": "Token expired, please login again",
+  "when_download_success": "Download successful",
+  "when_file_saved_to_path": "File saved to {path}",
+  "@when_file_saved_to_path": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "function_default_like_on_zero": "Like",
   "function_default_dislike": "Dislike",
   "function_default_report": "Report",

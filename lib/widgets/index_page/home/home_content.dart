@@ -38,13 +38,13 @@ class _HomeContentState extends State<HomeContent> {
         child: VideoTabsContainer(
           controller: ScrollController(),
           tabs: [
-            S.of(context).home_tabs_recommend,
-            S.of(context).home_tabs_game,
-            S.of(context).home_tabs_vitascope,
-            S.of(context).home_tabs_military,
-            S.of(context).home_tabs_knowledge,
-            S.of(context).home_tabs_news,
-            S.of(context).home_tabs_life,
+            S.current.home_tabs_recommend,
+            S.current.home_tabs_game,
+            S.current.home_tabs_vitascope,
+            S.current.home_tabs_military,
+            S.current.home_tabs_knowledge,
+            S.current.home_tabs_news,
+            S.current.home_tabs_life,
           ],
         ),
       )

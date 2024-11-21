@@ -60,6 +60,66 @@ class S {
     );
   }
 
+  /// `Network error, please check your network settings`
+  String get when_internet_error {
+    return Intl.message(
+      'Network error, please check your network settings',
+      name: 'when_internet_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Network error, error code: {code}`
+  String when_internet_error0(int code) {
+    return Intl.message(
+      'Network error, error code: $code',
+      name: 'when_internet_error0',
+      desc: '',
+      args: [code],
+    );
+  }
+
+  /// `Server error, please try again later`
+  String get when_server_error {
+    return Intl.message(
+      'Server error, please try again later',
+      name: 'when_server_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Token expired, please login again`
+  String get when_token_expired {
+    return Intl.message(
+      'Token expired, please login again',
+      name: 'when_token_expired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Download successful`
+  String get when_download_success {
+    return Intl.message(
+      'Download successful',
+      name: 'when_download_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `File saved to {path}`
+  String when_file_saved_to_path(String path) {
+    return Intl.message(
+      'File saved to $path',
+      name: 'when_file_saved_to_path',
+      desc: '',
+      args: [path],
+    );
+  }
+
   /// `Like`
   String get function_default_like_on_zero {
     return Intl.message(

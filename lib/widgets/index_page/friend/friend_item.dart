@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/utils/number_converter.dart';
-import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 import '../../../generated/l10n.dart';
@@ -34,7 +33,7 @@ class _FriendItemState extends State<FriendItem> {
         padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
         overlayColor: user.isFollowed! ? Theme.of(context).dialogBackgroundColor : Theme.of(context).primaryColor);
     var icon = user.isFollowed! ? Icons.check : Icons.add;
-    var text = user.isFollowed! ? S.of(context).search_followed : S.of(context).search_follow;
+    var text = user.isFollowed! ? S.current.search_followed : S.current.search_follow;
     var iconColor = user.isFollowed! ? Theme.of(context).hintColor : Theme.of(context).scaffoldBackgroundColor;
     var iconSize = Theme.of(context).textTheme.bodySmall!.fontSize;
     var textStyle = TextStyle(
@@ -54,10 +53,6 @@ class _FriendItemState extends State<FriendItem> {
                 if (response.data['code'] == Global.successCode) {
                   user.followerCount = !user.isFollowed! ? user.followerCount! + 1 : user.followerCount! - 1;
                   user.isFollowed = !user.isFollowed!;
-                } else {
-                  if (context.mounted) {
-                    ToastificationUtils.showSimpleToastification(context, response.data['msg']);
-                  }
                 }
                 setState(() {});
               },
@@ -126,7 +121,7 @@ class _FriendItemState extends State<FriendItem> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            '${NumberConverter.convertNumber(user.followerCount!)}${S.of(context).search_follower}',
+                            '${NumberConverter.convertNumber(user.followerCount!)}${S.current.search_follower}',
                             style: TextStyle(
                               color: Theme.of(context).hintColor,
                               fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,

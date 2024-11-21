@@ -16,7 +16,7 @@ class ActivityPage extends StatelessWidget {
           titleSpacing: 0,
           leading: Container(),
           centerTitle: true,
-          title: Text(S.of(context).dynamic_title, style: Theme.of(context).textTheme.headlineSmall)),
+          title: Text(S.current.dynamic_title, style: Theme.of(context).textTheme.headlineSmall)),
       backgroundColor: Theme.of(context).dialogBackgroundColor,
       body: const Column(
         mainAxisAlignment: MainAxisAlignment.start,

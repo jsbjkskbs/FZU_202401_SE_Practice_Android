@@ -147,7 +147,7 @@ class _VideoPageTabsContainer extends State<VideoPageTabsContainer> with TickerP
                       });
                     },
                     child: CommentReplyPopupFakeContainer(
-                      hintText: S.of(context).reply_comment_popup_hint,
+                      hintText: S.current.reply_comment_popup_hint,
                     ),
                   ),
                 ],

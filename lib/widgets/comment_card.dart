@@ -9,7 +9,6 @@ import 'package:like_button/like_button.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 import '../pages/space.dart';
-import '../utils/toastification.dart';
 import 'comment_popup.dart';
 
 class CommentCard extends StatefulWidget {
@@ -179,10 +178,6 @@ class _CommentCardState extends State<CommentCard> {
                             widget.comment.likeCount = isLiked ? widget.comment.likeCount! - 1 : widget.comment.likeCount! + 1;
                             widget.comment.isLiked = !isLiked;
                           });
-                        } else {
-                          if (context.mounted) {
-                            ToastificationUtils.showSimpleToastification(context, response.data["msg"]);
-                          }
                         }
                         return widget.comment.isLiked;
                       },

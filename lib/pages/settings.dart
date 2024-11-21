@@ -28,7 +28,7 @@ class SettingsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          S.of(context).settings_title,
+          S.current.settings_title,
           style: TextStyle(
             color: Theme.of(context).primaryColor,
           ),
@@ -71,7 +71,7 @@ class _SettingsList {
             Icons.lightbulb_outline,
             size: 24,
           ),
-          label: S.of(context).settings_light_dark_switch,
+          label: S.current.settings_light_dark_switch,
           kind: 'additional',
           labelIndex: 0,
           kindIndex: 0,
@@ -86,7 +86,7 @@ class _SettingsList {
                 break;
             }
             Storage.storePersistentData(Global.appPersistentData);
-            ToastificationUtils.showSimpleToastification(context, S.of(context).home_theme_switch_toast);
+            ToastificationUtils.showSimpleToastification(S.current.home_theme_switch_toast);
           },
           rightWidget: const SettingsLightDarkSwitch()),
       SettingsItem(
@@ -94,14 +94,14 @@ class _SettingsList {
           DisplayIcons.palette,
           size: 24,
         ),
-        label: S.of(context).settings_change_theme,
+        label: S.current.settings_change_theme,
         kind: 'additional',
         labelIndex: 1,
         kindIndex: 0,
         onTap: (BuildContext context) {
           DropDownState(DropDown(
             bottomSheetTitle: Text(
-              S.of(context).settings_select_theme,
+              S.current.settings_select_theme,
               style: TextStyle(
                 color: Theme.of(context).primaryColor,
                 fontWeight: FontWeight.bold,
@@ -110,14 +110,14 @@ class _SettingsList {
             ),
             data: [
               SelectedListItem(
-                name: S.of(context).flex_scheme_default,
+                name: S.current.flex_scheme_default,
                 isSelected: Global.appPersistentData.themeSelection == FlexScheme.sakura.name,
                 value: FlexScheme.sakura.name,
               ),
               for (var value in FlexScheme.values)
                 if (value.name != 'custom') ...[
                   SelectedListItem(
-                      name: SchemeReflect.getFlexSchemeLocalizedName(value.name, context),
+                      name: SchemeReflect.getFlexSchemeLocalizedName(value.name),
                       isSelected: Global.appPersistentData.themeSelection == value.name,
                       value: value.name),
                 ]
@@ -128,7 +128,7 @@ class _SettingsList {
               Storage.storePersistentData(Global.appPersistentData);
               MyAppState.appScheme.setSchemeWithContext(SchemeReflect.getFlexScheme(val, defaultScheme: FlexScheme.sakura), context);
             },
-            searchHintText: S.of(context).home_top_bar_search,
+            searchHintText: S.current.home_top_bar_search,
           )).showModal(context);
         },
       ),
@@ -137,14 +137,14 @@ class _SettingsList {
             DisplayIcons.language_change,
             size: 24,
           ),
-          label: S.of(context).settings_change_language,
+          label: S.current.settings_change_language,
           kind: 'additional',
           labelIndex: 2,
           kindIndex: 0,
           onTap: (BuildContext context) {
             DropDownState(DropDown(
               bottomSheetTitle: Text(
-                S.of(context).settings_select_language,
+                S.current.settings_select_language,
                 style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontWeight: FontWeight.bold,
@@ -172,7 +172,7 @@ class _SettingsList {
             DisplayIcons.about,
             size: 24,
           ),
-          label: S.of(context).settings_about_us,
+          label: S.current.settings_about_us,
           kind: 'additional',
           labelIndex: 3,
           kindIndex: 0,
@@ -200,7 +200,7 @@ class _SettingsList {
                           ),
                           const SizedBox(height: 32),
                           Text(
-                            S.of(context).settings_about_us_noting,
+                            S.current.settings_about_us_noting,
                             style: TextStyle(
                               color: Theme.of(context).primaryColor,
                               fontSize: MediaQuery.of(context).size.width / 20,
@@ -213,15 +213,18 @@ class _SettingsList {
           }),
       if (Global.self.isValidUser())
         SettingsItem(
-          label: S.of(context).settings_logout,
+          label: S.current.settings_logout,
           kind: 'security',
           labelIndex: 0,
           kindIndex: 1,
           onTap: (BuildContext context) {
             Global.self = User();
+            Global.appPersistentData.user = Global.self;
+            Global.updateDioToken(clear: true);
+            Global.resetAllCache();
             Storage.storePersistentData(Global.appPersistentData.copyWith(user: Global.self));
             Navigator.of(context).pushNamedAndRemoveUntil(IndexPage.routeName, (route) => false);
-            ToastificationUtils.showSimpleToastification(context, S.of(context).settings_logout_success);
+            ToastificationUtils.showSimpleToastification(S.current.settings_logout_success);
           },
           icon: const Icon(
             Icons.exit_to_app,

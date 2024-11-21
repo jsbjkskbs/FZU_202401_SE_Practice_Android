@@ -64,11 +64,14 @@ class Global {
     receiveTimeout: const Duration(seconds: 5),
   ));
 
-  static Future<bool> accessTokenRefresh() async {
+  static Future<bool?> accessTokenRefresh() async {
     if (self.isValidUser()) {
       Response response;
       response = await dio.get("/api/v1/tool/token/refresh");
       debugPrint("Global.startAsyncTask[Access-Token]: ${response.data}");
+      if (response.statusCode != 200) {
+        return null;
+      }
       if (response.data["code"] == successCode) {
         self.accessToken = response.data["data"]["access_token"];
         debugPrint("Global.startAsyncTask[self:Access-Token]: ${self.accessToken}");
@@ -92,11 +95,14 @@ class Global {
     return false;
   }
 
-  static Future<bool> refreshTokenRefresh() async {
+  static Future<bool?> refreshTokenRefresh() async {
     if (self.isValidUser()) {
       Response response;
       response = await dio.get("/api/v1/tool/refresh_token/refresh");
       debugPrint("Global.startAsyncTask[Refresh-Token]: ${response.data}");
+      if (response.statusCode != 200) {
+        return null;
+      }
       if (response.data["code"] == successCode) {
         self.refreshToken = response.data["data"]["refresh_token"];
         Storage.storePersistentData(appPersistentData.copyWith(user: self));
@@ -127,7 +133,12 @@ class Global {
     }));
   }
 
-  static updateDioToken({String? accessToken, String? refreshToken}) {
+  static updateDioToken({String? accessToken, String? refreshToken, bool clear = false}) {
+    if (clear) {
+      dio.options.headers.remove("Access-Token");
+      dio.options.headers.remove("Refresh-Token");
+      return;
+    }
     if (accessToken != null) {
       dio.options.headers["Access-Token"] = accessToken;
     }
@@ -151,6 +162,18 @@ class Global {
   static Map<String, MapEntry<List<Video>, bool>> cachedMapVideoList = {};
   static Map<String, MapEntry<List<Comment>, bool>> cachedMapCommentList = {};
   static Map<String, MapEntry<List<Activity>, bool>> cachedMapDynamicList = {};
+
+  static resetAllCache() {
+    cachedMap = {};
+    cachedMapUser = {};
+    cachedMapVideo = {};
+    cachedSearchVideoList = [];
+    cachedVideoList = {};
+    cachedMapUserList = {};
+    cachedMapVideoList = {};
+    cachedMapCommentList = {};
+    cachedMapDynamicList = {};
+  }
 
   static const List<String> categoryList = ["游戏", "知识", "生活", "军事", "影音", "新闻"];
 }

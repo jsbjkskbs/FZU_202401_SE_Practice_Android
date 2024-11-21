@@ -27,7 +27,7 @@ class _SearchPageTopBarState extends State<SearchPageTopBar> {
         children: [
           Expanded(
             child: SearchBar(
-              hintText: S.of(context).home_top_bar_search,
+              hintText: S.current.home_top_bar_search,
               leading: Icon(
                 Icons.search,
                 color: Theme.of(context).unselectedWidgetColor,
@@ -39,7 +39,7 @@ class _SearchPageTopBarState extends State<SearchPageTopBar> {
               autoFocus: true,
               onSubmitted: (value) {
                 if (value.isEmpty || value == '') {
-                  ToastificationUtils.showSimpleToastification(context, S.of(context).search_input_box_no_text_hint);
+                  ToastificationUtils.showSimpleToastification(S.current.search_input_box_no_text_hint);
                   return;
                 }
                 Global.cachedMapVideoList.remove(SearchPageUserTabsView.uniqueKey);
@@ -52,7 +52,7 @@ class _SearchPageTopBarState extends State<SearchPageTopBar> {
           TextButton(
             onPressed: () {
               if (text.isEmpty || text == '') {
-                ToastificationUtils.showSimpleToastification(context, S.of(context).search_input_box_no_text_hint);
+                ToastificationUtils.showSimpleToastification(S.current.search_input_box_no_text_hint);
                 return;
               }
               Global.cachedMapVideoList.remove(SearchPageUserTabsView.uniqueKey);
@@ -62,7 +62,7 @@ class _SearchPageTopBarState extends State<SearchPageTopBar> {
             style: ButtonStyle(
               overlayColor: WidgetStateProperty.all(Colors.transparent),
             ),
-            child: Text(S.of(context).home_top_bar_search, style: TextStyle(color: Theme.of(context).primaryColor)),
+            child: Text(S.current.home_top_bar_search, style: TextStyle(color: Theme.of(context).primaryColor)),
           ),
         ],
       ),

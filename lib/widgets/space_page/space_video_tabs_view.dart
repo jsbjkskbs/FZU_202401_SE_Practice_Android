@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:fulifuli_app/global.dart';
-import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:fulifuli_app/widgets/empty_placeholder.dart';
 import 'package:fulifuli_app/widgets/load_footer.dart';
 import 'package:fulifuli_app/widgets/video_card.dart';
@@ -76,9 +75,6 @@ class _SpaceVideoTabsViewState extends State<SpaceVideoTabsView> {
           Global.cachedMapVideoList.remove(key);
           String? result = await _fetchData();
           if (result != null) {
-            if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, result);
-            }
             _easyRefreshController.finishRefresh();
             return;
           }
@@ -92,9 +88,6 @@ class _SpaceVideoTabsViewState extends State<SpaceVideoTabsView> {
 
           String? result = await _fetchData();
           if (result != null) {
-            if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, result);
-            }
             _easyRefreshController.finishLoad();
             return;
           }

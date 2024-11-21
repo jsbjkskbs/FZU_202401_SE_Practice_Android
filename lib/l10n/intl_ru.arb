@@ -1,6 +1,26 @@
 {
   "@@locale": "ru",
   "egg_wa_ao": "Ва Ао!",
+  "when_internet_error": "Ошибка сети, пожалуйста, проверьте подключение к интернету",
+  "when_internet_error0": "Ошибка сети, код ошибки: {code}",
+  "@when_internet_error0": {
+    "placeholders": {
+      "code": {
+        "type": "int"
+      }
+    }
+  },
+  "when_server_error": "Ошибка сервера, пожалуйста, попробуйте позже",
+  "when_token_expired": "Срок действия токена истек, пожалуйста, войдите снова",
+  "when_download_success": "Загрузка успешна",
+  "when_file_saved_to_path": "Файл сохранен в {path}",
+  "@when_file_saved_to_path": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "function_default_like_on_zero": "Нравится",
   "function_default_dislike": "Не нравится",
   "function_default_report": "Пожаловаться",

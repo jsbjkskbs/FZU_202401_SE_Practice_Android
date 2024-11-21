@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:fluid_dialog/fluid_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:fulifuli_app/global.dart';
+import 'package:fulifuli_app/utils/dio_interceptors.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
@@ -19,6 +20,9 @@ class RecoverPasswordForm extends StatefulWidget {
 }
 
 class _RecoverPasswordState extends State<RecoverPasswordForm> {
+  final Dio dio = Dio(BaseOptions(
+    baseUrl: Global.baseUrl,
+  ));
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _codeController = TextEditingController();
   final TextEditingController _recoverPasswordController1 = TextEditingController();
@@ -63,6 +67,12 @@ class _RecoverPasswordState extends State<RecoverPasswordForm> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    dio.interceptors.add(DioHttpErrorInterceptor());
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FluidDialog(
         rootPage: FluidDialogPage(
@@ -73,36 +83,35 @@ class _RecoverPasswordState extends State<RecoverPasswordForm> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const SizedBox(height: 16),
-                      Text(S.of(context).login_recover_page_reset_password,
-                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      Text(S.current.login_recover_page_reset_password, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 16),
                       TDInput(
                         controller: _emailController,
-                        leftLabel: S.of(context).login_recover_page_reset_email,
+                        leftLabel: S.current.login_recover_page_reset_email,
                         leftLabelStyle: TextStyle(
                           color: Theme.of(context).indicatorColor,
                         ),
                         textStyle: TextStyle(
                           color: Theme.of(context).indicatorColor,
                         ),
-                        inputDecoration: _makeInputDecoration(S.of(context).login_recover_page_reset_email_hint, context),
+                        inputDecoration: _makeInputDecoration(S.current.login_recover_page_reset_email_hint, context),
                         onChanged: (value) {
                           setState(() {
                             _emailValid = _validateEmail(value);
                           });
                         },
-                        additionInfo: _emailValid ? "" : S.of(context).login_recover_page_reset_email_error,
+                        additionInfo: _emailValid ? "" : S.current.login_recover_page_reset_email_error,
                         additionInfoColor: Colors.red,
                       ),
                       TDInput(
                         controller: _codeController,
-                        leftLabel: S.of(context).login_recover_page_reset_code,
+                        leftLabel: S.current.login_recover_page_reset_code,
                         leftLabelStyle: TextStyle(color: Theme.of(context).indicatorColor, letterSpacing: 0),
                         textStyle: TextStyle(
                           color: Theme.of(context).indicatorColor,
                         ),
-                        inputDecoration: _makeInputDecoration(S.of(context).login_recover_page_reset_code_hint, context),
-                        additionInfo: _verifyCodeValid ? "" : S.of(context).login_recover_page_reset_code_error,
+                        inputDecoration: _makeInputDecoration(S.current.login_recover_page_reset_code_hint, context),
+                        additionInfo: _verifyCodeValid ? "" : S.current.login_recover_page_reset_code_error,
                         additionInfoColor: Colors.red,
                         rightBtn: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -117,11 +126,11 @@ class _RecoverPasswordState extends State<RecoverPasswordForm> {
                             ),
                             _countdownTime > 0
                                 ? TDText(
-                                    S.of(context).login_recover_page_send_reset_code_on_countdown(_countdownTime),
+                                    S.current.login_recover_page_send_reset_code_on_countdown(_countdownTime),
                                     textColor: Theme.of(context).secondaryHeaderColor,
                                   )
                                 : TDText(
-                                    S.of(context).login_recover_page_send_reset_code,
+                                    S.current.login_recover_page_send_reset_code,
                                     textColor: Theme.of(context).primaryColor,
                                   ),
                           ],
@@ -129,9 +138,7 @@ class _RecoverPasswordState extends State<RecoverPasswordForm> {
                         onBtnTap: () async {
                           if (_countdownTime == 0) {
                             Response response;
-                            response = await Dio(BaseOptions(
-                              baseUrl: Global.baseUrl,
-                            )).post(
+                            response = await dio.post(
                               "/api/v1/user/security/password/retrieve/email",
                               data: {
                                 "email": _emailController.text,
@@ -140,7 +147,7 @@ class _RecoverPasswordState extends State<RecoverPasswordForm> {
                             if (response.data["code"] != Global.successCode && context.mounted) {
                               TDToast.showText(response.data["msg"], context: context);
                             } else if (context.mounted) {
-                              TDToast.showText(S.of(context).login_recover_page_reset_code_has_sent, context: context);
+                              TDToast.showText(S.current.login_recover_page_reset_code_has_sent, context: context);
                               setState(() {
                                 _countdownTime = 60;
                                 _countdownTimer.cancel();
@@ -159,21 +166,21 @@ class _RecoverPasswordState extends State<RecoverPasswordForm> {
                         },
                       ),
                       TDInput(
-                        leftLabel: S.of(context).login_recover_page_new_password,
+                        leftLabel: S.current.login_recover_page_new_password,
                         leftLabelStyle: TextStyle(
                           color: Theme.of(context).indicatorColor,
                         ),
                         textStyle: TextStyle(
                           color: Theme.of(context).indicatorColor,
                         ),
-                        inputDecoration: _makeInputDecoration(S.of(context).login_recover_page_new_password_hint, context),
+                        inputDecoration: _makeInputDecoration(S.current.login_recover_page_new_password_hint, context),
                         controller: _recoverPasswordController1,
                         onChanged: (value) {
                           setState(() {
                             _passwordValid = _validatePassword(value);
                           });
                         },
-                        additionInfo: _passwordValid ? "" : S.of(context).login_recover_page_new_password_error,
+                        additionInfo: _passwordValid ? "" : S.current.login_recover_page_new_password_error,
                         additionInfoColor: Colors.red,
                         obscureText: !_passwordVisible,
                         rightBtn: IconButton(
@@ -187,21 +194,21 @@ class _RecoverPasswordState extends State<RecoverPasswordForm> {
                         needClear: false,
                       ),
                       TDInput(
-                        leftLabel: S.of(context).login_recover_page_confirm_password,
+                        leftLabel: S.current.login_recover_page_confirm_password,
                         leftLabelStyle: TextStyle(
                           color: Theme.of(context).indicatorColor,
                         ),
                         textStyle: TextStyle(
                           color: Theme.of(context).indicatorColor,
                         ),
-                        inputDecoration: _makeInputDecoration(S.of(context).login_recover_page_confirm_password_hint, context),
+                        inputDecoration: _makeInputDecoration(S.current.login_recover_page_confirm_password_hint, context),
                         controller: _recoverPasswordController2,
                         onChanged: (value) {
                           setState(() {
                             _password2Valid = _validatePassword2(_recoverPasswordController1.text, value);
                           });
                         },
-                        additionInfo: _password2Valid ? "" : S.of(context).login_recover_page_confirm_password_error,
+                        additionInfo: _password2Valid ? "" : S.current.login_recover_page_confirm_password_error,
                         additionInfoColor: Colors.red,
                         obscureText: !_password2Visible,
                         rightBtn: IconButton(
@@ -223,15 +230,14 @@ class _RecoverPasswordState extends State<RecoverPasswordForm> {
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: Text(S.of(context).login_recover_page_cancel),
+                            child: Text(S.current.login_recover_page_cancel),
                           )),
                           const SizedBox(width: 48),
                           Expanded(
                               child: ElevatedButton(
                             onPressed: () async {
                               if (_recoverPasswordController1.text != _recoverPasswordController2.text) {
-                                ToastificationUtils.showSimpleToastification(
-                                    context, S.of(context).login_recover_page_confirm_password_error);
+                                ToastificationUtils.showSimpleToastification(S.current.login_recover_page_confirm_password_error);
                               } else {
                                 Response response;
                                 response = await Dio(
@@ -248,10 +254,9 @@ class _RecoverPasswordState extends State<RecoverPasswordForm> {
                                 );
 
                                 if (response.data["code"] != Global.successCode && context.mounted) {
-                                  ToastificationUtils.showSimpleToastification(context, response.data["msg"]);
+                                  ToastificationUtils.showSimpleToastification(response.data["msg"]);
                                 } else if (context.mounted) {
-                                  ToastificationUtils.showSimpleToastification(
-                                      context, S.of(context).login_recover_page_reset_password_success);
+                                  ToastificationUtils.showSimpleToastification(S.current.login_recover_page_reset_password_success);
                                   Navigator.of(context).pop();
                                 }
                               }
@@ -259,7 +264,7 @@ class _RecoverPasswordState extends State<RecoverPasswordForm> {
                             style: ButtonStyle(
                               backgroundColor: WidgetStatePropertyAll(Theme.of(context).indicatorColor),
                             ),
-                            child: Text(S.of(context).login_recover_page_confirm, style: TextStyle(color: Theme.of(context).cardColor)),
+                            child: Text(S.current.login_recover_page_confirm, style: TextStyle(color: Theme.of(context).cardColor)),
                           )),
                           const SizedBox(width: 36),
                         ],

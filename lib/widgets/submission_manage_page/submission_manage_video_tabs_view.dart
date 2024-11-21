@@ -3,7 +3,6 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/pages/video.dart';
-import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:fulifuli_app/widgets/empty_placeholder.dart';
 import 'package:fulifuli_app/widgets/load_footer.dart';
 import 'package:fulifuli_app/widgets/submission_manage_page/submission_manage_video_item.dart';
@@ -65,9 +64,8 @@ class _SubmissionManageVideoTabsViewState extends State<SubmissionManageVideoTab
           Global.cachedMapVideoList[widget.uniqueKey] = const MapEntry([], false);
           String? result = await _fetchData();
           if (result != null) {
-            if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, result);
-            }
+            _controller.finishRefresh();
+            return;
           }
           setState(() {});
           _controller.finishRefresh();
@@ -79,9 +77,8 @@ class _SubmissionManageVideoTabsViewState extends State<SubmissionManageVideoTab
           }
           String? result = await _fetchData();
           if (result != null) {
-            if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, result);
-            }
+            _controller.finishLoad();
+            return;
           }
           setState(() {});
           _controller.finishLoad();

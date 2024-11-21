@@ -24,21 +24,21 @@ class _FuncZoneState extends State<FuncZone> {
   Widget build(BuildContext context) {
     List<FuncItem> funcItems = [
       FuncItem(
-          S.of(context).mine_func_zone_liked_videos,
+          S.current.mine_func_zone_liked_videos,
           Icon(
             Icons.favorite,
             color: Theme.of(context).primaryColor,
           ),
           "/liked_videos"),
       FuncItem(
-          S.of(context).mine_func_zone_submission_management,
+          S.current.mine_func_zone_submission_management,
           Icon(
             Icons.add,
             color: Theme.of(context).primaryColor,
           ),
           "/submission/manage"),
       FuncItem(
-          S.of(context).mine_func_zone_settings,
+          S.current.mine_func_zone_settings,
           Icon(
             Icons.settings,
             color: Theme.of(context).primaryColor,

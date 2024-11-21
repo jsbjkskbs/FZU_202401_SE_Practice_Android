@@ -35,7 +35,7 @@ class _SettingsLightDarkSwitchState extends State<SettingsLightDarkSwitch> {
               break;
           }
           Storage.storePersistentData(Global.appPersistentData);
-          ToastificationUtils.showSimpleToastification(context, S.of(context).home_theme_switch_toast);
+          ToastificationUtils.showSimpleToastification(S.current.home_theme_switch_toast);
         }),
         iconList: [
           Icon(

@@ -52,7 +52,7 @@ class _MFAVerificationState extends State<MFAVerification> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      S.of(context).mfa_title,
+                      S.current.mfa_title,
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -60,7 +60,7 @@ class _MFAVerificationState extends State<MFAVerification> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      S.of(context).mfa_hint,
+                      S.current.mfa_hint,
                       style: const TextStyle(
                         fontSize: 20,
                       ),
@@ -77,7 +77,7 @@ class _MFAVerificationState extends State<MFAVerification> {
                         fontSize: 16,
                         color: Colors.red,
                       ),
-                      errorText: S.of(context).mfa_validation_error,
+                      errorText: S.current.mfa_validation_error,
                       inputFormatters: createOtpInputFormatters(),
                       pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
                       enabled: _enableInput,
@@ -96,7 +96,7 @@ class _MFAVerificationState extends State<MFAVerification> {
                           setState(() {
                             _enableInput = true;
                           });
-                          return S.of(context).mfa_validation_error;
+                          return S.current.mfa_validation_error;
                         }
                       },
                       onCompleted: (pin) {
@@ -116,7 +116,7 @@ class _MFAVerificationState extends State<MFAVerification> {
                               speed: const Duration(milliseconds: 150),
                             )
                           : TyperAnimatedText(
-                              S.of(context).mfa_verifying,
+                              S.current.mfa_verifying,
                               curve: Curves.easeIn,
                               textStyle: const TextStyle(
                                 fontSize: 16,

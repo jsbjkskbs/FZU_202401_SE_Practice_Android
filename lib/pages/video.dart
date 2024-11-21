@@ -136,8 +136,8 @@ class _VideoPageState extends State<VideoPage> {
                     child: VideoPageTabsContainer(
                       video: video!,
                       tabs: [
-                        S.of(context).video_introduction_title,
-                        S.of(context).video_comments_title,
+                        S.current.video_introduction_title,
+                        S.current.video_comments_title,
                       ],
                     ),
                   ))
@@ -209,7 +209,7 @@ class _VideoPageState extends State<VideoPage> {
                 width: MediaQuery.of(context).size.width * 0.6,
               ),
               Text(
-                S.of(context).empty_placeholder_hint,
+                S.current.empty_placeholder_hint,
                 style: TextStyle(fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize, color: Theme.of(context).primaryColor),
               ),
             ],

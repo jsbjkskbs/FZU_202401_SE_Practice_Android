@@ -9,7 +9,6 @@ import 'package:tdesign_flutter/tdesign_flutter.dart';
 import '../../generated/l10n.dart';
 import '../../model/video.dart';
 import '../../utils/number_converter.dart';
-import '../../utils/toastification.dart';
 import '../expand_shrink_text.dart';
 import '../icons/def.dart';
 
@@ -115,10 +114,6 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                                   : widget.video.user!.followerCount! + 1;
                               widget.video.user!.isFollowed = !widget.video.user!.isFollowed!;
                               setState(() {});
-                            } else {
-                              if (context.mounted) {
-                                ToastificationUtils.showSimpleToastification(context, response.data["msg"]);
-                              }
                             }
                           },
                           style: !widget.video.user!.isFollowed!
@@ -147,7 +142,7 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                                       : Theme.of(context).hintColor,
                                 ),
                                 Text(
-                                  !widget.video.user!.isFollowed! ? S.of(context).video_author_follow : S.of(context).video_author_followed,
+                                  !widget.video.user!.isFollowed! ? S.current.video_author_follow : S.current.video_author_followed,
                                   style: TextStyle(
                                       fontSize: 14,
                                       color: !widget.video.user!.isFollowed!
@@ -249,10 +244,6 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                                         widget.video.isLiked! ? widget.video.likeCount! - 1 : widget.video.likeCount! + 1;
                                     widget.video.isLiked = !widget.video.isLiked!;
                                     setState(() {});
-                                  } else {
-                                    if (context.mounted) {
-                                      ToastificationUtils.showSimpleToastification(context, response.data["msg"]);
-                                    }
                                   }
                                   return widget.video.isLiked!;
                                 },
@@ -277,7 +268,7 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                                   Widget result;
                                   if (count == 0) {
                                     result = Text(
-                                      S.of(context).function_default_like_on_zero,
+                                      S.current.function_default_like_on_zero,
                                       style: TextStyle(color: color, fontSize: 12),
                                     );
                                   } else {
@@ -315,7 +306,7 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                                   var color = isLiked ? Theme.of(context).primaryColor : Theme.of(context).unselectedWidgetColor;
                                   Widget result;
                                   result = Text(
-                                    S.of(context).function_default_dislike,
+                                    S.current.function_default_dislike,
                                     style: TextStyle(color: color, fontSize: 12),
                                   );
                                   return result;
@@ -351,7 +342,7 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                                   var color = Theme.of(context).unselectedWidgetColor;
                                   Widget result;
                                   result = Text(
-                                    S.of(context).function_default_report,
+                                    S.current.function_default_report,
                                     style: TextStyle(color: color, fontSize: 12),
                                   );
                                   return result;

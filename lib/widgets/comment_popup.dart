@@ -27,7 +27,7 @@ class CommentPopup {
           modalBarrierColor: Theme.of(context).textTheme.headlineMedium!.color!.withOpacity(0.5),
           builder: (context) {
             return TDPopupBottomDisplayPanel(
-                title: S.of(context).comment_popup_title,
+                title: S.current.comment_popup_title,
                 titleColor: Theme.of(context).textTheme.headlineMedium!.color,
                 closeColor: Theme.of(context).textTheme.headlineMedium!.color,
                 closeClick: () {
@@ -55,7 +55,7 @@ class CommentPopup {
                             });
                           },
                           child: CommentReplyPopupFakeContainer(
-                            hintText: S.of(context).reply_comment_popup_hint,
+                            hintText: S.current.reply_comment_popup_hint,
                           ),
                         ),
                       ],
@@ -87,7 +87,7 @@ class CommentPopup {
                 onSend: onSend,
                 parentId: parentId,
                 rootId: rootId,
-                hintText: hintText ?? S.of(context).reply_comment_popup_hint,
+                hintText: hintText ?? S.current.reply_comment_popup_hint,
               );
             }));
   }

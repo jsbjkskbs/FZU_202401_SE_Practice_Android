@@ -70,7 +70,7 @@ class _UserInfoViewState extends State<UserInfoView> {
                         ? "NaN"
                         : NumberConverter.convertNumber(Global.self.likeCount!),
                     style: TextStyle(color: Theme.of(context).primaryColor, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize)),
-                Text(S.of(context).mine_user_info_like,
+                Text(S.current.mine_user_info_like,
                     style: TextStyle(color: Theme.of(context).primaryColor, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize)),
               ],
             ),
@@ -86,7 +86,7 @@ class _UserInfoViewState extends State<UserInfoView> {
                     return FollowingPage(userId: Global.self.id!);
                   }));
                 } else {
-                  ToastificationUtils.showSimpleToastification(context, S.of(context).mine_need_login);
+                  ToastificationUtils.showSimpleToastification(S.current.mine_need_login);
                   Navigator.of(context).pushNamed(LoginScreen.routeName);
                 }
               },
@@ -97,7 +97,7 @@ class _UserInfoViewState extends State<UserInfoView> {
                           ? "NaN"
                           : NumberConverter.convertNumber(Global.self.followingCount!),
                       style: TextStyle(color: Theme.of(context).primaryColor, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize)),
-                  Text(S.of(context).mine_user_info_subscribe,
+                  Text(S.current.mine_user_info_subscribe,
                       style: TextStyle(color: Theme.of(context).primaryColor, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize)),
                 ],
               ),
@@ -112,7 +112,7 @@ class _UserInfoViewState extends State<UserInfoView> {
                     return FollowerPage(userId: Global.self.id!);
                   }));
                 } else {
-                  ToastificationUtils.showSimpleToastification(context, S.of(context).mine_need_login);
+                  ToastificationUtils.showSimpleToastification(S.current.mine_need_login);
                   Navigator.of(context).pushNamed(LoginScreen.routeName);
                 }
               },
@@ -123,7 +123,7 @@ class _UserInfoViewState extends State<UserInfoView> {
                           ? "NaN"
                           : NumberConverter.convertNumber(Global.self.followerCount!),
                       style: TextStyle(color: Theme.of(context).primaryColor, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize)),
-                  Text(S.of(context).mine_user_info_follower,
+                  Text(S.current.mine_user_info_follower,
                       style: TextStyle(color: Theme.of(context).primaryColor, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize)),
                 ],
               ),

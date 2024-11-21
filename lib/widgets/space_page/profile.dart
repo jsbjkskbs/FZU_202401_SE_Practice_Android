@@ -87,7 +87,7 @@ class _ProfileState extends State<Profile> {
                           style:
                               _labelStyle.copyWith(fontWeight: FontWeight.bold, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize)),
                       Text(
-                        S.of(context).space_follower,
+                        S.current.space_follower,
                         style: _labelStyle,
                       ),
                     ],
@@ -109,7 +109,7 @@ class _ProfileState extends State<Profile> {
                           style:
                               _labelStyle.copyWith(fontWeight: FontWeight.bold, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize)),
                       Text(
-                        S.of(context).space_following,
+                        S.current.space_following,
                         style: _labelStyle,
                       ),
                     ],
@@ -127,7 +127,7 @@ class _ProfileState extends State<Profile> {
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      S.of(context).space_like,
+                      S.current.space_like,
                       style: _labelStyle,
                     ),
                   ],
@@ -141,25 +141,15 @@ class _ProfileState extends State<Profile> {
               ? () async {
                   String? result = await _uploadAvatar(context);
                   if (result != null) {
-                    if (context.mounted) {
-                      ToastificationUtils.showSimpleToastification(context, result);
-                    }
                   } else {
-                    if (context.mounted) {
-                      ToastificationUtils.showSimpleToastification(context, S.of(context).space_upload_avatar_success);
-                    }
+                    ToastificationUtils.showSimpleToastification(S.current.space_upload_avatar_success);
                   }
                 }
               : () async {
                   String? result = await _follow();
                   if (result != null) {
-                    if (context.mounted) {
-                      ToastificationUtils.showSimpleToastification(context, result);
-                    }
                   } else {
-                    if (context.mounted) {
-                      ToastificationUtils.showSimpleToastification(context, S.of(context).space_follow_action_success);
-                    }
+                    ToastificationUtils.showSimpleToastification(S.current.space_follow_action_success);
                   }
                 },
           style: Global.self.id == Global.cachedMapUser[widget.keyInCachedMapUser]!.id
@@ -177,10 +167,8 @@ class _ProfileState extends State<Profile> {
                 ),
           child: Text(
             Global.self.id == Global.cachedMapUser[widget.keyInCachedMapUser]!.id
-                ? S.of(context).space_upload_avatar
-                : (Global.cachedMapUser[widget.keyInCachedMapUser]?.isFollowed == true
-                    ? S.of(context).space_followed
-                    : S.of(context).space_follow),
+                ? S.current.space_upload_avatar
+                : (Global.cachedMapUser[widget.keyInCachedMapUser]?.isFollowed == true ? S.current.space_followed : S.current.space_follow),
             style: Global.self.id == Global.cachedMapUser[widget.keyInCachedMapUser]!.id
                 ? TextStyle(
                     color: Theme.of(context).scaffoldBackgroundColor,
@@ -251,10 +239,10 @@ class _ProfileState extends State<Profile> {
                 return rr.data["msg"];
               }
             } else {
-              return S.of(context).space_upload_avatar_error;
+              return S.current.space_upload_avatar_error;
             }
           } else {
-            return S.of(context).space_upload_avatar_not_select;
+            return S.current.space_upload_avatar_not_select;
           }
         }
       } else {
