@@ -4,11 +4,11 @@ import 'package:dio/dio.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:fulifuli_app/global.dart';
+import 'package:fulifuli_app/utils/option_grid_view.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../model/video.dart';
-import '../../../utils/option_grid_view.dart';
 import '../../video_card.dart';
 
 class VideoTabsView extends StatefulWidget {
@@ -103,7 +103,7 @@ class _VideoTabsViewState extends State<VideoTabsView> {
         onLoad: () async {
           if (offset == -1) {
             ToastificationUtils.showSimpleToastification(context, S.of(context).home_page_no_more);
-            _easyRefreshController.finishLoad();
+            _easyRefreshController.finishLoad(IndicatorResult.noMore, true);
             return;
           }
           var oldLength = Global.cachedVideoList[widget.assignedIndex.toString()]!.key.length;

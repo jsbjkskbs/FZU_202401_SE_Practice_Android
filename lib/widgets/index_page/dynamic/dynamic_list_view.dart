@@ -134,6 +134,7 @@ class _DynamicListViewState extends State<DynamicListView> {
       }
       Global.cachedMapDynamicList[_DynamicListViewState._uniqueKey] =
           MapEntry([...Global.cachedMapDynamicList[_uniqueKey]!.key, ...list], isEnd);
+      debugPrint('response count ${list.length}, total count ${Global.cachedMapDynamicList[_uniqueKey]!.key.length}, isEnd $isEnd');
       return null;
     } else {
       return response.data["msg"];

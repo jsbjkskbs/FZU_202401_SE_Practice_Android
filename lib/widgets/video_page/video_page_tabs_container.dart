@@ -7,6 +7,7 @@ import 'package:fulifuli_app/widgets/index_page/home/video_tabs_view.dart';
 import 'package:fulifuli_app/widgets/video_page/video_introduction_view.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
+import '../../generated/l10n.dart';
 import '../../model/video.dart';
 import '../comment_list.dart';
 import '../comment_reply_fake_container.dart';
@@ -145,7 +146,9 @@ class _VideoPageTabsContainer extends State<VideoPageTabsContainer> with TickerP
                         _easyRefreshController.callRefresh();
                       });
                     },
-                    child: const CommentReplyPopupFakeContainer(),
+                    child: CommentReplyPopupFakeContainer(
+                      hintText: S.of(context).reply_comment_popup_hint,
+                    ),
                   ),
                 ],
               )

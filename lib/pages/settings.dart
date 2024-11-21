@@ -154,6 +154,10 @@ class _SettingsList {
               data: [
                 SelectedListItem(name: '简体中文', isSelected: Global.appPersistentData.languageCode == 'zh', value: 'zh'),
                 SelectedListItem(name: 'English', isSelected: Global.appPersistentData.languageCode == 'en', value: 'en'),
+                SelectedListItem(name: 'Français', isSelected: Global.appPersistentData.languageCode == 'fr', value: 'fr'),
+                SelectedListItem(name: 'Español', isSelected: Global.appPersistentData.languageCode == 'es', value: 'es'),
+                SelectedListItem(
+                    name: 'русский(Сложный набор текста)', isSelected: Global.appPersistentData.languageCode == 'ru', value: 'ru'),
               ],
               onSelected: (items) {
                 var val = items.first.value ?? 'zh';

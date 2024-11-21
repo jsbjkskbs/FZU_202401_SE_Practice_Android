@@ -252,6 +252,13 @@
   "submit_popup_tag_label": "标签",
   "submit_popup_tag_hint": "请输入标签",
   "submit_popup_additional_hint": "最大输入 {count} 个字",
+  "@submit_popup_additional_hint": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "submit_popup_clear_button": "清空",
   "submit_popup_confirm_button": "确认",
   "submit_video_tag_duplicate": "标签重复",

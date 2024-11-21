@@ -69,8 +69,9 @@ class _UserInfoViewState extends State<UserInfoView> {
                     (!Global.self.isValidUser() || (Global.self.isValidUser() && Global.self.likeCount == null))
                         ? "NaN"
                         : NumberConverter.convertNumber(Global.self.likeCount!),
-                    style: TextStyle(color: Theme.of(context).primaryColor)),
-                Text(S.of(context).mine_user_info_like, style: TextStyle(color: Theme.of(context).primaryColor)),
+                    style: TextStyle(color: Theme.of(context).primaryColor, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize)),
+                Text(S.of(context).mine_user_info_like,
+                    style: TextStyle(color: Theme.of(context).primaryColor, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize)),
               ],
             ),
           ),
@@ -95,8 +96,9 @@ class _UserInfoViewState extends State<UserInfoView> {
                       (!Global.self.isValidUser() || (Global.self.isValidUser() && Global.self.likeCount == null))
                           ? "NaN"
                           : NumberConverter.convertNumber(Global.self.followingCount!),
-                      style: TextStyle(color: Theme.of(context).primaryColor)),
-                  Text(S.of(context).mine_user_info_subscribe, style: TextStyle(color: Theme.of(context).primaryColor)),
+                      style: TextStyle(color: Theme.of(context).primaryColor, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize)),
+                  Text(S.of(context).mine_user_info_subscribe,
+                      style: TextStyle(color: Theme.of(context).primaryColor, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize)),
                 ],
               ),
             )),
@@ -120,8 +122,9 @@ class _UserInfoViewState extends State<UserInfoView> {
                       (!Global.self.isValidUser() || (Global.self.isValidUser() && Global.self.likeCount == null))
                           ? "NaN"
                           : NumberConverter.convertNumber(Global.self.followerCount!),
-                      style: TextStyle(color: Theme.of(context).primaryColor)),
-                  Text(S.of(context).mine_user_info_follower, style: TextStyle(color: Theme.of(context).primaryColor)),
+                      style: TextStyle(color: Theme.of(context).primaryColor, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize)),
+                  Text(S.of(context).mine_user_info_follower,
+                      style: TextStyle(color: Theme.of(context).primaryColor, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize)),
                 ],
               ),
             )),

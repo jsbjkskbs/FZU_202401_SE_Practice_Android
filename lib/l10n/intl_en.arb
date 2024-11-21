@@ -252,6 +252,13 @@
   "submit_popup_tag_label": "Tags",
   "submit_popup_tag_hint": "Enter tags",
   "submit_popup_additional_hint": "Maximum {count} characters",
+  "@submit_popup_additional_hint": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "submit_popup_clear_button": "Clear",
   "submit_popup_confirm_button": "Confirm",
   "submit_video_tag_duplicate": "Duplicate tag",

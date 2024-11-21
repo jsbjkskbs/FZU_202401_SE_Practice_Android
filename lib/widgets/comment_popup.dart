@@ -54,7 +54,9 @@ class CommentPopup {
                               controller.callRefresh();
                             });
                           },
-                          child: const CommentReplyPopupFakeContainer(),
+                          child: CommentReplyPopupFakeContainer(
+                            hintText: S.of(context).reply_comment_popup_hint,
+                          ),
                         ),
                       ],
                     )));

@@ -69,7 +69,7 @@ class _ProfileViewState extends State<ProfileView> {
                         Global.self.name ?? S.of(context).mine_profile_login_or_register,
                         style: TextStyle(
                           color: Theme.of(context).primaryColor,
-                          fontSize: 20.0,
+                          fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

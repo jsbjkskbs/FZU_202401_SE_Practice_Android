@@ -2251,7 +2251,7 @@ class S {
   }
 
   /// `Maximum {count} characters`
-  String submit_popup_additional_hint(Object count) {
+  String submit_popup_additional_hint(int count) {
     return Intl.message(
       'Maximum $count characters',
       name: 'submit_popup_additional_hint',
@@ -2767,6 +2767,9 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
   List<Locale> get supportedLocales {
     return const <Locale>[
       Locale.fromSubtags(languageCode: 'en'),
+      Locale.fromSubtags(languageCode: 'es'),
+      Locale.fromSubtags(languageCode: 'fr'),
+      Locale.fromSubtags(languageCode: 'ru'),
       Locale.fromSubtags(languageCode: 'zh'),
     ];
   }

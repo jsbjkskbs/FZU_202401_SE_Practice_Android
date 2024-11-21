@@ -9,10 +9,12 @@ class LoadFooter {
       messageStyle: TextStyle(
         fontSize: Theme.of(context).textTheme.labelLarge!.fontSize,
         color: Theme.of(context).primaryColor,
+        decoration: TextDecoration.none,
       ),
       textStyle: TextStyle(
         fontSize: Theme.of(context).textTheme.labelLarge!.fontSize,
         color: Theme.of(context).primaryColor,
+        decoration: TextDecoration.none,
       ),
       dragText: S.of(context).home_page_refresher_drag_text,
       armedText: S.of(context).home_page_refresher_armed_text,

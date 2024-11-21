@@ -73,7 +73,8 @@ class _ProfileState extends State<Profile> {
             const SizedBox(),
             GestureDetector(
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => FollowerPage(userId: widget.keyInCachedMapUser)));
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => FollowerPage(userId: widget.keyInCachedMapUser.split("/").last)));
               },
               child: SizedBox(
                   width: MediaQuery.of(context).size.width / 4,
@@ -94,7 +95,8 @@ class _ProfileState extends State<Profile> {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => FollowingPage(userId: widget.keyInCachedMapUser)));
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => FollowingPage(userId: widget.keyInCachedMapUser.split("/").last)));
               },
               child: SizedBox(
                   width: MediaQuery.of(context).size.width / 4,
