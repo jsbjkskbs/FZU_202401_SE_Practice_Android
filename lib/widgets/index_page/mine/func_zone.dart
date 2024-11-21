@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../../generated/l10n.dart';
 
 class FuncZone extends StatefulWidget {
   const FuncZone({super.key});
@@ -23,21 +24,21 @@ class _FuncZoneState extends State<FuncZone> {
   Widget build(BuildContext context) {
     List<FuncItem> funcItems = [
       FuncItem(
-          AppLocalizations.of(context)!.mine_func_zone_liked_videos,
+          S.of(context).mine_func_zone_liked_videos,
           Icon(
             Icons.favorite,
             color: Theme.of(context).primaryColor,
           ),
           "/liked_videos"),
       FuncItem(
-          AppLocalizations.of(context)!.mine_func_zone_submission_management,
+          S.of(context).mine_func_zone_submission_management,
           Icon(
             Icons.add,
             color: Theme.of(context).primaryColor,
           ),
           "/submission/manage"),
       FuncItem(
-          AppLocalizations.of(context)!.mine_func_zone_settings,
+          S.of(context).mine_func_zone_settings,
           Icon(
             Icons.settings,
             color: Theme.of(context).primaryColor,

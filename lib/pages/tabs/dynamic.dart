@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/pages/dynamic_post.dart';
 import 'package:fulifuli_app/widgets/icons/def.dart';
 import 'package:fulifuli_app/widgets/index_page/dynamic/dynamic_list_view.dart';
+
+import '../../generated/l10n.dart';
 
 class ActivityPage extends StatelessWidget {
   const ActivityPage({super.key});
@@ -15,7 +16,7 @@ class ActivityPage extends StatelessWidget {
           titleSpacing: 0,
           leading: Container(),
           centerTitle: true,
-          title: Text(AppLocalizations.of(context)!.dynamic_title, style: Theme.of(context).textTheme.headlineSmall)),
+          title: Text(S.of(context).dynamic_title, style: Theme.of(context).textTheme.headlineSmall)),
       backgroundColor: Theme.of(context).dialogBackgroundColor,
       body: const Column(
         mainAxisAlignment: MainAxisAlignment.start,

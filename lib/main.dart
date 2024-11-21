@@ -5,7 +5,7 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/model/locale.dart';
 import 'package:fulifuli_app/model/scheme.dart';
@@ -24,6 +24,7 @@ import 'package:fulifuli_app/pages/submission_manage.dart';
 import 'package:fulifuli_app/pages/video.dart';
 import 'package:fulifuli_app/utils/scheme_reflect.dart';
 
+import 'generated/l10n.dart';
 import 'model/user.dart';
 
 Future<void> main() async {
@@ -104,8 +105,13 @@ class MyAppState extends State<MyApp> {
                 }
                 return const Locale('zh');
               },
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              supportedLocales: AppLocalizations.supportedLocales,
+              localizationsDelegates: const [
+                S.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: S.delegate.supportedLocales,
               theme: theme.copyWith(
                   pageTransitionsTheme: const PageTransitionsTheme(builders: <TargetPlatform, PageTransitionsBuilder>{
                 TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),

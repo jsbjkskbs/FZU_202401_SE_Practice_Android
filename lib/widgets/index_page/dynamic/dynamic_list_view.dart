@@ -1,13 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/model/activity.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:fulifuli_app/widgets/empty_placeholder.dart';
 import 'package:fulifuli_app/widgets/load_footer.dart';
 
+import '../../../generated/l10n.dart';
 import '../../dynamic_card.dart';
 
 class DynamicListView extends StatefulWidget {
@@ -71,7 +71,7 @@ class _DynamicListViewState extends State<DynamicListView> {
             }
           } else {
             if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.dynamic_refresh_success);
+              ToastificationUtils.showSimpleToastification(context, S.of(context).dynamic_refresh_success);
               setState(() {});
             }
           }
@@ -89,7 +89,7 @@ class _DynamicListViewState extends State<DynamicListView> {
             }
           } else {
             if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.dynamic_load_success);
+              ToastificationUtils.showSimpleToastification(context, S.of(context).dynamic_load_success);
               setState(() {});
             }
           }

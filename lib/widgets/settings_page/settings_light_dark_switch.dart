@@ -1,8 +1,8 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../generated/l10n.dart';
 import '../../global.dart';
 import '../../utils/toastification.dart';
 
@@ -35,7 +35,7 @@ class _SettingsLightDarkSwitchState extends State<SettingsLightDarkSwitch> {
               break;
           }
           Storage.storePersistentData(Global.appPersistentData);
-          ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.home_theme_switch_toast);
+          ToastificationUtils.showSimpleToastification(context, S.of(context).home_theme_switch_toast);
         }),
         iconList: [
           Icon(

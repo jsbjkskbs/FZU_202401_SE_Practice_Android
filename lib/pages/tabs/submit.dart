@@ -8,7 +8,6 @@ import 'package:drop_down_list/model/selected_list_item.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/pkg/chewie/chewie.dart';
 import 'package:fulifuli_app/utils/file_type_judge.dart';
@@ -20,6 +19,8 @@ import 'package:fulifuli_app/widgets/video_page/custom_controls/custom_controls.
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 import 'package:video_player/video_player.dart';
+
+import '../../generated/l10n.dart';
 
 class SubmitPage extends StatefulWidget {
   const SubmitPage({super.key});
@@ -209,7 +210,7 @@ class _SubmitPageState extends State<SubmitPage> {
                   children: [
                     const Icon(DisplayIcons.upload_video, size: 48),
                     Text(
-                      AppLocalizations.of(context)!.submit_select_video_hint,
+                      S.of(context).submit_select_video_hint,
                       style: TextStyle(
                         color: Theme.of(context).textTheme.bodyLarge!.color,
                         fontWeight: FontWeight.bold,
@@ -261,7 +262,7 @@ class _SubmitPageState extends State<SubmitPage> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: Text(AppLocalizations.of(context)!.submit_clear_button, style: const TextStyle(color: Colors.white))),
+                    child: Text(S.of(context).submit_clear_button, style: const TextStyle(color: Colors.white))),
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.4,
@@ -276,7 +277,7 @@ class _SubmitPageState extends State<SubmitPage> {
                   ),
                   onPressed: video == null
                       ? () {
-                          ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.submit_video_not_selected);
+                          ToastificationUtils.showSimpleToastification(context, S.of(context).submit_video_not_selected);
                         }
                       : () async {
                           _onUploading = true;
@@ -300,8 +301,7 @@ class _SubmitPageState extends State<SubmitPage> {
                           debugPrint(response.data.toString());
                           if (response.data['code'] == Global.successCode) {
                             if (context.mounted) {
-                              ToastificationUtils.showSimpleToastification(
-                                  context, AppLocalizations.of(context)!.submit_video_uploading_hint);
+                              ToastificationUtils.showSimpleToastification(context, S.of(context).submit_video_uploading_hint);
                             }
                             var uploadUrl = response.data['data']['upload_url'];
                             var uploadKey = response.data['data']['upload_key'];
@@ -323,8 +323,7 @@ class _SubmitPageState extends State<SubmitPage> {
                             );
                             if (response.statusCode == 200) {
                               if (context.mounted) {
-                                ToastificationUtils.showSimpleToastification(
-                                    context, AppLocalizations.of(context)!.submit_video_uploading_success);
+                                ToastificationUtils.showSimpleToastification(context, S.of(context).submit_video_uploading_success);
                               }
                               reset();
                               setState(() {
@@ -347,7 +346,7 @@ class _SubmitPageState extends State<SubmitPage> {
                             });
                           }
                         },
-                  child: Text(AppLocalizations.of(context)!.submit_submit_button,
+                  child: Text(S.of(context).submit_submit_button,
                       style: TextStyle(color: video == null ? Theme.of(context).unselectedWidgetColor : Theme.of(context).primaryColor)),
                 ),
               ),
@@ -389,7 +388,7 @@ class _SubmitPageState extends State<SubmitPage> {
                     height: 16,
                     child: AnimatedTextKit(repeatForever: true, animatedTexts: [
                       TypewriterAnimatedText(
-                        AppLocalizations.of(context)!.submit_video_uploading_hint_bottom,
+                        S.of(context).submit_video_uploading_hint_bottom,
                         speed: const Duration(milliseconds: 200),
                         textStyle: TextStyle(
                           color: Theme.of(context).primaryColor,
@@ -417,7 +416,7 @@ class _SubmitPageState extends State<SubmitPage> {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  AppLocalizations.of(context)!.submit_video_title_hint,
+                  S.of(context).submit_video_title_hint,
                   style: TextStyle(
                     color: Theme.of(context).textTheme.bodyLarge!.color,
                     fontWeight: FontWeight.bold,
@@ -428,10 +427,10 @@ class _SubmitPageState extends State<SubmitPage> {
             ),
             TDInput(
                 controller: _titleController,
-                hintText: AppLocalizations.of(context)!.submit_video_title_input_hint,
+                hintText: S.of(context).submit_video_title_input_hint,
                 autofocus: false,
                 maxLength: 32,
-                additionInfo: AppLocalizations.of(context)!.submit_video_title_additional_hint(_titleController.text.length, 32),
+                additionInfo: S.of(context).submit_video_title_additional_hint(_titleController.text.length, 32),
                 additionInfoColor: _titleController.text.length >= 32 ? Colors.red : Theme.of(context).hintColor,
                 onClearTap: () {
                   _titleController.clear();
@@ -467,7 +466,7 @@ class _SubmitPageState extends State<SubmitPage> {
               const Icon(Icons.description),
               const SizedBox(width: 8),
               Text(
-                AppLocalizations.of(context)!.submit_video_description_hint,
+                S.of(context).submit_video_description_hint,
                 style: TextStyle(
                   color: Theme.of(context).textTheme.bodyLarge!.color,
                   fontWeight: FontWeight.bold,
@@ -478,10 +477,10 @@ class _SubmitPageState extends State<SubmitPage> {
           ),
           TDTextarea(
             controller: _descriptionController,
-            hintText: AppLocalizations.of(context)!.submit_video_description_input_hint,
+            hintText: S.of(context).submit_video_description_input_hint,
             autofocus: false,
             minLines: 4,
-            additionInfo: AppLocalizations.of(context)!.submit_video_title_additional_hint(_descriptionController.text.length, 256),
+            additionInfo: S.of(context).submit_video_title_additional_hint(_descriptionController.text.length, 256),
             additionInfoColor: _descriptionController.text.length >= 256 ? Colors.red : Theme.of(context).hintColor,
             maxLength: 256,
             onChanged: (value) {
@@ -502,7 +501,7 @@ class _SubmitPageState extends State<SubmitPage> {
       style: _shardButtonStyle,
       onPressed: () {
         DropDownState(DropDown(
-          searchHintText: AppLocalizations.of(context)!.home_top_bar_search,
+          searchHintText: S.of(context).home_top_bar_search,
           data: [
             for (var category in Global.categoryList)
               SelectedListItem(
@@ -527,7 +526,7 @@ class _SubmitPageState extends State<SubmitPage> {
               const Icon(Icons.category),
               const SizedBox(width: 8),
               Text(
-                AppLocalizations.of(context)!.submit_video_category_hint,
+                S.of(context).submit_video_category_hint,
                 style: TextStyle(
                   color: Theme.of(context).textTheme.bodyLarge!.color,
                   fontWeight: FontWeight.bold,
@@ -592,7 +591,7 @@ class _SubmitPageState extends State<SubmitPage> {
                   child: Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
                     const SizedBox(height: 16),
                     Material(
-                      child: Text(AppLocalizations.of(context)!.submit_video_tag_additional_hint(tags.length),
+                      child: Text(S.of(context).submit_video_tag_additional_hint(tags.length),
                           style: TextStyle(
                             color: Theme.of(context).textTheme.bodyLarge!.color,
                             fontWeight: FontWeight.bold,
@@ -620,19 +619,19 @@ class _SubmitPageState extends State<SubmitPage> {
                         child: TDInput(
                             controller: _popupController,
                             type: TDInputType.normal,
-                            leftLabel: AppLocalizations.of(context)!.submit_popup_tag_label,
+                            leftLabel: S.of(context).submit_popup_tag_label,
                             leftLabelStyle: TextStyle(
                               color: Theme.of(context).textTheme.bodyLarge!.color,
                               fontWeight: FontWeight.bold,
                               fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
                             ),
-                            hintText: AppLocalizations.of(context)!.submit_popup_tag_hint,
+                            hintText: S.of(context).submit_popup_tag_hint,
                             hintTextStyle: TextStyle(
                               color: Theme.of(context).hintColor,
                               fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
                             ),
                             maxLength: 16,
-                            additionInfo: AppLocalizations.of(context)!.submit_popup_additional_hint(16),
+                            additionInfo: S.of(context).submit_popup_additional_hint(16),
                             additionInfoColor: _popupController.text.length >= 16 ? Colors.red : Theme.of(context).hintColor,
                             autofocus: true,
                             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -642,8 +641,7 @@ class _SubmitPageState extends State<SubmitPage> {
                             onSubmitted: (value) {
                               if (value.isNotEmpty) {
                                 if (tags.any((element) => element.text == value)) {
-                                  ToastificationUtils.showSimpleToastification(
-                                      context, AppLocalizations.of(context)!.submit_video_tag_duplicate);
+                                  ToastificationUtils.showSimpleToastification(context, S.of(context).submit_video_tag_duplicate);
                                 } else {
                                   var inColor = ColorUtils.getRandomModerateColor();
                                   tags.add(TDTag(value,
@@ -706,7 +704,7 @@ class _SubmitPageState extends State<SubmitPage> {
                                     const Icon(Icons.clear, color: Colors.white),
                                     const SizedBox(width: 8),
                                     Text(
-                                      AppLocalizations.of(context)!.submit_popup_clear_button,
+                                      S.of(context).submit_popup_clear_button,
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
@@ -744,7 +742,7 @@ class _SubmitPageState extends State<SubmitPage> {
                                     ),
                                     const SizedBox(width: 8),
                                     Text(
-                                      AppLocalizations.of(context)!.submit_popup_confirm_button,
+                                      S.of(context).submit_popup_confirm_button,
                                       style: TextStyle(
                                         color: Theme.of(context).primaryColor,
                                         fontWeight: FontWeight.bold,
@@ -777,7 +775,7 @@ class _SubmitPageState extends State<SubmitPage> {
                   const Icon(Icons.tag),
                   const SizedBox(width: 8),
                   Text(
-                    AppLocalizations.of(context)!.submit_video_tag_hint,
+                    S.of(context).submit_video_tag_hint,
                     style: TextStyle(
                       color: Theme.of(context).textTheme.bodyLarge!.color,
                       fontWeight: FontWeight.bold,
@@ -812,19 +810,19 @@ class _SubmitPageState extends State<SubmitPage> {
 
   bool _checkMessageFilled(BuildContext context) {
     if (_titleController.text.isEmpty) {
-      ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.submit_video_title_empty);
+      ToastificationUtils.showSimpleToastification(context, S.of(context).submit_video_title_empty);
       return false;
     }
     if (_descriptionController.text.isEmpty) {
-      ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.submit_video_description_empty);
+      ToastificationUtils.showSimpleToastification(context, S.of(context).submit_video_description_empty);
       return false;
     }
     if (_selectedCategory.isEmpty) {
-      ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.submit_video_category_empty);
+      ToastificationUtils.showSimpleToastification(context, S.of(context).submit_video_category_empty);
       return false;
     }
     if (tags.isEmpty) {
-      ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.submit_video_tag_empty);
+      ToastificationUtils.showSimpleToastification(context, S.of(context).submit_video_tag_empty);
       return false;
     }
     return true;

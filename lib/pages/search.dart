@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/widgets/search_page/search_page_tabs_container.dart';
 import 'package:fulifuli_app/widgets/search_page/search_page_top_bar.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
+import '../generated/l10n.dart';
 import '../global.dart';
 import '../widgets/search_page/search_page_user_tabs_view.dart';
 import '../widgets/search_page/search_page_video_tabs_view.dart';
@@ -43,7 +43,7 @@ class _SearchPageState extends State<SearchPage> {
             height: MediaQuery.of(context).size.height * 0.2,
             width: MediaQuery.of(context).size.width * 0.6,
           ),
-          Text(AppLocalizations.of(context)!.search_loading_hint),
+          Text(S.of(context).search_loading_hint),
         ],
       )),
     );
@@ -55,8 +55,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _getTabsView(String keyword) {
-    return SearchPageTabsContainer(
-        tabs: [AppLocalizations.of(context)!.search_video, AppLocalizations.of(context)!.search_user], keyword: keyword);
+    return SearchPageTabsContainer(tabs: [S.of(context).search_video, S.of(context).search_user], keyword: keyword);
   }
 
   @override

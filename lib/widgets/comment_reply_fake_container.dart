@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:fulifuli_app/widgets/icons/def.dart';
+
+import '../generated/l10n.dart';
 
 class CommentReplyPopupFakeContainer extends StatefulWidget {
   const CommentReplyPopupFakeContainer({super.key, this.hintText = '可以来点评论吗~'});
@@ -53,7 +54,7 @@ class _CommentReplyPopupFakeContainerState extends State<CommentReplyPopupFakeCo
           Expanded(
               child: GestureDetector(
                   onTap: () {
-                    ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.egg_wa_ao);
+                    ToastificationUtils.showSimpleToastification(context, S.of(context).egg_wa_ao);
                   },
                   child: const Icon(DisplayIcons.cat)))
         ],

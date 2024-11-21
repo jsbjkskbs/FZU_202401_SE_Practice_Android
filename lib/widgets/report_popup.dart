@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/utils/language_reflect.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
+import '../generated/l10n.dart';
 import '../utils/toastification.dart';
 import 'icons/def.dart';
 
@@ -17,7 +17,7 @@ class ReportPopup {
           modalBarrierColor: Theme.of(context).textTheme.headlineMedium!.color!.withOpacity(0.5),
           builder: (context) {
             return TDPopupBottomDisplayPanel(
-                title: AppLocalizations.of(context)!.function_default_report,
+                title: S.of(context).function_default_report,
                 titleColor: Theme.of(context).textTheme.headlineMedium!.color,
                 closeColor: Theme.of(context).textTheme.headlineMedium!.color,
                 closeClick: () {
@@ -90,7 +90,7 @@ class _ReportPopupContainerState extends State<ReportPopupContainer> {
             const Divider(),
             TDTextarea(
               controller: _controller,
-              hintText: AppLocalizations.of(context)!.report_report_reason_hint,
+              hintText: S.of(context).report_report_reason_hint,
               minLines: 3,
               maxLength: 256,
               textStyle: TextStyle(
@@ -125,7 +125,7 @@ class _ReportPopupContainerState extends State<ReportPopupContainer> {
                             const Icon(DisplayIcons.clear, color: Colors.white),
                             const SizedBox(width: 4),
                             Text(
-                              AppLocalizations.of(context)!.function_default_clear,
+                              S.of(context).function_default_clear,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
@@ -143,7 +143,7 @@ class _ReportPopupContainerState extends State<ReportPopupContainer> {
                           } else {
                             if (context.mounted) {
                               _controller.clear();
-                              ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.report_submit_success);
+                              ToastificationUtils.showSimpleToastification(context, S.of(context).report_submit_success);
                               Navigator.pop(context, true);
                             }
                           }
@@ -159,7 +159,7 @@ class _ReportPopupContainerState extends State<ReportPopupContainer> {
                             Icon(DisplayIcons.post, color: Theme.of(context).primaryColor),
                             const SizedBox(width: 4),
                             Text(
-                              AppLocalizations.of(context)!.function_default_submit,
+                              S.of(context).function_default_submit,
                               style: TextStyle(
                                 color: Theme.of(context).primaryColor,
                                 fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
@@ -178,10 +178,10 @@ class _ReportPopupContainerState extends State<ReportPopupContainer> {
 
   Future<String?> _sendReport() async {
     if (_selected == null) {
-      return AppLocalizations.of(context)!.report_not_select_report_type;
+      return S.of(context).report_not_select_report_type;
     }
     if (_controller.text.isEmpty) {
-      return AppLocalizations.of(context)!.report_not_type_report_reason;
+      return S.of(context).report_not_type_report_reason;
     }
     debugPrint('sendReport: ${widget.oType}, ${widget.oId}, ${_reportSelections[_selected!]}, ${_controller.text}');
     debugPrint('sendReport: ${widget.commentType}, ${widget.fromMediaId}');

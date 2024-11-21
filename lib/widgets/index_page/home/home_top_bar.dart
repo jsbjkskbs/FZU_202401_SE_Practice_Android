@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/pages/space.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:fulifuli_app/widgets/icons/def.dart';
 import 'package:like_button/like_button.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
+
+import '../../../generated/l10n.dart';
 
 class HomeTopBar extends StatefulWidget {
   const HomeTopBar({super.key});
@@ -58,7 +59,7 @@ class _HomeTopBarState extends State<HomeTopBar> {
                           ),
                         );
                       } else {
-                        ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.home_login_hint);
+                        ToastificationUtils.showSimpleToastification(context, S.of(context).home_login_hint);
                         Navigator.of(context).pushNamed('/login');
                       }
                     },
@@ -67,7 +68,7 @@ class _HomeTopBarState extends State<HomeTopBar> {
                 const SizedBox(width: 16),
                 Expanded(
                   child: SearchBar(
-                    hintText: AppLocalizations.of(context)!.home_top_bar_search,
+                    hintText: S.of(context).home_top_bar_search,
                     leading: Icon(
                       Icons.search,
                       color: Theme.of(context).unselectedWidgetColor,

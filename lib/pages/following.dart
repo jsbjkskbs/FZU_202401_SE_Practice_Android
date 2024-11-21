@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/pages/space.dart';
 import 'package:fulifuli_app/widgets/empty_placeholder.dart';
 import 'package:fulifuli_app/widgets/load_footer.dart';
 
+import '../generated/l10n.dart';
 import '../global.dart';
 import '../model/user.dart';
 import '../utils/toastification.dart';
@@ -60,7 +60,7 @@ class _FollowingPageState extends State<FollowingPage> {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.following_title),
+        title: Text(S.of(context).following_title),
         centerTitle: true,
       ),
       body: Center(

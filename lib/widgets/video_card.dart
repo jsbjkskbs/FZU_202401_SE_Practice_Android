@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_popup/flutter_popup.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/model/video.dart';
@@ -8,6 +7,7 @@ import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:fulifuli_app/widgets/icons/def.dart';
 import 'package:fulifuli_app/widgets/report_popup.dart';
 
+import '../generated/l10n.dart';
 import '../pages/video.dart';
 import '../utils/image_shader_mask.dart';
 
@@ -57,7 +57,7 @@ class _VideoCardState extends State<VideoCard> {
                       children: [
                         const Icon(DisplayIcons.report),
                         const SizedBox(width: 4),
-                        Text(AppLocalizations.of(context)!.video_card_report),
+                        Text(S.of(context).video_card_report),
                       ],
                     ))),
                 TextButton(
@@ -77,8 +77,7 @@ class _VideoCardState extends State<VideoCard> {
                       }
                       if (context.mounted) {
                         Navigator.of(context).pop();
-                        ToastificationUtils.showSimpleToastification(
-                            context, AppLocalizations.of(context)!.video_card_uninterested_success);
+                        ToastificationUtils.showSimpleToastification(context, S.of(context).video_card_uninterested_success);
                       }
                     },
                     child: IntrinsicWidth(
@@ -86,7 +85,7 @@ class _VideoCardState extends State<VideoCard> {
                       children: [
                         const Icon(DisplayIcons.not_interest),
                         const SizedBox(width: 4),
-                        Text(AppLocalizations.of(context)!.video_card_uninterested),
+                        Text(S.of(context).video_card_uninterested),
                       ],
                     ))),
               ],

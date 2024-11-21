@@ -1,10 +1,10 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
+import '../generated/l10n.dart';
 import 'index.dart';
 
 class LoadingPage extends StatefulWidget {
@@ -52,7 +52,7 @@ class _LoadingPageState extends State<LoadingPage> {
               child: GestureDetector(
                   onTap: () {
                     if (!_isLoaded) {
-                      ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.loading_not_completed);
+                      ToastificationUtils.showSimpleToastification(context, S.of(context).loading_not_completed);
                       return;
                     } else {
                       Navigator.of(context).pushReplacementNamed(IndexPage.routeName);
@@ -76,7 +76,7 @@ class _LoadingPageState extends State<LoadingPage> {
                         return;
                       }
                       Navigator.of(context).pushReplacementNamed(IndexPage.routeName);
-                      ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.loading_hint,
+                      ToastificationUtils.showSimpleToastification(context, S.of(context).loading_hint,
                           duration: const Duration(seconds: 3));
                     },
                   )),
@@ -100,7 +100,7 @@ class _LoadingPageState extends State<LoadingPage> {
               child: ElevatedButton(
                   onPressed: () {
                     if (!_isLoaded) {
-                      ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.loading_not_completed);
+                      ToastificationUtils.showSimpleToastification(context, S.of(context).loading_not_completed);
                       return;
                     }
                     Navigator.of(context).pushReplacementNamed(IndexPage.routeName);
@@ -110,7 +110,7 @@ class _LoadingPageState extends State<LoadingPage> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  child: Text(AppLocalizations.of(context)!.loading_skip,
+                  child: Text(S.of(context).loading_skip,
                       style: TextStyle(
                           fontSize: MediaQuery.of(context).size.width / 20,
                           fontWeight: FontWeight.bold,

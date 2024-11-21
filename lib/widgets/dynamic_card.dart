@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/model/activity.dart';
 import 'package:fulifuli_app/pages/space.dart';
@@ -10,6 +9,7 @@ import 'package:fulifuli_app/widgets/report_popup.dart';
 import 'package:like_button/like_button.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
+import '../generated/l10n.dart';
 import '../utils/number_converter.dart';
 import '../utils/toastification.dart';
 import 'comment_list.dart';
@@ -162,7 +162,7 @@ class _DynamicCardState extends State<DynamicCard> {
                   countBuilder: (int? count, bool isLiked, String text) {
                     if (count == 0) {
                       return Text(
-                        AppLocalizations.of(context)!.function_default_like_on_zero,
+                        S.of(context).function_default_like_on_zero,
                         style: TextStyle(
                           fontSize: Theme.of(context).textTheme.labelMedium!.fontSize,
                           fontWeight: FontWeight.bold,
@@ -216,7 +216,7 @@ class _DynamicCardState extends State<DynamicCard> {
                       Icon(DisplayIcons.report,
                           size: Theme.of(context).textTheme.headlineSmall!.fontSize, color: Theme.of(context).unselectedWidgetColor),
                       const SizedBox(width: 4),
-                      Text(AppLocalizations.of(context)!.function_default_report,
+                      Text(S.of(context).function_default_report,
                           style: TextStyle(
                               fontSize: Theme.of(context).textTheme.labelMedium!.fontSize,
                               fontWeight: FontWeight.bold,
@@ -261,8 +261,7 @@ class _DynamicCardState extends State<DynamicCard> {
                                     if (filepath != null) {
                                       ToastificationUtils.showDownloadSuccess(context, path: filepath);
                                     } else {
-                                      ToastificationUtils.showSimpleToastification(
-                                          context, AppLocalizations.of(context)!.dynamic_save_image_failed);
+                                      ToastificationUtils.showSimpleToastification(context, S.of(context).dynamic_save_image_failed);
                                     }
                                     Navigator.of(context).pop();
                                   }
@@ -274,7 +273,7 @@ class _DynamicCardState extends State<DynamicCard> {
                                   padding: WidgetStateProperty.all(const EdgeInsets.only(top: 16, bottom: 16)),
                                 ),
                                 child: Text(
-                                  AppLocalizations.of(context)!.dynamic_save_image,
+                                  S.of(context).dynamic_save_image,
                                   style: TextStyle(
                                       fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize, color: Theme.of(context).primaryColor),
                                 )),
@@ -293,7 +292,7 @@ class _DynamicCardState extends State<DynamicCard> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             const Icon(Icons.not_interested_outlined, size: 48),
-                            Text(AppLocalizations.of(context)!.function_default_image_load_failed),
+                            Text(S.of(context).function_default_image_load_failed),
                           ],
                         )),
                     height: 120,

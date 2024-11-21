@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/pages/video.dart';
 import 'package:fulifuli_app/widgets/empty_placeholder.dart';
 import 'package:fulifuli_app/widgets/load_footer.dart';
 
+import '../generated/l10n.dart';
 import '../global.dart';
 import '../model/video.dart';
 import '../utils/toastification.dart';
@@ -55,7 +55,7 @@ class _LikedVideosPageState extends State<LikedVideosPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.liked_video_title),
+        title: Text(S.of(context).liked_video_title),
         centerTitle: true,
       ),
       body: EasyRefresh(

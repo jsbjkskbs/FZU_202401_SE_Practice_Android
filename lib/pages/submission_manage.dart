@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/widgets/submission_manage_page/submission_manage_tabs_container.dart';
+
+import '../generated/l10n.dart';
 
 class SubmissionManagePage extends StatefulWidget {
   const SubmissionManagePage({super.key});
@@ -19,15 +20,15 @@ class _SubmissionManagePageState extends State<SubmissionManagePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        title: Text(AppLocalizations.of(context)!.submission_management_title),
+        title: Text(S.of(context).submission_management_title),
       ),
       body: Center(
         child: SubmissionManageTabsContainer(
           tabs: [
-            AppLocalizations.of(context)!.submission_management_kind_all,
-            AppLocalizations.of(context)!.submission_management_kind_passed,
-            AppLocalizations.of(context)!.submission_management_kind_review,
-            AppLocalizations.of(context)!.submission_management_kind_locked
+            S.of(context).submission_management_kind_all,
+            S.of(context).submission_management_kind_passed,
+            S.of(context).submission_management_kind_review,
+            S.of(context).submission_management_kind_locked
           ],
         ),
       ),

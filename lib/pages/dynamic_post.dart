@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_popup/flutter_popup.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/utils/file_type_judge.dart';
@@ -12,6 +11,7 @@ import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
+import '../generated/l10n.dart';
 import '../widgets/icons/def.dart';
 
 class DynamicPostPage extends StatefulWidget {
@@ -70,7 +70,7 @@ class _DynamicPostPage extends State<DynamicPostPage> {
                     padding: EdgeInsets.zero),
                 child: Icon(Icons.arrow_back_ios_new,
                     size: Theme.of(context).textTheme.headlineSmall!.fontSize, color: Theme.of(context).textTheme.headlineSmall!.color)),
-            Text(AppLocalizations.of(context)!.dynamic_post_title, style: Theme.of(context).textTheme.headlineSmall),
+            Text(S.of(context).dynamic_post_title, style: Theme.of(context).textTheme.headlineSmall),
             CustomPopup(
                 contentPadding: const EdgeInsets.all(2),
                 content: IntrinsicWidth(
@@ -83,8 +83,7 @@ class _DynamicPostPage extends State<DynamicPostPage> {
                               if (context.mounted) {
                                 Navigator.pop(context);
                                 if (files == null) {
-                                  ToastificationUtils.showSimpleToastification(
-                                      context, AppLocalizations.of(context)!.dynamic_post_not_select_right_image);
+                                  ToastificationUtils.showSimpleToastification(context, S.of(context).dynamic_post_not_select_right_image);
                                 } else {
                                   setState(() {
                                     _files = [..._files!, ...files];
@@ -97,8 +96,7 @@ class _DynamicPostPage extends State<DynamicPostPage> {
                               children: [
                                 const Icon(Icons.upload_file_outlined),
                                 const SizedBox(width: 4),
-                                Text(AppLocalizations.of(context)!.dynamic_post_upload_image,
-                                    style: TextStyle(color: Theme.of(context).primaryColor)),
+                                Text(S.of(context).dynamic_post_upload_image, style: TextStyle(color: Theme.of(context).primaryColor)),
                               ],
                             )),
                       ],
@@ -122,7 +120,7 @@ class _DynamicPostPage extends State<DynamicPostPage> {
               return [
                 const SizedBox(height: 16),
                 TDTextarea(
-                    hintText: AppLocalizations.of(context)!.dynamic_post_textarea_hint,
+                    hintText: S.of(context).dynamic_post_textarea_hint,
                     autofocus: false,
                     minLines: 8,
                     maxLength: 256,
@@ -146,7 +144,7 @@ class _DynamicPostPage extends State<DynamicPostPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 16),
-                Text(AppLocalizations.of(context)!.dynamic_post_image_count_hint(_files!.length),
+                Text(S.of(context).dynamic_post_image_count_hint(_files!.length),
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).primaryColor)),
                 const Divider(
                   height: 1,
@@ -168,8 +166,7 @@ class _DynamicPostPage extends State<DynamicPostPage> {
                                   _files!.removeAt(index);
                                   listViewKey = UniqueKey();
                                 });
-                                ToastificationUtils.showSimpleToastification(
-                                    context, AppLocalizations.of(context)!.dynamic_post_delete_image_success);
+                                ToastificationUtils.showSimpleToastification(context, S.of(context).dynamic_post_delete_image_success);
                                 Navigator.pop(context);
                               },
                               child: IntrinsicHeight(
@@ -178,8 +175,7 @@ class _DynamicPostPage extends State<DynamicPostPage> {
                                     children: [
                                       const Icon(Icons.delete_forever, color: Colors.red),
                                       const SizedBox(width: 4),
-                                      Text(AppLocalizations.of(context)!.function_default_delete,
-                                          style: const TextStyle(color: Colors.red)),
+                                      Text(S.of(context).function_default_delete, style: const TextStyle(color: Colors.red)),
                                     ],
                                   ),
                                 ),
@@ -236,7 +232,7 @@ class _DynamicPostPage extends State<DynamicPostPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Icon(DisplayIcons.clear, color: Colors.white),
-                          Text(AppLocalizations.of(context)!.function_default_delete, style: const TextStyle(color: Colors.white)),
+                          Text(S.of(context).function_default_delete, style: const TextStyle(color: Colors.white)),
                         ],
                       )),
                 ),
@@ -250,8 +246,7 @@ class _DynamicPostPage extends State<DynamicPostPage> {
                             ToastificationUtils.showSimpleToastification(context, result);
                           } else {
                             Navigator.pop(context);
-                            ToastificationUtils.showSimpleToastification(
-                                context, AppLocalizations.of(context)!.dynamic_post_submit_success);
+                            ToastificationUtils.showSimpleToastification(context, S.of(context).dynamic_post_submit_success);
                           }
                         }
                       },
@@ -268,7 +263,7 @@ class _DynamicPostPage extends State<DynamicPostPage> {
                         children: [
                           Icon(DisplayIcons.post, color: Theme.of(context).primaryColor),
                           Text(
-                            AppLocalizations.of(context)!.function_default_send,
+                            S.of(context).function_default_send,
                             style: TextStyle(color: Theme.of(context).primaryColor),
                           )
                         ],

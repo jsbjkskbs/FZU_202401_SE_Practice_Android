@@ -3,10 +3,10 @@ import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
 
+import '../../../generated/l10n.dart';
 import '../../../model/video.dart';
 import '../../../utils/option_grid_view.dart';
 import '../../video_card.dart';
@@ -77,7 +77,7 @@ class _VideoTabsViewState extends State<VideoTabsView> {
         onRefresh: () async {
           if (offset == -1) {
             if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.home_page_no_more);
+              ToastificationUtils.showSimpleToastification(context, S.of(context).home_page_no_more);
             }
             offset = Random().nextInt(_n);
             Global.cachedVideoList[widget.assignedIndex.toString()] = MapEntry([], offset);
@@ -90,21 +90,19 @@ class _VideoTabsViewState extends State<VideoTabsView> {
           });
           if (offset == -1) {
             if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.home_page_no_more);
+              ToastificationUtils.showSimpleToastification(context, S.of(context).home_page_no_more);
             }
           } else {
             if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(
-                  context,
-                  AppLocalizations.of(context)!
-                      .home_page_get_data_count(Global.cachedVideoList[widget.assignedIndex.toString()]!.key.length - oldLength));
+              ToastificationUtils.showSimpleToastification(context,
+                  S.of(context).home_page_get_data_count(Global.cachedVideoList[widget.assignedIndex.toString()]!.key.length - oldLength));
             }
           }
           _easyRefreshController.finishRefresh();
         },
         onLoad: () async {
           if (offset == -1) {
-            ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.home_page_no_more);
+            ToastificationUtils.showSimpleToastification(context, S.of(context).home_page_no_more);
             _easyRefreshController.finishLoad();
             return;
           }
@@ -116,14 +114,12 @@ class _VideoTabsViewState extends State<VideoTabsView> {
           });
           if (offset == -1) {
             if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.home_page_no_more);
+              ToastificationUtils.showSimpleToastification(context, S.of(context).home_page_no_more);
             }
           } else {
             if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(
-                  context,
-                  AppLocalizations.of(context)!
-                      .home_page_get_data_count(Global.cachedVideoList[widget.assignedIndex.toString()]!.key.length - oldLength));
+              ToastificationUtils.showSimpleToastification(context,
+                  S.of(context).home_page_get_data_count(Global.cachedVideoList[widget.assignedIndex.toString()]!.key.length - oldLength));
             }
           }
           _easyRefreshController.finishLoad();

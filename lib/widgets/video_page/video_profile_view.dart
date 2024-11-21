@@ -1,12 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/pages/space.dart';
 import 'package:fulifuli_app/widgets/report_popup.dart';
 import 'package:like_button/like_button.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
+import '../../generated/l10n.dart';
 import '../../model/video.dart';
 import '../../utils/number_converter.dart';
 import '../../utils/toastification.dart';
@@ -147,9 +147,7 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                                       : Theme.of(context).hintColor,
                                 ),
                                 Text(
-                                  !widget.video.user!.isFollowed!
-                                      ? AppLocalizations.of(context)!.video_author_follow
-                                      : AppLocalizations.of(context)!.video_author_followed,
+                                  !widget.video.user!.isFollowed! ? S.of(context).video_author_follow : S.of(context).video_author_followed,
                                   style: TextStyle(
                                       fontSize: 14,
                                       color: !widget.video.user!.isFollowed!
@@ -279,7 +277,7 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                                   Widget result;
                                   if (count == 0) {
                                     result = Text(
-                                      AppLocalizations.of(context)!.function_default_like_on_zero,
+                                      S.of(context).function_default_like_on_zero,
                                       style: TextStyle(color: color, fontSize: 12),
                                     );
                                   } else {
@@ -317,7 +315,7 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                                   var color = isLiked ? Theme.of(context).primaryColor : Theme.of(context).unselectedWidgetColor;
                                   Widget result;
                                   result = Text(
-                                    AppLocalizations.of(context)!.function_default_dislike,
+                                    S.of(context).function_default_dislike,
                                     style: TextStyle(color: color, fontSize: 12),
                                   );
                                   return result;
@@ -353,7 +351,7 @@ class _VideoProfileViewState extends State<VideoProfileView> {
                                   var color = Theme.of(context).unselectedWidgetColor;
                                   Widget result;
                                   result = Text(
-                                    AppLocalizations.of(context)!.function_default_report,
+                                    S.of(context).function_default_report,
                                     style: TextStyle(color: color, fontSize: 12),
                                   );
                                   return result;

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:fulifuli_app/widgets/search_page/search_page_user_tabs_view.dart';
+
+import '../../generated/l10n.dart';
 
 class SearchPageTopBar extends StatefulWidget {
   const SearchPageTopBar({super.key, required this.onSearch});
@@ -26,7 +27,7 @@ class _SearchPageTopBarState extends State<SearchPageTopBar> {
         children: [
           Expanded(
             child: SearchBar(
-              hintText: AppLocalizations.of(context)!.home_top_bar_search,
+              hintText: S.of(context).home_top_bar_search,
               leading: Icon(
                 Icons.search,
                 color: Theme.of(context).unselectedWidgetColor,
@@ -38,7 +39,7 @@ class _SearchPageTopBarState extends State<SearchPageTopBar> {
               autoFocus: true,
               onSubmitted: (value) {
                 if (value.isEmpty || value == '') {
-                  ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.search_input_box_no_text_hint);
+                  ToastificationUtils.showSimpleToastification(context, S.of(context).search_input_box_no_text_hint);
                   return;
                 }
                 Global.cachedMapVideoList.remove(SearchPageUserTabsView.uniqueKey);
@@ -51,7 +52,7 @@ class _SearchPageTopBarState extends State<SearchPageTopBar> {
           TextButton(
             onPressed: () {
               if (text.isEmpty || text == '') {
-                ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.search_input_box_no_text_hint);
+                ToastificationUtils.showSimpleToastification(context, S.of(context).search_input_box_no_text_hint);
                 return;
               }
               Global.cachedMapVideoList.remove(SearchPageUserTabsView.uniqueKey);
@@ -61,7 +62,7 @@ class _SearchPageTopBarState extends State<SearchPageTopBar> {
             style: ButtonStyle(
               overlayColor: WidgetStateProperty.all(Colors.transparent),
             ),
-            child: Text(AppLocalizations.of(context)!.home_top_bar_search, style: TextStyle(color: Theme.of(context).primaryColor)),
+            child: Text(S.of(context).home_top_bar_search, style: TextStyle(color: Theme.of(context).primaryColor)),
           ),
         ],
       ),

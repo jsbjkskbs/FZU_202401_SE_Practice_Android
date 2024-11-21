@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
+import '../../../generated/l10n.dart';
 import '../../../global.dart';
 import '../../../pages/space.dart';
 
@@ -66,7 +66,7 @@ class _ProfileViewState extends State<ProfileView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        Global.self.name ?? AppLocalizations.of(context)!.mine_profile_login_or_register,
+                        Global.self.name ?? S.of(context).mine_profile_login_or_register,
                         style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontSize: 20.0,
@@ -80,7 +80,7 @@ class _ProfileViewState extends State<ProfileView> {
             ),
             Row(
               children: [
-                Text(Global.self.isValidUser() ? AppLocalizations.of(context)!.mine_profile_view_profile : "",
+                Text(Global.self.isValidUser() ? S.of(context).mine_profile_view_profile : "",
                     style: TextStyle(
                       color: Theme.of(context).primaryColor,
                       fontSize: 16.0,

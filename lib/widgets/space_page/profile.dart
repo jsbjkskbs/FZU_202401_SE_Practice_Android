@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
+import '../../generated/l10n.dart';
 import '../../pages/followers.dart';
 import '../../pages/following.dart';
 import '../../utils/file_type_judge.dart';
@@ -86,7 +86,7 @@ class _ProfileState extends State<Profile> {
                           style:
                               _labelStyle.copyWith(fontWeight: FontWeight.bold, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize)),
                       Text(
-                        AppLocalizations.of(context)!.space_follower,
+                        S.of(context).space_follower,
                         style: _labelStyle,
                       ),
                     ],
@@ -107,7 +107,7 @@ class _ProfileState extends State<Profile> {
                           style:
                               _labelStyle.copyWith(fontWeight: FontWeight.bold, fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize)),
                       Text(
-                        AppLocalizations.of(context)!.space_following,
+                        S.of(context).space_following,
                         style: _labelStyle,
                       ),
                     ],
@@ -125,7 +125,7 @@ class _ProfileState extends State<Profile> {
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      AppLocalizations.of(context)!.space_like,
+                      S.of(context).space_like,
                       style: _labelStyle,
                     ),
                   ],
@@ -144,7 +144,7 @@ class _ProfileState extends State<Profile> {
                     }
                   } else {
                     if (context.mounted) {
-                      ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.space_upload_avatar_success);
+                      ToastificationUtils.showSimpleToastification(context, S.of(context).space_upload_avatar_success);
                     }
                   }
                 }
@@ -156,7 +156,7 @@ class _ProfileState extends State<Profile> {
                     }
                   } else {
                     if (context.mounted) {
-                      ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.space_follow_action_success);
+                      ToastificationUtils.showSimpleToastification(context, S.of(context).space_follow_action_success);
                     }
                   }
                 },
@@ -175,10 +175,10 @@ class _ProfileState extends State<Profile> {
                 ),
           child: Text(
             Global.self.id == Global.cachedMapUser[widget.keyInCachedMapUser]!.id
-                ? AppLocalizations.of(context)!.space_upload_avatar
+                ? S.of(context).space_upload_avatar
                 : (Global.cachedMapUser[widget.keyInCachedMapUser]?.isFollowed == true
-                    ? AppLocalizations.of(context)!.space_followed
-                    : AppLocalizations.of(context)!.space_follow),
+                    ? S.of(context).space_followed
+                    : S.of(context).space_follow),
             style: Global.self.id == Global.cachedMapUser[widget.keyInCachedMapUser]!.id
                 ? TextStyle(
                     color: Theme.of(context).scaffoldBackgroundColor,
@@ -249,10 +249,10 @@ class _ProfileState extends State<Profile> {
                 return rr.data["msg"];
               }
             } else {
-              return AppLocalizations.of(context)!.space_upload_avatar_error;
+              return S.of(context).space_upload_avatar_error;
             }
           } else {
-            return AppLocalizations.of(context)!.space_upload_avatar_not_select;
+            return S.of(context).space_upload_avatar_not_select;
           }
         }
       } else {

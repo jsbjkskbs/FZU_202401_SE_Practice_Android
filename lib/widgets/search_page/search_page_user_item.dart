@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/utils/number_converter.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
+import '../../generated/l10n.dart';
 import '../../model/user.dart';
 
 class SearchPageUserItem extends StatefulWidget {
@@ -28,7 +28,7 @@ class _SearchPageUserItemState extends State<SearchPageUserItem> {
         padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
         overlayColor: widget.user.isFollowed! ? Theme.of(context).dialogBackgroundColor : Theme.of(context).primaryColor);
     var icon = widget.user.isFollowed! ? Icons.check : Icons.add;
-    var text = widget.user.isFollowed! ? AppLocalizations.of(context)!.search_followed : AppLocalizations.of(context)!.search_follow;
+    var text = widget.user.isFollowed! ? S.of(context).search_followed : S.of(context).search_follow;
     var iconColor = widget.user.isFollowed! ? Theme.of(context).hintColor : Theme.of(context).scaffoldBackgroundColor;
     var iconSize = Theme.of(context).textTheme.bodySmall!.fontSize;
     var textStyle = TextStyle(
@@ -124,7 +124,7 @@ class _SearchPageUserItemState extends State<SearchPageUserItem> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            '${NumberConverter.convertNumber(widget.user.followerCount!)}${AppLocalizations.of(context)!.search_follower}',
+                            '${NumberConverter.convertNumber(widget.user.followerCount!)}${S.of(context).search_follower}',
                             style: TextStyle(
                               color: Theme.of(context).hintColor,
                               fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,

@@ -1,4 +1,5 @@
 {
+  "@@locale": "en",
   "egg_wa_ao": "Wa Ao!",
   "function_default_like_on_zero": "Like",
   "function_default_dislike": "Dislike",

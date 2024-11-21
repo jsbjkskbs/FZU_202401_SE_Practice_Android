@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
+
+import '../generated/l10n.dart';
 
 class EmptyPlaceHolder extends StatelessWidget {
   const EmptyPlaceHolder({super.key});
@@ -18,7 +19,7 @@ class EmptyPlaceHolder extends StatelessWidget {
             width: MediaQuery.of(context).size.width * 0.6,
           ),
           Text(
-            AppLocalizations.of(context)!.empty_placeholder_hint,
+            S.of(context).empty_placeholder_hint,
             style: TextStyle(
                 fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
                 color: Theme.of(context).primaryColor,

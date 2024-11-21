@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/widgets/icons/def.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
+import '../generated/l10n.dart';
 import '../utils/toastification.dart';
 
 class CommentReplyPopupContainer extends StatefulWidget {
@@ -137,7 +137,7 @@ class _CommentReplyPopupContainerState extends State<CommentReplyPopupContainer>
                                 children: [
                                   Icon(DisplayIcons.clear, color: Theme.of(context).scaffoldBackgroundColor),
                                   const SizedBox(width: 4),
-                                  Text(AppLocalizations.of(context)!.function_default_clear,
+                                  Text(S.of(context).function_default_clear,
                                       style: TextStyle(color: Theme.of(context).scaffoldBackgroundColor)),
                                 ],
                               ))),
@@ -158,8 +158,7 @@ class _CommentReplyPopupContainerState extends State<CommentReplyPopupContainer>
                                 _controller.clear();
                                 widget.onSend();
                                 if (context.mounted) {
-                                  ToastificationUtils.showSimpleToastification(
-                                      context, AppLocalizations.of(context)!.reply_comment_popup_submit_success);
+                                  ToastificationUtils.showSimpleToastification(context, S.of(context).reply_comment_popup_submit_success);
                                 }
                               }
                             },
@@ -167,8 +166,7 @@ class _CommentReplyPopupContainerState extends State<CommentReplyPopupContainer>
                               children: [
                                 Icon(DisplayIcons.post, color: Theme.of(context).primaryColor),
                                 const SizedBox(width: 4),
-                                Text(AppLocalizations.of(context)!.function_default_send,
-                                    style: TextStyle(color: Theme.of(context).primaryColor)),
+                                Text(S.of(context).function_default_send, style: TextStyle(color: Theme.of(context).primaryColor)),
                               ],
                             )),
                       ),

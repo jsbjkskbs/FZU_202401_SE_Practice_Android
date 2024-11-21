@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/widgets/index_page/home/home_top_bar.dart';
 import 'package:fulifuli_app/widgets/index_page/home/video_tabs_container.dart';
+
+import '../../../generated/l10n.dart';
 
 class HomeContent extends StatefulWidget {
   const HomeContent({super.key});
@@ -37,13 +38,13 @@ class _HomeContentState extends State<HomeContent> {
         child: VideoTabsContainer(
           controller: ScrollController(),
           tabs: [
-            AppLocalizations.of(context)!.home_tabs_recommend,
-            AppLocalizations.of(context)!.home_tabs_game,
-            AppLocalizations.of(context)!.home_tabs_vitascope,
-            AppLocalizations.of(context)!.home_tabs_military,
-            AppLocalizations.of(context)!.home_tabs_knowledge,
-            AppLocalizations.of(context)!.home_tabs_news,
-            AppLocalizations.of(context)!.home_tabs_life,
+            S.of(context).home_tabs_recommend,
+            S.of(context).home_tabs_game,
+            S.of(context).home_tabs_vitascope,
+            S.of(context).home_tabs_military,
+            S.of(context).home_tabs_knowledge,
+            S.of(context).home_tabs_news,
+            S.of(context).home_tabs_life,
           ],
         ),
       )

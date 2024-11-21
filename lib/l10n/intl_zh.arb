@@ -1,4 +1,5 @@
 {
+  "@@locale": "zh",
   "egg_wa_ao": "哇袄~",
   "function_default_like_on_zero": "点个赞吧~",
   "function_default_dislike": "不喜欢",

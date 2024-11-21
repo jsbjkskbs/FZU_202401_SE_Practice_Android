@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/widgets/empty_placeholder.dart';
 import 'package:fulifuli_app/widgets/space_page/space_tabs_container.dart';
 import 'package:fulifuli_app/widgets/space_page/space_video_tabs_view.dart';
 
+import '../generated/l10n.dart';
 import '../model/user.dart';
 import '../widgets/space_page/profile.dart';
 import '../widgets/space_page/space_dynamic_tabs_view.dart';
@@ -73,8 +73,8 @@ class _SpacePageState extends State<SpacePage> {
                     child: SpaceTabsContainer(
                   uniqueKeySuffix: widget.userId,
                   tabs: [
-                    AppLocalizations.of(context)!.space_video,
-                    AppLocalizations.of(context)!.space_dynamic,
+                    S.of(context).space_video,
+                    S.of(context).space_dynamic,
                   ],
                 )),
               ],

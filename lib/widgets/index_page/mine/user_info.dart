@@ -1,13 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/pages/followers.dart';
 import 'package:fulifuli_app/pages/following.dart';
 import 'package:fulifuli_app/pages/login.dart';
 import 'package:fulifuli_app/utils/number_converter.dart';
 import 'package:fulifuli_app/utils/toastification.dart';
+
+import '../../../generated/l10n.dart';
 
 class UserInfoView extends StatefulWidget {
   const UserInfoView({super.key});
@@ -69,7 +70,7 @@ class _UserInfoViewState extends State<UserInfoView> {
                         ? "NaN"
                         : NumberConverter.convertNumber(Global.self.likeCount!),
                     style: TextStyle(color: Theme.of(context).primaryColor)),
-                Text(AppLocalizations.of(context)!.mine_user_info_like, style: TextStyle(color: Theme.of(context).primaryColor)),
+                Text(S.of(context).mine_user_info_like, style: TextStyle(color: Theme.of(context).primaryColor)),
               ],
             ),
           ),
@@ -84,7 +85,7 @@ class _UserInfoViewState extends State<UserInfoView> {
                     return FollowingPage(userId: Global.self.id!);
                   }));
                 } else {
-                  ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.mine_need_login);
+                  ToastificationUtils.showSimpleToastification(context, S.of(context).mine_need_login);
                   Navigator.of(context).pushNamed(LoginScreen.routeName);
                 }
               },
@@ -95,7 +96,7 @@ class _UserInfoViewState extends State<UserInfoView> {
                           ? "NaN"
                           : NumberConverter.convertNumber(Global.self.followingCount!),
                       style: TextStyle(color: Theme.of(context).primaryColor)),
-                  Text(AppLocalizations.of(context)!.mine_user_info_subscribe, style: TextStyle(color: Theme.of(context).primaryColor)),
+                  Text(S.of(context).mine_user_info_subscribe, style: TextStyle(color: Theme.of(context).primaryColor)),
                 ],
               ),
             )),
@@ -109,7 +110,7 @@ class _UserInfoViewState extends State<UserInfoView> {
                     return FollowerPage(userId: Global.self.id!);
                   }));
                 } else {
-                  ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.mine_need_login);
+                  ToastificationUtils.showSimpleToastification(context, S.of(context).mine_need_login);
                   Navigator.of(context).pushNamed(LoginScreen.routeName);
                 }
               },
@@ -120,7 +121,7 @@ class _UserInfoViewState extends State<UserInfoView> {
                           ? "NaN"
                           : NumberConverter.convertNumber(Global.self.followerCount!),
                       style: TextStyle(color: Theme.of(context).primaryColor)),
-                  Text(AppLocalizations.of(context)!.mine_user_info_follower, style: TextStyle(color: Theme.of(context).primaryColor)),
+                  Text(S.of(context).mine_user_info_follower, style: TextStyle(color: Theme.of(context).primaryColor)),
                 ],
               ),
             )),

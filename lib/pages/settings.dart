@@ -3,7 +3,6 @@ import 'package:drop_down_list/drop_down_list.dart';
 import 'package:drop_down_list/model/selected_list_item.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/main.dart';
 import 'package:fulifuli_app/model/settings.dart';
@@ -15,6 +14,7 @@ import 'package:fulifuli_app/widgets/settings_page/settings_list_item.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
+import '../generated/l10n.dart';
 import '../model/user.dart';
 import '../utils/toastification.dart';
 
@@ -28,7 +28,7 @@ class SettingsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context)!.settings_title,
+          S.of(context).settings_title,
           style: TextStyle(
             color: Theme.of(context).primaryColor,
           ),
@@ -71,7 +71,7 @@ class _SettingsList {
             Icons.lightbulb_outline,
             size: 24,
           ),
-          label: AppLocalizations.of(context)!.settings_light_dark_switch,
+          label: S.of(context).settings_light_dark_switch,
           kind: 'additional',
           labelIndex: 0,
           kindIndex: 0,
@@ -86,7 +86,7 @@ class _SettingsList {
                 break;
             }
             Storage.storePersistentData(Global.appPersistentData);
-            ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.home_theme_switch_toast);
+            ToastificationUtils.showSimpleToastification(context, S.of(context).home_theme_switch_toast);
           },
           rightWidget: const SettingsLightDarkSwitch()),
       SettingsItem(
@@ -94,14 +94,14 @@ class _SettingsList {
           DisplayIcons.palette,
           size: 24,
         ),
-        label: AppLocalizations.of(context)!.settings_change_theme,
+        label: S.of(context).settings_change_theme,
         kind: 'additional',
         labelIndex: 1,
         kindIndex: 0,
         onTap: (BuildContext context) {
           DropDownState(DropDown(
             bottomSheetTitle: Text(
-              AppLocalizations.of(context)!.settings_select_theme,
+              S.of(context).settings_select_theme,
               style: TextStyle(
                 color: Theme.of(context).primaryColor,
                 fontWeight: FontWeight.bold,
@@ -110,7 +110,7 @@ class _SettingsList {
             ),
             data: [
               SelectedListItem(
-                name: AppLocalizations.of(context)!.flex_scheme_default,
+                name: S.of(context).flex_scheme_default,
                 isSelected: Global.appPersistentData.themeSelection == FlexScheme.sakura.name,
                 value: FlexScheme.sakura.name,
               ),
@@ -128,7 +128,7 @@ class _SettingsList {
               Storage.storePersistentData(Global.appPersistentData);
               MyAppState.appScheme.setSchemeWithContext(SchemeReflect.getFlexScheme(val, defaultScheme: FlexScheme.sakura), context);
             },
-            searchHintText: AppLocalizations.of(context)!.home_top_bar_search,
+            searchHintText: S.of(context).home_top_bar_search,
           )).showModal(context);
         },
       ),
@@ -137,14 +137,14 @@ class _SettingsList {
             DisplayIcons.language_change,
             size: 24,
           ),
-          label: AppLocalizations.of(context)!.settings_change_language,
+          label: S.of(context).settings_change_language,
           kind: 'additional',
           labelIndex: 2,
           kindIndex: 0,
           onTap: (BuildContext context) {
             DropDownState(DropDown(
               bottomSheetTitle: Text(
-                AppLocalizations.of(context)!.settings_select_language,
+                S.of(context).settings_select_language,
                 style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontWeight: FontWeight.bold,
@@ -156,7 +156,7 @@ class _SettingsList {
                 SelectedListItem(name: 'English', isSelected: Global.appPersistentData.languageCode == 'en', value: 'en'),
               ],
               onSelected: (items) {
-                var val = items.first.value ?? 'en';
+                var val = items.first.value ?? 'zh';
                 MyAppState.appLocale.changeLocale(Locale(val));
               },
               isSearchVisible: false,
@@ -168,7 +168,7 @@ class _SettingsList {
             DisplayIcons.about,
             size: 24,
           ),
-          label: AppLocalizations.of(context)!.settings_about_us,
+          label: S.of(context).settings_about_us,
           kind: 'additional',
           labelIndex: 3,
           kindIndex: 0,
@@ -196,7 +196,7 @@ class _SettingsList {
                           ),
                           const SizedBox(height: 32),
                           Text(
-                            AppLocalizations.of(context)!.settings_about_us_noting,
+                            S.of(context).settings_about_us_noting,
                             style: TextStyle(
                               color: Theme.of(context).primaryColor,
                               fontSize: MediaQuery.of(context).size.width / 20,
@@ -209,7 +209,7 @@ class _SettingsList {
           }),
       if (Global.self.isValidUser())
         SettingsItem(
-          label: AppLocalizations.of(context)!.settings_logout,
+          label: S.of(context).settings_logout,
           kind: 'security',
           labelIndex: 0,
           kindIndex: 1,
@@ -217,7 +217,7 @@ class _SettingsList {
             Global.self = User();
             Storage.storePersistentData(Global.appPersistentData.copyWith(user: Global.self));
             Navigator.of(context).pushNamedAndRemoveUntil(IndexPage.routeName, (route) => false);
-            ToastificationUtils.showSimpleToastification(context, AppLocalizations.of(context)!.settings_logout_success);
+            ToastificationUtils.showSimpleToastification(context, S.of(context).settings_logout_success);
           },
           icon: const Icon(
             Icons.exit_to_app,

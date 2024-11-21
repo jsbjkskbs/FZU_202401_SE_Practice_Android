@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/widgets/index_page/friend/friend_list_view.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
+import '../../generated/l10n.dart';
 import '../../widgets/icons/def.dart';
 
 class FriendPage extends StatelessWidget {
@@ -16,7 +16,7 @@ class FriendPage extends StatelessWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(AppLocalizations.of(context)!.friend_title, style: Theme.of(context).textTheme.headlineSmall),
+            Text(S.of(context).friend_title, style: Theme.of(context).textTheme.headlineSmall),
             IconButton(
               onPressed: () {
                 Navigator.of(context).push(TDSlidePopupRoute(
@@ -35,7 +35,7 @@ class FriendPage extends StatelessWidget {
                           ),
                           child: Center(
                             child: Text(
-                              AppLocalizations.of(context)!.friend_about_description,
+                              S.of(context).friend_about_description,
                               style: TextStyle(
                                 decoration: TextDecoration.none,
                                 color: Theme.of(context).textTheme.headlineSmall!.color,

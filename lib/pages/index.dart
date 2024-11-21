@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fulifuli_app/pages/tabs/dynamic.dart';
 import 'package:fulifuli_app/pages/tabs/friend.dart';
 import 'package:fulifuli_app/pages/tabs/home.dart';
 import 'package:fulifuli_app/pages/tabs/mine.dart';
 import 'package:fulifuli_app/pages/tabs/submit.dart';
 import 'package:fulifuli_app/widgets/icons/def.dart';
+
+import '../generated/l10n.dart';
 
 class IndexPage extends StatefulWidget {
   const IndexPage({super.key});
@@ -53,24 +54,24 @@ class _IndexPageState extends State<IndexPage> {
         items: [
           BottomNavigationBarItem(
             icon: const Icon(DisplayIcons.home),
-            label: AppLocalizations.of(context)!.index_tabs_home,
+            label: S.of(context).index_tabs_home,
           ),
           BottomNavigationBarItem(
             icon: const Icon(DisplayIcons.dynamic),
-            label: AppLocalizations.of(context)!.index_tabs_dynamic,
+            label: S.of(context).index_tabs_dynamic,
           ),
           BottomNavigationBarItem(
             icon: const Icon(DisplayIcons.submit),
-            label: AppLocalizations.of(context)!.index_tabs_submit,
+            label: S.of(context).index_tabs_submit,
           ),
           BottomNavigationBarItem(
             icon: const Icon(DisplayIcons.friend),
-            label: AppLocalizations.of(context)!.index_tabs_friend,
+            label: S.of(context).index_tabs_friend,
           ),
           BottomNavigationBarItem(
             icon: const Icon(DisplayIcons.mine),
             activeIcon: const Icon(DisplayIcons.mine_active),
-            label: AppLocalizations.of(context)!.index_tabs_mine,
+            label: S.of(context).index_tabs_mine,
           ),
         ],
         currentIndex: _currentIndex,
