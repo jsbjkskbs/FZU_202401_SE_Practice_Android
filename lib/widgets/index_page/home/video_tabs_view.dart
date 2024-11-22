@@ -82,9 +82,6 @@ class _VideoTabsViewState extends State<VideoTabsView> {
         controller: _easyRefreshController,
         onRefresh: () async {
           if (offset == -1) {
-            if (context.mounted) {
-              ToastificationUtils.showSimpleToastification(S.current.home_page_no_more);
-            }
             offset = Random().nextInt(_n);
             Global.cachedVideoList[widget.assignedIndex.toString()] = MapEntry([], offset);
           }
