@@ -35,11 +35,14 @@ class _LikedVideosPageState extends State<LikedVideosPage> {
   void initState() {
     super.initState();
     var widgetsBinding = WidgetsBinding.instance;
-    widgetsBinding.addPostFrameCallback((callback) {
+    widgetsBinding.addPostFrameCallback((callback) async {
       if (!Global.cachedMapVideoList.containsKey(key)) {
         Global.cachedMapVideoList[key] = const MapEntry([], false);
       }
-      _controller.callRefresh();
+      if (Global.cachedMapVideoList[key]!.key.isEmpty) {
+        await _fetchData();
+      }
+      setState(() {});
     });
   }
 
