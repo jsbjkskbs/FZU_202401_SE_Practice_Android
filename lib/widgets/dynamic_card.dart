@@ -239,6 +239,7 @@ class _DynamicCardState extends State<DynamicCard> {
       padding: const EdgeInsets.only(top: 16, bottom: 16, left: 4, right: 4),
       child: ListView.separated(
           scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
           itemBuilder: (context, index) => GestureDetector(
                 onTap: () {
                   TDImageViewer.showImageViewer(
