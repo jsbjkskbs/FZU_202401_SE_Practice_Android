@@ -42,6 +42,12 @@ class _VideoTabsViewState extends State<VideoTabsView> {
   );
 
   @override
+  void dispose() {
+    super.dispose();
+    _easyRefreshController.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
     offset = Global.cachedVideoList[widget.assignedIndex.toString()]!.value;

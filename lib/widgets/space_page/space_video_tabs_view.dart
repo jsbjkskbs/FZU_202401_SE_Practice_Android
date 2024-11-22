@@ -44,6 +44,12 @@ class _SpaceVideoTabsViewState extends State<SpaceVideoTabsView> {
   bool isEnd = false;
 
   @override
+  void dispose() {
+    super.dispose();
+    _easyRefreshController.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
 

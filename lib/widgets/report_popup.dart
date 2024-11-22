@@ -121,6 +121,7 @@ class _ReportPopupContainerState extends State<ReportPopupContainer> {
                             fixedSize: Size(MediaQuery.of(context).size.width * 0.4, 40),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Icon(DisplayIcons.clear, color: Colors.white),
                             const SizedBox(width: 4),
@@ -152,6 +153,7 @@ class _ReportPopupContainerState extends State<ReportPopupContainer> {
                             fixedSize: Size(MediaQuery.of(context).size.width * 0.4, 40),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(DisplayIcons.post, color: Theme.of(context).primaryColor),
                             const SizedBox(width: 4),

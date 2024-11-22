@@ -60,6 +60,8 @@ class _RecoverPasswordState extends State<RecoverPasswordForm> {
 
   @override
   void dispose() {
+    _emailController.dispose();
+    _codeController.dispose();
     _recoverPasswordController1.dispose();
     _recoverPasswordController2.dispose();
     _countdownTimer.cancel();

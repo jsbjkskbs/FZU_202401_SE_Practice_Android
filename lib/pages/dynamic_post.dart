@@ -36,8 +36,8 @@ class _DynamicPostPage extends State<DynamicPostPage> {
 
   @override
   void dispose() {
-    _contentController.dispose();
     super.dispose();
+    _contentController.dispose();
   }
 
   @override

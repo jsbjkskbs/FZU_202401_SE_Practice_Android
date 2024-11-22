@@ -37,12 +37,10 @@ class CustomControls extends StatefulWidget {
 class _CustomControlsState extends State<CustomControls> with SingleTickerProviderStateMixin {
   late PlayerNotifier notifier;
   late VideoPlayerValue _latestValue;
-  double? _latestVolume;
   Timer? _hideTimer;
   Timer? _initTimer;
   Timer? _volumeHideTimer;
   Timer? _brightnessHideTimer;
-  Timer? _speedUpHintTimer;
   bool _hideVolume = true;
   bool _hideBrightness = true;
   bool _hideSpeedUpHint = true;
@@ -51,7 +49,6 @@ class _CustomControlsState extends State<CustomControls> with SingleTickerProvid
   bool _subtitleOn = false;
   Timer? _showAfterExpandCollapseTimer;
   bool _dragging = false;
-  bool _displayTapped = false;
   Timer? _bufferingDisplayTimer;
   bool _displayBufferingIndicator = false;
 
@@ -552,39 +549,6 @@ class _CustomControlsState extends State<CustomControls> with SingleTickerProvid
         ));
   }
 
-  GestureDetector _buildMuteButton(
-    VideoPlayerController controller,
-  ) {
-    return GestureDetector(
-      onTap: () {
-        _cancelAndRestartTimer();
-
-        if (_latestValue.volume == 0) {
-          controller.setVolume(_latestVolume ?? 0.5);
-        } else {
-          _latestVolume = controller.value.volume;
-          controller.setVolume(0.0);
-        }
-      },
-      child: AnimatedOpacity(
-        opacity: notifier.hideStuff ? 0.0 : 1.0,
-        duration: const Duration(milliseconds: 300),
-        child: ClipRect(
-          child: Container(
-            height: barHeight,
-            padding: const EdgeInsets.only(
-              left: 6.0,
-            ),
-            child: Icon(
-              _latestValue.volume > 0 ? Icons.volume_up : Icons.volume_off,
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   GestureDetector _buildExpandButton() {
     return GestureDetector(
       onTap: _onExpandCollapse,
@@ -652,9 +616,6 @@ class _CustomControlsState extends State<CustomControls> with SingleTickerProvid
   }
 
   Widget _buildHitArea() {
-    final bool isFinished = (_latestValue.position >= _latestValue.duration) && _latestValue.duration.inSeconds > 0;
-    final bool showPlayButton = widget.showPlayButton && !_dragging && !notifier.hideStuff;
-
     return GestureDetector(
       onDoubleTap: () {
         if (_latestValue.isPlaying) {
@@ -762,7 +723,6 @@ class _CustomControlsState extends State<CustomControls> with SingleTickerProvid
 
     setState(() {
       notifier.hideStuff = false;
-      _displayTapped = true;
     });
   }
 
@@ -771,7 +731,6 @@ class _CustomControlsState extends State<CustomControls> with SingleTickerProvid
 
     setState(() {
       notifier.hideStuff = !notifier.hideStuff;
-      _displayTapped = true;
     });
 
     if (!notifier.hideStuff) {

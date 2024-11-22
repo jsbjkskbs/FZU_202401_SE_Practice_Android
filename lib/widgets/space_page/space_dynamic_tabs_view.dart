@@ -41,6 +41,12 @@ class _SpaceDynamicTabsViewState extends State<SpaceDynamicTabsView> {
   static const int pageSize = 10;
 
   @override
+  void dispose() {
+    super.dispose();
+    _easyRefreshController.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
 

@@ -29,6 +29,8 @@ class _HomeContentState extends State<HomeContent> {
   @override
   void dispose() {
     super.dispose();
+    _scrollController.dispose();
+    _scrollController2.dispose();
   }
 
   @override

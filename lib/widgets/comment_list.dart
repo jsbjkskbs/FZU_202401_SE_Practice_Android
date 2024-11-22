@@ -81,9 +81,8 @@ class _CommentListViewState extends State<CommentListView> {
   }
 
   @override
-  dispose() {
+  void dispose() {
     super.dispose();
-    _controller.dispose();
     // Global.cachedMapCommentList.remove(key);
   }
 

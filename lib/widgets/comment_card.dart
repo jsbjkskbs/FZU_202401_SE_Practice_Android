@@ -45,7 +45,7 @@ class _CommentCardState extends State<CommentCard> {
       duration: const Duration(milliseconds: 1000),
       curve: Curves.easeInOut,
       decoration: BoxDecoration(
-        color: widget.isObserved ? Theme.of(context).primaryColor : Colors.transparent,
+        color: widget.isObserved ? Theme.of(context).primaryColor.withOpacity(0.5) : Colors.transparent,
       ),
       child: Column(
         children: [

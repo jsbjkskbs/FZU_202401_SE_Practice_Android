@@ -262,7 +262,17 @@ class _SubmitPageState extends State<SubmitPage> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: Text(S.current.submit_clear_button, style: const TextStyle(color: Colors.white))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          DisplayIcons.clear,
+                          color: Colors.white,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(S.current.submit_clear_button, style: const TextStyle(color: Colors.white))
+                      ],
+                    )),
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.4,
@@ -340,8 +350,16 @@ class _SubmitPageState extends State<SubmitPage> {
                             });
                           }
                         },
-                  child: Text(S.current.submit_submit_button,
-                      style: TextStyle(color: video == null ? Theme.of(context).unselectedWidgetColor : Theme.of(context).primaryColor)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(DisplayIcons.post,
+                          color: video == null ? Theme.of(context).unselectedWidgetColor : Theme.of(context).primaryColor),
+                      const SizedBox(width: 4),
+                      Text(S.current.submit_submit_button,
+                          style: TextStyle(color: video == null ? Theme.of(context).unselectedWidgetColor : Theme.of(context).primaryColor))
+                    ],
+                  ),
                 ),
               ),
             ])
