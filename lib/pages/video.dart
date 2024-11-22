@@ -46,7 +46,7 @@ class _VideoPageState extends State<VideoPage> {
       await _fetchData();
       debugPrint('video: $video');
       if (video != null) {
-        await _initializeVideoPlayer(context);
+        await _initializeVideoPlayer();
       }
       setState(() {});
     });
@@ -147,7 +147,7 @@ class _VideoPageState extends State<VideoPage> {
     );
   }
 
-  Future<void> _initializeVideoPlayer(BuildContext context) async {
+  Future<void> _initializeVideoPlayer() async {
     _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(video!.videoUrl!));
     if (_videoPlayerController != null) {
       _chewieController = ChewieController(

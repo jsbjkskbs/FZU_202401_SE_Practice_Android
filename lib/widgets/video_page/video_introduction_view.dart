@@ -33,6 +33,7 @@ class _VideoIntroductionViewState extends State<VideoIntroductionView> {
         Global.cachedMapVideoList[key] = const MapEntry([], false);
       }
       await _fetchData();
+      debugPrint('video: ${widget.video.toJson()}');
       setState(() {});
     });
   }
@@ -86,6 +87,6 @@ class _VideoIntroductionViewState extends State<VideoIntroductionView> {
     for (var item in response.data["data"]["items"]) {
       list.add(Video.fromJson(item));
     }
-    Global.cachedMapVideoList[key] = MapEntry(Global.cachedMapVideoList[key]!.key + list, response.data["data"]["is_end"]);
+    Global.cachedMapVideoList[key] = MapEntry(Global.cachedMapVideoList[key]!.key + list, true);
   }
 }

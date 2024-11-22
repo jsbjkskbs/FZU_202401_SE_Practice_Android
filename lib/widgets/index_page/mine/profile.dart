@@ -80,11 +80,6 @@ class _ProfileViewState extends State<ProfileView> {
             ),
             Row(
               children: [
-                Text(Global.self.isValidUser() ? S.current.mine_profile_view_profile : "",
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                      fontSize: 16.0,
-                    )),
                 Icon(
                   Icons.arrow_forward_ios,
                   size: 20,

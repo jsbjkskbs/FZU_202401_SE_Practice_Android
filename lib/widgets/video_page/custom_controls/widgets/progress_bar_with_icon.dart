@@ -187,7 +187,7 @@ class _ProgressBarPainter extends CustomPainter {
   final double handleHeight;
   final bool drawShadow;
 
-  final _littleTvScaleRate = 0.4;
+  final _littleTvScaleRate = 0.35;
   final Paint littleTvPaintBg = Paint()
     ..style = PaintingStyle.fill
     ..strokeWidth = 2.5

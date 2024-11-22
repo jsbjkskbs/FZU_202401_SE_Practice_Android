@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fulifuli_app/pages/index.dart';
 import 'package:fulifuli_app/pkg/chewie/chewie.dart';
@@ -10,6 +12,7 @@ import 'package:fulifuli_app/widgets/video_page/custom_controls/custom_progress_
 import 'package:fulifuli_app/widgets/video_page/custom_controls/widgets/play_button.dart';
 import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart';
+import 'package:screen_brightness/screen_brightness.dart';
 import 'package:video_player/video_player.dart';
 
 import 'widgets/options_dialog.dart';
@@ -37,6 +40,13 @@ class _CustomControlsState extends State<CustomControls> with SingleTickerProvid
   double? _latestVolume;
   Timer? _hideTimer;
   Timer? _initTimer;
+  Timer? _volumeHideTimer;
+  Timer? _brightnessHideTimer;
+  Timer? _speedUpHintTimer;
+  bool _hideVolume = true;
+  bool _hideBrightness = true;
+  bool _hideSpeedUpHint = true;
+  double _brightness = 0.0;
   late var _subtitlesPosition = Duration.zero;
   bool _subtitleOn = false;
   Timer? _showAfterExpandCollapseTimer;
@@ -78,10 +88,48 @@ class _CustomControlsState extends State<CustomControls> with SingleTickerProvid
 
     return MouseRegion(
       onHover: (_) {
-        _cancelAndRestartTimer();
+        if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
+          _cancelAndRestartTimer();
+        }
       },
       child: GestureDetector(
-        onTap: () => _cancelAndRestartTimer(),
+        onTap: () => _switchTimerHiddenState(),
+        // => _cancelAndRestartTimer(),
+        onVerticalDragUpdate: (details) {
+          if (details.localPosition.dx > MediaQuery.of(context).size.width / 2) {
+            if (details.primaryDelta != null) {
+              final double delta = details.primaryDelta! / MediaQuery.of(context).size.height;
+              if (delta > 0) {
+                controller.setVolume((controller.value.volume - delta).clamp(0.0, 1.0));
+              } else if (delta < 0) {
+                controller.setVolume((controller.value.volume - delta).clamp(0.0, 1.0));
+              }
+              _cancelAndRestartVolumeTimer();
+            }
+          } else {
+            if (details.primaryDelta != null) {
+              final double delta = details.primaryDelta! / MediaQuery.of(context).size.height;
+              if (delta > 0) {
+                ScreenBrightness.instance.setApplicationScreenBrightness((_brightness - delta).clamp(0.0, 1.0));
+              } else if (delta < 0) {
+                ScreenBrightness.instance.setApplicationScreenBrightness((_brightness - delta).clamp(0.0, 1.0));
+              }
+              _cancelAndRestartBrightnessTimer();
+            }
+          }
+        },
+        onLongPressStart: (details) {
+          if (details.localPosition.dx > MediaQuery.of(context).size.width / 2) {
+            controller.setPlaybackSpeed(2.0);
+          } else {
+            controller.setPlaybackSpeed(0.5);
+          }
+          _showSpeedUp();
+        },
+        onLongPressEnd: (_) {
+          controller.setPlaybackSpeed(1.0);
+          _hideSpeedUp();
+        },
         child: AbsorbPointer(
           absorbing: notifier.hideStuff,
           child: Stack(
@@ -98,7 +146,7 @@ class _CustomControlsState extends State<CustomControls> with SingleTickerProvid
               Positioned(left: 0, top: 0, child: _buildBackButton(context)),
               Positioned(
                 left: 48,
-                top: 0,
+                top: chewieController.isFullScreen ? 2 : 0,
                 child: chewieController.isFullScreen ? _buildTitle() : _buildHomeButton(context),
               ),
               Positioned(
@@ -131,6 +179,9 @@ class _CustomControlsState extends State<CustomControls> with SingleTickerProvid
                   _buildBottomBar(context),
                 ],
               ),
+              Positioned(left: MediaQuery.of(context).size.width / 2 - 50, bottom: barHeight * 2, child: _buildVolumeWidget()),
+              Positioned(left: MediaQuery.of(context).size.width / 2 - 50, bottom: barHeight * 2, child: _buildBrightnessWidget()),
+              Positioned(left: MediaQuery.of(context).size.width / 2 - 50, bottom: barHeight * 2, child: _buildSpeedUpHint())
             ],
           ),
         ),
@@ -148,7 +199,10 @@ class _CustomControlsState extends State<CustomControls> with SingleTickerProvid
     controller.removeListener(_updateState);
     _hideTimer?.cancel();
     _initTimer?.cancel();
+    _volumeHideTimer?.cancel();
+    _brightnessHideTimer?.cancel();
     _showAfterExpandCollapseTimer?.cancel();
+    ScreenBrightness.instance.resetApplicationScreenBrightness();
   }
 
   @override
@@ -177,6 +231,118 @@ class _CustomControlsState extends State<CustomControls> with SingleTickerProvid
             children: [
               _buildSubtitleToggle(),
               if (chewieController.showOptions) _buildOptionsButton(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSpeedUpHint() {
+    return AnimatedOpacity(
+      opacity: _hideSpeedUpHint ? 0.0 : 1.0,
+      duration: const Duration(milliseconds: 300),
+      child: Container(
+        width: 100,
+        height: 60,
+        margin: const EdgeInsets.only(right: 6.0),
+        padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.7),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Center(
+          child: Column(
+            children: [
+              Icon(
+                _latestValue.playbackSpeed == 1.0
+                    ? Icons.keyboard_arrow_right
+                    : _latestValue.playbackSpeed == 2.0
+                        ? Icons.keyboard_double_arrow_right
+                        : Icons.last_page_outlined,
+                color: Colors.white,
+                size: 24.0,
+              ),
+              Text(
+                '${_latestValue.playbackSpeed}x',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14.0,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildVolumeWidget() {
+    return AnimatedOpacity(
+      opacity: _hideVolume ? 0.0 : 1.0,
+      duration: const Duration(milliseconds: 300),
+      child: Container(
+        width: 100,
+        height: 60,
+        margin: const EdgeInsets.only(right: 6.0),
+        padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.7),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Center(
+          child: Column(
+            children: [
+              Icon(
+                _latestValue.volume > 0 ? Icons.volume_up : Icons.volume_off,
+                color: Colors.white,
+                size: 24.0,
+              ),
+              Text(
+                '${(controller.value.volume * 100).toStringAsFixed(0)}%',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14.0,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBrightnessWidget() {
+    ScreenBrightness.instance.application.then((value) {
+      _brightness = value;
+    });
+    return AnimatedOpacity(
+      opacity: _hideBrightness ? 0.0 : 1.0,
+      duration: const Duration(milliseconds: 300),
+      child: Container(
+        width: 100,
+        height: 60,
+        margin: const EdgeInsets.only(right: 6.0),
+        padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.7),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Center(
+          child: Column(
+            children: [
+              Icon(
+                _brightness > 0 ? Icons.brightness_high : Icons.brightness_low,
+                color: Colors.white,
+                size: 24.0,
+              ),
+              Text(
+                '${(_brightness * 100).toStringAsFixed(0)}%',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14.0,
+                ),
+              ),
             ],
           ),
         ),
@@ -600,6 +766,19 @@ class _CustomControlsState extends State<CustomControls> with SingleTickerProvid
     });
   }
 
+  void _switchTimerHiddenState() {
+    _hideTimer?.cancel();
+
+    setState(() {
+      notifier.hideStuff = !notifier.hideStuff;
+      _displayTapped = true;
+    });
+
+    if (!notifier.hideStuff) {
+      _startHideTimer();
+    }
+  }
+
   Future<void> _initialize() async {
     _subtitleOn = chewieController.subtitle?.isNotEmpty ?? false;
     controller.addListener(_updateState);
@@ -663,6 +842,64 @@ class _CustomControlsState extends State<CustomControls> with SingleTickerProvid
     _hideTimer = Timer(hideControlsTimer, () {
       setState(() {
         notifier.hideStuff = true;
+      });
+    });
+  }
+
+  void _cancelAndRestartVolumeTimer() {
+    _volumeHideTimer?.cancel();
+    _startVolumeTimer();
+
+    setState(() {
+      _hideVolume = false;
+      _hideBrightness = true;
+      _hideSpeedUpHint = true;
+    });
+  }
+
+  void _cancelAndRestartBrightnessTimer() {
+    _brightnessHideTimer?.cancel();
+    _startBrightnessTimer();
+
+    setState(() {
+      _hideBrightness = false;
+      _hideVolume = true;
+      _hideSpeedUpHint = true;
+    });
+  }
+
+  void _showSpeedUp() {
+    setState(() {
+      _hideSpeedUpHint = false;
+      _hideBrightness = true;
+      _hideVolume = true;
+    });
+  }
+
+  void _hideSpeedUp() {
+    Future.delayed(const Duration(milliseconds: 200), () {
+      setState(() {
+        _hideSpeedUpHint = true;
+      });
+    });
+  }
+
+  void _startVolumeTimer() {
+    final hideControlsTimer =
+        chewieController.hideControlsTimer.isNegative ? ChewieController.defaultHideControlsTimer : chewieController.hideControlsTimer;
+    _volumeHideTimer = Timer(hideControlsTimer, () {
+      setState(() {
+        _hideVolume = true;
+      });
+    });
+  }
+
+  void _startBrightnessTimer() {
+    final hideControlsTimer =
+        chewieController.hideControlsTimer.isNegative ? ChewieController.defaultHideControlsTimer : chewieController.hideControlsTimer;
+    _brightnessHideTimer = Timer(hideControlsTimer, () {
+      setState(() {
+        _hideBrightness = true;
       });
     });
   }
