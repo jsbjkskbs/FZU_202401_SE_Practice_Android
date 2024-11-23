@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../generated/l10n.dart';
+
 class GradientImage extends StatelessWidget {
   final String imgName;
 
@@ -32,7 +34,45 @@ class GradientImage extends StatelessWidget {
 
   Widget _createImage() {
     if (imgName.startsWith('http')) {
-      return CachedNetworkImage(width: width, height: height, imageUrl: imgName, fit: BoxFit.cover);
+      return CachedNetworkImage(
+        width: width,
+        height: height,
+        imageUrl: imgName,
+        fit: BoxFit.cover,
+        errorWidget: (context, _, __) {
+          return Stack(
+            children: [
+              Center(
+                child: Image.asset('assets/images/error_cover.png',
+                    width: width, height: height, fit: BoxFit.cover, alignment: Alignment.topCenter),
+              ),
+              Center(
+                  child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(4),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black12,
+                      offset: Offset(0, 2),
+                      blurRadius: 4,
+                    )
+                  ],
+                ),
+                child: Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Text(
+                      S.current.function_default_image_load_failed,
+                      style: const TextStyle(
+                        color: Colors.red,
+                        fontSize: 12,
+                      ),
+                    )),
+              )),
+            ],
+          );
+        },
+      );
     } else {
       return Image.asset(imgName, width: width, height: height, fit: BoxFit.cover, alignment: Alignment.topCenter);
     }

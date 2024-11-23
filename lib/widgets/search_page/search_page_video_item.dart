@@ -4,6 +4,8 @@ import 'package:fulifuli_app/utils/number_converter.dart';
 import 'package:fulifuli_app/widgets/icons/def.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
+import '../../generated/l10n.dart';
+
 class SearchPageVideoItem extends StatelessWidget {
   const SearchPageVideoItem({super.key, required this.onTap, required this.data});
 
@@ -25,6 +27,40 @@ class SearchPageVideoItem extends StatelessWidget {
                 imgUrl: data.coverUrl,
                 width: MediaQuery.of(context).size.width / 2 - 8,
                 height: MediaQuery.of(context).size.width * 9 / 32 - 8,
+                errorWidget: Stack(
+                  children: [
+                    Center(
+                      child: Image.asset('assets/images/error_cover.png',
+                          width: MediaQuery.of(context).size.width / 2 - 8,
+                          height: MediaQuery.of(context).size.width * 9 / 32 - 8,
+                          fit: BoxFit.contain,
+                          alignment: Alignment.topCenter),
+                    ),
+                    Center(
+                        child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(4),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black12,
+                            offset: Offset(0, 2),
+                            blurRadius: 4,
+                          )
+                        ],
+                      ),
+                      child: Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: Text(
+                            S.current.function_default_image_load_failed,
+                            style: const TextStyle(
+                              color: Colors.red,
+                              fontSize: 12,
+                            ),
+                          )),
+                    )),
+                  ],
+                ),
               ),
               const SizedBox(
                 width: 8,

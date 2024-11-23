@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:fulifuli_app/global.dart';
+import 'package:fulifuli_app/widgets/empty_placeholder.dart';
 import 'package:fulifuli_app/widgets/load_footer.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
@@ -159,15 +160,19 @@ class _CommentListViewState extends State<CommentListView> {
                           ])
                         : const SizedBox();
                   }
-                  return CommentCard(
-                    comment: Global.cachedMapCommentList[key]!.key[index - 2],
-                    needToShowChildCount: !widget.isComment,
-                    indexCommentKey: widget.isComment ? key : null,
-                    onClickIndexComment: _scrollToComment,
-                    isObserved: observerCommentId == Global.cachedMapCommentList[key]!.key[index - 2].id,
-                  );
+                  return Global.cachedMapCommentList.containsKey(key) && Global.cachedMapCommentList[key]!.key.isNotEmpty
+                      ? CommentCard(
+                          comment: Global.cachedMapCommentList[key]!.key[index - 2],
+                          needToShowChildCount: !widget.isComment,
+                          indexCommentKey: widget.isComment ? key : null,
+                          onClickIndexComment: _scrollToComment,
+                          isObserved: observerCommentId == Global.cachedMapCommentList[key]!.key[index - 2].id,
+                        )
+                      : const EmptyPlaceHolder();
                 },
-                itemCount: Global.cachedMapCommentList.containsKey(key) ? Global.cachedMapCommentList[key]!.key.length + 2 : 2));
+                itemCount: Global.cachedMapCommentList.containsKey(key) && Global.cachedMapCommentList[key]!.key.isNotEmpty
+                    ? Global.cachedMapCommentList[key]!.key.length + 2
+                    : 3));
       },
     );
   }

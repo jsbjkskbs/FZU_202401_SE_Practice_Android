@@ -54,13 +54,14 @@ class _SpaceVideoTabsViewState extends State<SpaceVideoTabsView> {
     super.initState();
 
     WidgetsBinding widgetsBinding = WidgetsBinding.instance;
-    widgetsBinding.addPostFrameCallback((_) {
+    widgetsBinding.addPostFrameCallback((_) async {
       if (!Global.cachedMapVideoList.containsKey(key)) {
         Global.cachedMapVideoList[key] = const MapEntry([], false);
         setState(() {});
       }
       if (Global.cachedMapVideoList[key]!.key.isEmpty && Global.cachedMapVideoList[key]!.value == false) {
-        _easyRefreshController.callRefresh();
+        await _fetchData();
+        setState(() {});
       }
     });
   }

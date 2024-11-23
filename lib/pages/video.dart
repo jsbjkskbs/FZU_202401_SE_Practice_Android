@@ -183,6 +183,26 @@ class _VideoPageState extends State<VideoPage> {
           DeviceOrientation.portraitUp,
           DeviceOrientation.portraitDown,
         ],
+        errorBuilder: (context, errorMessage) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                TDImage(
+                  assetUrl: 'assets/images/error_video.png',
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  width: MediaQuery.of(context).size.width,
+                  fit: BoxFit.contain,
+                ),
+                Text(
+                  S.current.empty_placeholder_hint,
+                  style: TextStyle(fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize, color: Theme.of(context).primaryColor),
+                ),
+              ],
+            ),
+          );
+        },
       );
     }
     _videoPlayerController!.initialize().then((_) {

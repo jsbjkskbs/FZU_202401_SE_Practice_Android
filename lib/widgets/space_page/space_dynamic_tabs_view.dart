@@ -51,13 +51,14 @@ class _SpaceDynamicTabsViewState extends State<SpaceDynamicTabsView> {
     super.initState();
 
     var widgetsBinding = WidgetsBinding.instance;
-    widgetsBinding.addPostFrameCallback((_) {
-      if (!Global.cachedMapVideoList.containsKey(key)) {
-        Global.cachedMapVideoList[key] = const MapEntry([], false);
+    widgetsBinding.addPostFrameCallback((_) async {
+      if (!Global.cachedMapDynamicList.containsKey(key)) {
+        Global.cachedMapDynamicList[key] = const MapEntry([], false);
         setState(() {});
       }
-      if (Global.cachedMapVideoList[key]!.key.isEmpty && Global.cachedMapVideoList[key]!.value == false) {
-        _easyRefreshController.callRefresh();
+      if (Global.cachedMapDynamicList[key]!.key.isEmpty && Global.cachedMapDynamicList[key]!.value == false) {
+        await _fetchData();
+        setState(() {});
       }
     });
   }

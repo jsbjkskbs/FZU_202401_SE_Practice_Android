@@ -29,11 +29,9 @@ class _LoadingPageState extends State<LoadingPage> {
     WidgetsBinding widgetsBinding = WidgetsBinding.instance;
     widgetsBinding.addPostFrameCallback((_) async {
       _loadingError = await widget.onLoading();
-      if (_loadingError == null) {
-        setState(() {
-          _isLoaded = true;
-        });
-      }
+      setState(() {
+        _isLoaded = true;
+      });
     });
   }
 

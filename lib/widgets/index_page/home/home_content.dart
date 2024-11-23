@@ -35,7 +35,7 @@ class _HomeContentState extends State<HomeContent> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(controller: _scrollController, slivers: [
+    return CustomScrollView(controller: _scrollController, physics: const NeverScrollableScrollPhysics(), slivers: [
       SliverAppBar(
         toolbarHeight: 48,
         floating: false,

@@ -110,9 +110,11 @@ class _VideoCardState extends State<VideoCard> {
                   const SizedBox(height: 6),
                   Stack(
                     children: [
-                      GradientImage(
-                        height: 120,
-                        imgName: video.coverUrl!,
+                      Center(
+                        child: GradientImage(
+                          height: 120,
+                          imgName: video.coverUrl!,
+                        ),
                       ),
                       Positioned(
                         left: 0,
