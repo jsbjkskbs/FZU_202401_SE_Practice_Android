@@ -79,6 +79,7 @@ class _SpaceVideoTabsViewState extends State<SpaceVideoTabsView> {
         controller: _easyRefreshController,
         onRefresh: () async {
           pageNum = 0;
+          isEnd = false;
           Global.cachedMapVideoList.remove(key);
           String? result = await _fetchData();
           if (result != null) {
@@ -91,6 +92,7 @@ class _SpaceVideoTabsViewState extends State<SpaceVideoTabsView> {
         onLoad: () async {
           if (isEnd) {
             _easyRefreshController.finishLoad(IndicatorResult.noMore, true);
+            return;
           }
 
           String? result = await _fetchData();
@@ -104,6 +106,7 @@ class _SpaceVideoTabsViewState extends State<SpaceVideoTabsView> {
         scrollController: widget.controller,
         childBuilder: (BuildContext context, ScrollPhysics physics) {
           return OptionGridView(
+            controller: widget.controller,
             physics: physics,
             itemCount: Global.cachedMapVideoList.containsKey(key) && Global.cachedMapVideoList[key]!.key.isNotEmpty
                 ? Global.cachedMapVideoList[key]!.key.length

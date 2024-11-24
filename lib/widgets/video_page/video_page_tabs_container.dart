@@ -13,10 +13,11 @@ import '../comment_list.dart';
 import '../comment_reply_fake_container.dart';
 
 class VideoPageTabsContainer extends StatefulWidget {
-  const VideoPageTabsContainer({super.key, required this.tabs, required this.video});
+  const VideoPageTabsContainer({super.key, required this.tabs, required this.video, required this.blockScroll});
 
   final List<String> tabs;
   final Video video;
+  final bool blockScroll;
 
   @override
   State<StatefulWidget> createState() {
@@ -131,7 +132,10 @@ class _VideoPageTabsContainer extends State<VideoPageTabsContainer> with TickerP
           child: TabBarView(
             controller: _tabController,
             children: [
-              VideoIntroductionView(video: widget.video),
+              VideoIntroductionView(
+                video: widget.video,
+                blockScroll: widget.blockScroll,
+              ),
               Column(
                 children: [
                   Expanded(
