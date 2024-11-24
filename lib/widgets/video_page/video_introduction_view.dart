@@ -8,10 +8,9 @@ import '../../model/video.dart';
 import '../../pages/video.dart';
 
 class VideoIntroductionView extends StatefulWidget {
-  const VideoIntroductionView({super.key, required this.video, required this.blockScroll});
+  const VideoIntroductionView({super.key, required this.video});
 
   final Video video;
-  final bool blockScroll;
   static const String cachePrefix = "video_introduction_view";
 
   @override
@@ -42,7 +41,6 @@ class _VideoIntroductionViewState extends State<VideoIntroductionView> {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      physics: widget.blockScroll ? const NeverScrollableScrollPhysics() : const AlwaysScrollableScrollPhysics(),
       separatorBuilder: (BuildContext context, int index) {
         return Divider(
           height: 8,

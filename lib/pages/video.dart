@@ -37,7 +37,6 @@ class _VideoPageState extends State<VideoPage> {
   final GlobalKey<RectGetterState> _rectGetterKey = RectGetter.createGlobalKey();
   double _chewieOpacity = 0;
   Video? video;
-  bool _blockScroll = false;
 
   @override
   void initState() {
@@ -135,7 +134,6 @@ class _VideoPageState extends State<VideoPage> {
                   SliverFillRemaining(
                       child: Material(
                     child: VideoPageTabsContainer(
-                      blockScroll: _blockScroll,
                       video: video!,
                       tabs: [
                         S.current.video_introduction_title,
@@ -210,15 +208,6 @@ class _VideoPageState extends State<VideoPage> {
     _videoPlayerController!.initialize().then((_) {
       setState(() {});
       _videoPlayerController!.play();
-      _videoPlayerController!.addListener(() {
-        debugPrint('isPlaying: ${_chewieController!.isPlaying}');
-        if (_chewieController!.isPlaying) {
-          _blockScroll = false;
-        } else {
-          _blockScroll = true;
-        }
-        setState(() {});
-      });
     }).onError((error, stackTrace) {
       debugPrint('VideoPlayerController: $error');
     });
