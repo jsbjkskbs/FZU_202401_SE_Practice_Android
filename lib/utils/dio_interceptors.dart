@@ -19,6 +19,10 @@ class DioHttpErrorInterceptor extends Interceptor {
 class DioHttpResponseInterceptor extends Interceptor {
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
+    if (response.toString() == "null") {
+      super.onResponse(response, handler);
+      return;
+    }
     if (response.data["code"] == null) {
       ToastificationUtils.showSimpleToastification(S.current.when_server_error);
     }
