@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:fulifuli_app/global.dart';
 import 'package:fulifuli_app/model/activity.dart';
 import 'package:fulifuli_app/pages/space.dart';
-import 'package:fulifuli_app/utils/download_file.dart';
 import 'package:fulifuli_app/widgets/comment_popup.dart';
 import 'package:fulifuli_app/widgets/report_popup.dart';
 import 'package:like_button/like_button.dart';
@@ -11,7 +10,6 @@ import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 import '../generated/l10n.dart';
 import '../utils/number_converter.dart';
-import '../utils/toastification.dart';
 import 'comment_list.dart';
 import 'icons/def.dart';
 
@@ -243,12 +241,13 @@ class _DynamicCardState extends State<DynamicCard> {
           itemBuilder: (context, index) => GestureDetector(
                 onTap: () {
                   TDImageViewer.showImageViewer(
-                      context: context,
-                      images: widget.data.images!,
-                      defaultIndex: index,
-                      showIndex: true,
-                      onLongPress: (index) {
+                    context: context,
+                    images: widget.data.images!,
+                    defaultIndex: index,
+                    showIndex: true,
+                    /* onLongPress: (index) {
                         Navigator.of(context).push(TDSlidePopupRoute(
+                          slideTransitionFrom: SlideTransitionFrom.bottom,
                           builder: (context) => Container(
                             width: MediaQuery.of(context).size.width,
                             decoration: BoxDecoration(
@@ -280,7 +279,8 @@ class _DynamicCardState extends State<DynamicCard> {
                                 )),
                           ),
                         ));
-                      });
+                      }*/
+                  );
                 },
                 child: SizedBox(
                   height: 120,
