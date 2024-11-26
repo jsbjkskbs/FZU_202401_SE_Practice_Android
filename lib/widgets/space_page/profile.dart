@@ -40,19 +40,11 @@ class _ProfileState extends State<Profile> {
             padding: EdgeInsets.all(MediaQuery.of(context).size.width / 16),
             child: GestureDetector(
                 onTap: () {
-                  TDImageViewer.showImageViewer(
-                      context: context,
-                      images: [
-                        Global.cachedMapUser[widget.keyInCachedMapUser]?.avatarUrl != ""
-                            ? Global.cachedMapUser[widget.keyInCachedMapUser]?.avatarUrl
-                            : Global.defaultAvatarUrl,
-                        "assets/images/dot.png",
-                      ],
-                      onIndexChange: (index) {
-                        if (index != 0) {
-                          Navigator.of(context).pop();
-                        }
-                      });
+                  TDImageViewer.showImageViewer(context: context, images: [
+                    Global.cachedMapUser[widget.keyInCachedMapUser]?.avatarUrl != ""
+                        ? Global.cachedMapUser[widget.keyInCachedMapUser]?.avatarUrl
+                        : Global.defaultAvatarUrl,
+                  ]);
                 },
                 child: TDImage(
                   imgUrl: Global.cachedMapUser[widget.keyInCachedMapUser]?.avatarUrl,
