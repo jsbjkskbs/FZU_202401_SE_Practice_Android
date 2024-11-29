@@ -184,7 +184,7 @@ class _RecoverPasswordState extends State<RecoverPasswordForm> {
                         },
                         additionInfo: _passwordValid ? "" : S.current.login_recover_page_new_password_error,
                         additionInfoColor: Colors.red,
-                        obscureText: !_passwordVisible,
+                        obscureText: _passwordVisible,
                         rightBtn: IconButton(
                           icon: Icon(_passwordVisible ? Icons.visibility : Icons.visibility_off),
                           onPressed: () {
@@ -212,7 +212,7 @@ class _RecoverPasswordState extends State<RecoverPasswordForm> {
                         },
                         additionInfo: _password2Valid ? "" : S.current.login_recover_page_confirm_password_error,
                         additionInfoColor: Colors.red,
-                        obscureText: !_password2Visible,
+                        obscureText: _password2Visible,
                         rightBtn: IconButton(
                           icon: Icon(_password2Visible ? Icons.visibility : Icons.visibility_off),
                           onPressed: () {
